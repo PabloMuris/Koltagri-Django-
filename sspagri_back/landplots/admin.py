@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PlantSpecies, Site, Cultivation, CultivationPlant, SiteMembership, Tasks
+from .models import PlantSpecies, Site, Cultivation, CultivationPlant, SiteMembership, Task
 
 @admin.register(PlantSpecies)
 class PlantSpeciesAdmin(admin.ModelAdmin):
@@ -33,7 +33,7 @@ class SiteMembershipAdmin(admin.ModelAdmin):
     list_display = ("id", "site", "user", "role")
     list_filter  = ("role",)
 
-@admin.register(Tasks)
+@admin.register(Task)
 class TasksAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "start_in", "end_in")
     filter_horizontal = ("cultivation",)

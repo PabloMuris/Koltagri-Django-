@@ -1,28 +1,27 @@
-from django.contrib import admin
-# Register your models here.
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.translation import gettext_lazy as _
-
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-@admin.register(User)
-class CustomUserAdmin(BaseUserAdmin):
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib import admin
+
+class UserAdmin(BaseUserAdmin):
     model = User
-    list_display = ('email', 'username', 'first_name', 'last_name', 'is_staff', 'is_superuser')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser')
     ordering = ('email',)
-    search_fields = ('email', 'username', 'first_name', 'last_name')
-    
+    search_fields = ('email', 'first_name', 'last_name')
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('username', 'first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Informações pessoais', {'fields': ('first_name', 'last_name')}),
+        ('Permissões', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
     )
-    
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser'),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name'),
         }),
     )
+
+admin.site.register(User, UserAdmin)

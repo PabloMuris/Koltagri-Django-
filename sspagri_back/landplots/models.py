@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 
 from django.contrib.auth.models import Group
 
+from .choices import KoppenClimate
 from sspagri_back.core.models import BaseModel,BaseModelWithSoftDelete
 import sspagri_back.person.models as person_models
 from .manager import SiteMembershipActiveUsersManager
@@ -26,6 +27,15 @@ from sspagri_back.core.constants import (
     ROLE_STUDY_MANAGER,
 )
 
+class ClimateZone(models.Model):
+    code = models.CharField(
+        max_length=3,
+        choices=KoppenClimate.choices,
+        unique=True
+    )
+
+    def __str__(self):
+        return self.get_code_display()
 
 
 class PlantSpecies(BaseModelWithSoftDelete):
@@ -40,11 +50,12 @@ class PlantSpecies(BaseModelWithSoftDelete):
         choices=LifeCycle.choices,
         default=LifeCycle.PERENNIAL,
     )
+
     germination = models.PositiveIntegerField(help_text="Dias médios até a germinação")
     flowering = models.PositiveIntegerField()
     fructification = models.PositiveIntegerField()
     precipitation_needs = models.PositiveIntegerField()
-    ideal_weather = models.TextField(_("Favorite Weather Conditions"))
+    climate_zones = models.ManyToManyField(ClimateZone)
 
 
 class Site(BaseModel):
@@ -161,7 +172,7 @@ class SiteMembership(BaseModel):
         ]
 
 
-class Tasks(BaseModel):
+class Task(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
     cultivation = models.ManyToManyField(Cultivation)
