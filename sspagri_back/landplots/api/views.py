@@ -10,3 +10,7 @@ class PlantViewSet(ModelViewSet):
     permission_classes = [IsSiteOwner]
     serializer_class = PlantSpeciesSerializer
 
+class CultivationViewSet(ModelViewSet):
+    queryset = Cultivation.objects.all()
+    permission_classes = [IsSiteOwner]
+    serializer_class = PlantSpeciesSerializer
