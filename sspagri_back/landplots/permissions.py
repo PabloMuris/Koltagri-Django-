@@ -8,17 +8,29 @@ from sspagri_back.core.constants import (
     ROLE_STUDY_TEAM,
     ROLE_STUDY_MANAGER)
 
+from .models import SiteMembership
 
 class IsInGroupPermission(BasePermission):
-    group_name = None
+    required_role = None 
 
     def has_permission(self, request, view):
-        return (
-            request.user and
-            request.user.is_authenticated and
-            self.group_name and
-            request.user.groups.filter(name=self.group_name).exists()
+        site_id = (
+            view.kwargs.get('site_id') or
+            request.data.get('site') or
+            request.query_params.get('site')
         )
+
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        if not self.required_role or not site_id:
+            return False
+
+        return SiteMembership.objects.filter(
+            user=request.user,
+            site_id=site_id,
+            role__name=self.required_role
+        ).exists()
 
 
 class IsSystemAdmin(IsInGroupPermission):

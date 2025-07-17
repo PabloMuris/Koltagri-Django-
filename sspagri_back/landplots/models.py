@@ -3,7 +3,7 @@ import zoneinfo
 from django.db import models
 
 from django.conf import settings
-
+from django.contrib.gis.db import models as geomodels
 
 from django.utils.translation import gettext_lazy as _
 
@@ -74,6 +74,7 @@ class Site(BaseModel):
         through_fields=("site", "user"),
     )
     timezone = models.CharField(default="UTC", max_length=50)
+    area = geomodels.MultiPolygonField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Site"
@@ -100,6 +101,7 @@ class Site(BaseModel):
 
 class Cultivation(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
+    area = geomodels.MultiPolygonField(null=True, blank=True)
     site = models.ForeignKey(
         Site,
         on_delete=models.CASCADE,
@@ -122,6 +124,7 @@ class CultivationPlant(BaseModelWithSoftDelete):
         on_delete=models.CASCADE,
         related_name="plantings"
     )
+    area = geomodels.MultiPolygonField(null=True, blank=True)
     planting_day = models.DateField()
     harvest_day = models.DateField()
     count = models.PositiveIntegerField(default=1)
@@ -130,6 +133,14 @@ class CultivationPlant(BaseModelWithSoftDelete):
         return (f"{self.count} x {self.plant_species.name} in "
                 f"{self.cultivation.name}: {self.planting_day} -> {self.harvest_day}")
     
+    def clean(self):
+        super().clean()
+
+        if self.harvest_day<self.planting_day:
+            raise ValidationError({
+                'harvest_day': 'The harvest day can\'t the same day as planting day'
+            })
+        
 
 class SiteMembership(BaseModel):
     site = models.ForeignKey("Site", verbose_name=_("Site"), on_delete=models.CASCADE)
@@ -159,22 +170,16 @@ class SiteMembership(BaseModel):
         self.clean()
         super().save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        if not person_models.UserInformation.objects.filter(user=self.user).exists():
-            invite = person_models.InviteLink.objects.get(email=self.user.email)
-            invite.delete()
-            self.user.delete()
-        return super().delete(*args, **kwargs)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(name="unique_together", fields=["user", "site"]),
+            models.UniqueConstraint(name="unique_user_site", fields=["user", "site"]),
         ]
 
 
 class Task(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    cultivation = models.ManyToManyField(Cultivation)
+    cultivation_plant= models.ManyToManyField(CultivationPlant, verbose_name=_(""))
     start_in = models.DateTimeField()
     end_in = models.DateTimeField()

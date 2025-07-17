@@ -1,23 +1,24 @@
 from django.contrib import admin
-from .models import PlantSpecies, Site, Cultivation, CultivationPlant, SiteMembership, Task
+from .models import PlantSpecies, Site, Cultivation, CultivationPlant, SiteMembership, Task,ClimateZone
+from leaflet.admin import LeafletGeoAdmin
 
 @admin.register(PlantSpecies)
 class PlantSpeciesAdmin(admin.ModelAdmin):
     list_display = ("name", "life_cycle", "germination", "flowering", "fructification")
 
 @admin.register(Site)
-class SiteAdmin(admin.ModelAdmin):
+class SiteAdmin(LeafletGeoAdmin):
     list_display = ("id", "name", "country", "number", "timezone")
     search_fields  = ("name",)
     list_filter    = ("country",)
 
 @admin.register(Cultivation)
-class CultivationAdmin(admin.ModelAdmin):
+class CultivationAdmin(LeafletGeoAdmin):
     list_display = ("id", "name", "site", "quantity")
     list_filter  = ("site",)
 
 @admin.register(CultivationPlant)
-class CultivationPlantAdmin(admin.ModelAdmin):
+class CultivationPlantAdmin(LeafletGeoAdmin):
     list_display = (
         "id",
         "cultivation",
@@ -36,4 +37,8 @@ class SiteMembershipAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TasksAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "start_in", "end_in")
-    filter_horizontal = ("cultivation",)
+    filter_horizontal = ("cultivation_plant",) 
+
+@admin.register(ClimateZone)
+class ClimateZoneAdmin(admin.ModelAdmin):
+    list_display = ["code"]
