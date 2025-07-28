@@ -8,7 +8,7 @@ class PlantSpeciesAdmin(admin.ModelAdmin):
 
 @admin.register(Site)
 class SiteAdmin(LeafletGeoAdmin):
-    list_display = ("id", "name", "country", "number", "timezone")
+    list_display = ("id", "name", "country", "timezone")
     search_fields  = ("name",)
     list_filter    = ("country",)
 

@@ -8,6 +8,10 @@ from ..models import (
     SiteMembership,
     Task,
 )
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+
+User = get_user_model()
 
 from sspagri_back.core.constants import (
     ROLE_SITE_OWNER,
