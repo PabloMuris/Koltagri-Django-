@@ -159,9 +159,9 @@ class TaskSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        plants = validated_data.pop('cultivation_plant')  # Corrigido
+        plants = validated_data.pop('cultivation_plant')  
         task = Task.objects.create(**validated_data)
-        task.cultivation_plant.set(plants)  # Corrigido
+        task.cultivation_plant.set(plants)  
         return task
 
     def update(self, instance, validated_data):
