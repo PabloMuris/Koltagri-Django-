@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
 from ..models import (
     ClimateZone,
     PlantSpecies,
@@ -9,8 +8,6 @@ from ..models import (
     SiteMembership,
     Task,
 )
-from django.contrib.auth.models import Group
-User = get_user_model()
 
 from sspagri_back.core.constants import (
     ROLE_SITE_OWNER,
@@ -45,7 +42,33 @@ class PlantSpeciesSerializer(serializers.ModelSerializer):
             'climate_zones',
         ]
 
+class CultivationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cultivation
+        fields = [
+            'id',
+            'name',
+            'life_cycle',
+            'germination',
+            'flowering',
+            'fructification',
+            'precipitation_needs',
+            'climate_zones',
+        ]
 
+class CultivationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CultivationPlant
+        fields = [
+            'id',
+            'name',
+            'life_cycle',
+            'germination',
+            'flowering',
+            'fructification',
+            'precipitation_needs',
+            'climate_zones',
+        ]
 
 
 class SiteSerializer(serializers.ModelSerializer):

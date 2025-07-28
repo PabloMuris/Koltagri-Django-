@@ -67,7 +67,6 @@ class Site(BaseModel):
         null=True,
         blank=True,
     )
-    number = models.PositiveIntegerField()
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through="SiteMembership",
@@ -81,7 +80,7 @@ class Site(BaseModel):
         verbose_name_plural = "Sites"
         constraints = [
             models.UniqueConstraint(
-                name="unique_name_number", fields=["number", "name"]
+                name="unique_name", fields=["name"]
             ),
         ]
 

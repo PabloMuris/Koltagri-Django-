@@ -11,7 +11,10 @@ class PlantViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PlantSpeciesSerializer
 
-
+class CultivationViewSet(ModelViewSet):
+    queryset = Cultivation.objects.all()
+    permission_classes = [IsSiteOwner]
+    serializer_class = PlantSpeciesSerializer
 class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
@@ -20,4 +23,5 @@ class TaskViewSet(ModelViewSet):
 class ClimateZoneViewSet(ReadOnlyModelViewSet):
     queryset = ClimateZone.objects.all()
     serializer_class = ClimateZoneSerializer
+    permission_classes = [IsAuthenticated]
     permission_classes = [IsAuthenticated]
