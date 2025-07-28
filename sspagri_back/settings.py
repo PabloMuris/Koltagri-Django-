@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'social_django',
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -81,10 +82,22 @@ WSGI_APPLICATION = 'sspagri_back.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "sspagri_db",
+        "USER": "postgres",
+        "PASSWORD": "minhasenha", 
+        "HOST": "localhost",         
+        "PORT": "5432",
+    },
+}
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-15.8, -47.9),
+    'DEFAULT_ZOOM': 4,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+    'SCALE': 'both',
 }
 
 SPATIALITE_LIBRARY_PATH = 'mod_spatialite'  
