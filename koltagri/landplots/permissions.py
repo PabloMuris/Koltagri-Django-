@@ -1,6 +1,6 @@
 from rest_framework import permissions
 from rest_framework.permissions import BasePermission
-from sspagri_back.core.constants import (
+from koltagri.core.constants import (
     ROLE_SYSTEM_ADMIN,
     ROLE_SITE_OWNER,
     ROLE_SITE_MANAGER,

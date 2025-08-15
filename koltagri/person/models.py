@@ -14,13 +14,13 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 
-from sspagri_back.core.models import BaseModel, BaseModelWithSoftDelete, SoftDeleteModel,Country
+from koltagri.core.models import BaseModel, BaseModelWithSoftDelete, SoftDeleteModel,Country
 
 from .managers import UserInformationManager,UserProfileManager,PasswordHistoryManager,ActivesUserInformationManager
 
 from .querysets import PasswordHistoryQuerySet
 
-import sspagri_back.core.constants as core_constants
+import koltagri.core.constants as core_constants
 
 from .querysets import UserInformationQuerySet
 

@@ -13,11 +13,11 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import Group
 
 from .choices import KoppenClimate
-from sspagri_back.core.models import BaseModel,BaseModelWithSoftDelete
-import sspagri_back.person.models as person_models
+from koltagri.core.models import BaseModel,BaseModelWithSoftDelete
+import koltagri.person.models as person_models
 from .manager import SiteMembershipActiveUsersManager
 
-from sspagri_back.core.constants import (
+from koltagri.core.constants import (
     SMALL_CHAR_FIELD_NAME_LENGTH,
     MEDIUM_CHAR_FIELD_NAME_LENGTH,
     MAX_CHAR_FIELD_NAME_LENGTH,

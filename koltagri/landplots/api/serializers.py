@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 
 User = get_user_model()
 
-from sspagri_back.core.constants import (
+from koltagri.core.constants import (
     ROLE_SITE_OWNER,
             ROLE_SITE_MANAGER,
             ROLE_STUDY_TEAM,

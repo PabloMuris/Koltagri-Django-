@@ -1,4 +1,4 @@
-from sspagri_back.landplots.models import Task,CultivationPlant,Cultivation,Site
+from koltagri.landplots.models import Task,CultivationPlant,Cultivation,Site
 task = CultivationPlant.objects.get(id=1)
 print(task)
 

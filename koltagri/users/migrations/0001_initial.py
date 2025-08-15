@@ -3,7 +3,7 @@
 import django.core.validators
 import django.utils.timezone
 import re
-import sspagri_back.users.manager
+import koltagri.users.manager
 from django.db import migrations, models
 
 
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'users',
             },
             managers=[
-                ('objects', sspagri_back.users.manager.UserManager()),
+                ('objects', koltagri.users.manager.UserManager()),
             ],
         ),
     ]

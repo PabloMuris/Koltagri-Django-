@@ -1,6 +1,6 @@
 from django.db import models
 
-from sspagri_back.core.manager import SoftDeleteManager
+from koltagri.core.manager import SoftDeleteManager
 
 
 class UserInformationManager(SoftDeleteManager):
@@ -17,7 +17,7 @@ class UserInformationManager(SoftDeleteManager):
 
         # if the last user profile is not set, set it
         if not user_information.last_user_profile:
-            from sspagri_back.person.models import UserProfile
+            from koltagri.person.models import UserProfile
 
             user_profile = UserProfile.objects.filter(
                 user=user, is_active=True, is_deleted=False
