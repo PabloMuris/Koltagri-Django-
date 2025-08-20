@@ -1,0 +1,59 @@
+:root {
+  /* Neutros */
+  --outono-neutro-1: #f6f1d3;
+  --outono-neutro-2: #c9a77e;
+  --outono-neutro-3: #9c7042;
+  --outono-neutro-4: #6d4b2f;
+  --outono-neutro-5: #4a2a1d;
+  --outono-neutro-6: #3a1a14;
+
+  /* Amarelos */
+  --outono-amarelo-1: #f6a600;
+  --outono-amarelo-2: #e3a900;
+  --outono-amarelo-3: #d49700;
+
+  /* Rosas */
+  --outono-rosa-1: #f7a692;
+  --outono-rosa-2: #f26b72;
+  --outono-rosa-3: #a44852;
+
+  /* Laranjas e Vermelhos */
+  --outono-laranja-1: #f5863e;
+  --outono-laranja-2: #e56142;
+  --outono-laranja-3: #e1462f;
+  --outono-laranja-4: #c55120;
+  --outono-laranja-5: #9a351d;
+  --outono-laranja-6: #f7c49a;
+  --outono-laranja-7: #f2a673;
+  --outono-vermelho-1: #e3221e;
+  --outono-vermelho-2: #b51d1d;
+  --outono-vermelho-3: #7d1614;
+
+  /* Roxos */
+  --outono-roxo-1: #a64063;
+  --outono-roxo-2: #822a35;
+  --outono-roxo-3: #3d1524;
+
+  /* Azuis */
+  --outono-azul-1: #5d8e8f;
+  --outono-azul-2: #2c6575;
+  --outono-azul-3: #183949;
+
+  /* Azuis esverdeados */
+  --outono-azul-esverdeado-1: #b1c37d;
+  --outono-azul-esverdeado-2: #6f7e4e;
+  --outono-azul-esverdeado-3: #4e6942;
+  --outono-azul-esverdeado-4: #1d4f33;
+  --outono-azul-esverdeado-5: #14321c;
+
+  /* Verdes */
+  --outono-verde-1: #8eb17f;
+  --outono-verde-2: #507d53;
+  --outono-verde-3: #2e6344;
+  --outono-verde-4: #14412d;
+  --outono-verde-5: #0f2715;
+
+  /* Metais */
+  --outono-metal-ouro: #d4af37;
+  --outono-metal-bronze: #b08d57;
+}

@@ -1,0 +1,306 @@
+#footer-weather-advices figure{
+  display: flex;
+  flex-flow: row;
+  bottom: 0px;
+  left: 0px;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  background-color: #C95313  !important;
+  border-bottom-left-radius: 10px;
+
+}
+
+#footer-weather-advices span{
+background-color: #f2f2f2;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: start;
+padding-left: 6px;
+border-bottom-right-radius: 10px;
+
+}
+#footer-weather-advices span p{
+  color:  #C95313  !important;
+}
+#footer-weather-advices{
+  display: flex;
+  position: absolute;
+  flex-flow: row;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+#button-weather-detail{
+  height: 44px;
+  width: fit-content;
+  padding-inline: 10px;
+  font-size: 16px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  border: 1px solid rgba(7, 125, 235, 0.1) !important;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(65, 65, 65, 0.2) !important;
+  backdrop-filter: blur(3px);
+}
+#button-weather-detail p{
+  color: var(--middle-grey);
+}
+
+#weather-section #weather-side-information{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--middle-grey);
+  height: 80%;
+  
+}
+
+#weather-section #weather-side-information svg{
+  width: 90px;
+  height: 94px;
+  fill: var(--middle-grey);
+}
+#weather-principal-information{
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 80%;
+  top: 4px;
+
+
+  
+}
+#weather-section #weather-principal-information h1{
+  font-size: 16px !important;
+  font-weight: 500;
+  color: var(--middle-grey);
+  position: absolute;
+  top: 16px;
+
+}
+#weather-principal-information p{
+  color: var(--middle-grey);
+}
+
+#weather-section #weather-principal-information span{
+  font-size: 86px !important;
+  color: var(--middle-grey);
+}
+#weather-principal p {
+  color: var(m);
+}
+
+#weather-section{
+  position: relative;
+  background-color: var(--middle-grey);
+  width: 100%;
+  border-radius: 10px;
+  padding: 44px 24px 44px 24px;
+  grid-area:  weather-section;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+  height: 60%;
+  background-image: linear-gradient(270deg,#65A659,#50817C);
+}
+#weather-section h1{
+  color: #2c3e50;
+}
+
+
+.transparent-card-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 7.5%;
+  gap: 2rem;
+  width: 100%;
+  padding-inline:24px;
+  
+}
+
+.transparent-card{
+  background :rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(1px);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  max-width: 170px;
+  min-width: 140px;
+  width: auto;
+  height: auto;
+  max-height: 80px;
+  min-height: 70px;
+  padding: 0rem 0.5rem;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+
+
+
+.transparent-card p{
+  color: #f2f2f2;
+}
+
+
+#tasks-card small{
+color: #f2f2f2;
+font-size: 13px;
+text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+#tasks-card b{
+font-size:36px;
+text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+#tasks-card svg{
+  height: 48px !important;
+  width: 48px;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.5));
+}
+
+
+
+#weather-card-content b{
+  font-size: 30px;
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+#new-plant-button{
+  
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #62984A;
+  height: 44px;
+  width: 155px;
+  left: calc(100vw - 155px);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  top: 100px;
+  
+}
+
+#new-plant-button p {
+  color: white;
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-content: center;
+  
+}
+
+
+.nav-button img{
+  height: 20px;
+  color: white;
+}
+
+.nav-button p {
+  color: white;
+  font-size: 15px;
+}
+
+
+
+#plant-resume-area{
+  margin-top: 20px;
+}
+#plant-resume-header{
+  display: flex;
+  padding-left: 24px;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+#plant-resume-header #acess-plant-button{
+  background-color: white;
+  display: flex;
+  gap: 5px;
+  height: 40px;
+  width: 144px;
+  align-items: center;
+  justify-content: center;
+  border-radius:5px 0px 0px 5px;
+  color: #f2f2f2;
+  
+
+}
+#acess-plant-button p{
+  color: #62984A;
+}
+#plant-resume-header h2{
+  color: #62984A;
+}
+#plant-resume-card #card-body{
+  display: flex;
+  padding-inline: 24px;
+  background-color: #62984A;
+  height: 84px;
+  align-items: center;
+  margin-top: 24px;
+}
+#plant-resume-card #card-body figure{
+  width: 56px;
+  height: 56px;
+}
+
+#plant-resume-card #card-body img{
+  width: 50px;
+  height: 50px;
+}
+
+#plant-image img{
+  border-radius: 100%;
+  
+}
+
+#plant-resume-data{
+  padding-left: 20px;
+  flex-grow: 1;
+  color: white;
+}
+
+#plant-resume-data p{
+  color: #FECB34;
+}
+
+#health-indicator-icon{
+  height: 100% !important;
+  width: 84px !important;
+  background-color: white;
+}
+
+#weather-events{
+  display: flex !important;
+  flex-flow: row;
+}
+
+@media (min-width: 748px) and (max-width: 1270px){
+  section#weather-events {
+  display: none;
+}
+
+
+}
