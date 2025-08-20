@@ -1,16 +1,5 @@
-from django.urls import path
-from rest_framework.routers import SimpleRouter
-from .api.views import PlantViewSet,ClimateZoneViewSet,TaskViewSet
-
-router = SimpleRouter()
-
-router.register('plants', PlantViewSet)
-router.register('climatezone',ClimateZoneViewSet)
-router.register('tasks',TaskViewSet)
-
-
-
-
+from django.urls import path,re_path
+from .views import CultivatesView
 urlpatterns = [
-] + router.urls
-
+    path('',CultivatesView.as_view(),name='cultivates')
+]
