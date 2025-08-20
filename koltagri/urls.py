@@ -25,5 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'api/v1/', include('djoser.urls')),
     re_path(r'api/v1/auth/', include('djoser.urls.jwt')),
-    path('api/v1/landplots/',include('koltagri.landplots.urls'))
+    path('cultivos/',include('koltagri.landplots.urls')),
+    path("",include('koltagri.core.urls')),
 ]
