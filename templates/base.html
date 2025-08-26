@@ -11,7 +11,9 @@
 </head>
 <body>
 <header>
-{% block header %}{% endblock header %}
+    {% include "partials/_header.html" %}
+{% block header %}
+{% endblock header %}
 </header>
 
     {% include "partials/_aside.html" %}

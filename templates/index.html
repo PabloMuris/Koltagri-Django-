@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static%}
+
 
 
 
@@ -6,70 +8,123 @@
 
 
 {% block css %}
-<style></style>{% endblock css %}
+<style>
+
+ #weather-prevision{
+  position: absolute;
+  width: auto;
+  left: 24px;
+  right: 24px;
+  top: 40%;
+  height: 150px;
+  height: 150px;
+  justify-content: start;
+  padding-top: 22px;
+  gap: 10px;
+  padding-left: 24px;
+ }
+  #weather-prevision p{
+    font-size: 16px;
+  }
+
+ #weather-prevision h2{
+  font-size: 30px;
+  color: var(--middle-grey);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+ }
+
+ #weather-prevision svg{
+  fill: var(--middle-grey);
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+ }
+
+#weather-events{
+  background-size: cover;  
+  background-repeat: no-repeat;
+  background-position: center;
+  width:100%;  
+  height:338px;
+  background-image: url("{% static 'imgs/icons/svg/home_page_.svg' %}");
+
+}
+
+#weather-location{
+  display: flex;
+  position: absolute;
+  flex-flow: row;
+  bottom: 0px;
+  left: 0px;
+  align-items: center;
+  width: 100%;
+  padding-left: 24px;
+  justify-content: space-between;
+  font-weight: 600;
+
+}
+
+#weather-location button{
+  height: 44px;
+  width: 44px;
+  background: transparent;
+  border: none;
+
+}
+
+#weather-location button svg{
+  height: 24px;
+  width: 24px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+section#shortcuts{
+  display: flex;
+  width: 100%;
+  flex-flow: column;
+}
+
+section#shortcuts button.shortcut-button{
+  height: 44px;
+  min-width: 44px;
+  width: auto;
+  max-width: 100px;
+}
+
+
+
+</style>{% endblock css %}
 
 {% block header %}
-<div id="search-bar">
-      <form action="">
-        <input type="text" placeholder="Pesquisar...">
-      </form>
-</div>
+{% endblock header %}
 
-    <div id="user-actions-desktop" style="display: flex; gap: 16px; align-items: center;">
-      <div id="email-button">
-        <button type="button" aria-label="Email">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-            <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/>
-          </svg>
-        </button>
-      </div>
 
-      <div id="notifications-button">
-        <button type="button" aria-label="Notificações">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-            <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
-          </svg>
-        </button>
-      </div>
+{% block main %}
 
-      <div id="profile-icon">
-        <button type="button" aria-label="Perfil" style="padding:0; border:none; background:none; cursor:pointer;">
-          <img src="svg/pablo.jpg" alt="Foto de perfil" style="width: 40px; height: 40px; border-radius: 50%;">
-        </button>
-      </div>
-    </div>{% endblock header %}
+<section id="weather-events" >
+  <div id="weather-prevision" class="transparent-card">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-760v-160h80v160h-80Zm266 110-56-56 113-114 56 57-113 113Zm54 210v-80h160v80H760Zm3 299L650-254l56-56 114 112-57 57ZM254-650 141-763l57-57 112 114-56 56Zm-14 450h180q25 0 42.5-17.5T480-260q0-25-17-42.5T421-320h-51l-20-48q-14-33-44-52.5T240-440q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T40-320q0-83 58.5-141.5T240-520q60 0 109.5 32.5T423-400q58 0 97.5 43T560-254q-2 57-42.5 95.5T420-120H240Zm320-134q-5-20-10-39t-10-39q45-19 72.5-59t27.5-89q0-66-47-113t-113-47q-60 0-105 39t-53 99q-20-5-41-9t-41-9q14-88 82.5-144T480-720q100 0 170 70t70 170q0 77-44 138.5T560-254Zm-79-226Z"/></svg>
+    <div id="climate-data">
+      <h2>26º</h2>
+      <p>Parcialmente Nublado</p>
+    </div>
+    <div id="weather-location">
+    <p>Pau dos Ferros</p>
+    <button>
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z"/></svg>
+    </button>
+  </div>
+  </div>
+  
+</section>
 
-{% block main %}<section id="weather-events">
-        <figure>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-400q0 52 21 98.5t60 81.5q-1-5-1-9v-9q0-32 12-60t35-51l113-111 113 111q23 23 35 51t12 60v9q0 4-1 9 39-35 60-81.5t21-98.5q0-50-18.5-94.5T608-574q-20 13-42 19.5t-45 6.5q-62 0-107.5-41T361-690q-39 33-69 68.5t-50.5 72Q221-513 210.5-475T200-400Zm240 52-57 56q-11 11-17 25t-6 29q0 32 23.5 55t56.5 23q33 0 56.5-23t23.5-55q0-16-6-29.5T497-292l-57-56Zm0-492v132q0 34 23.5 57t57.5 23q18 0 33.5-7.5T582-658l18-22q74 42 117 117t43 163q0 134-93 227T440-80q-134 0-227-93t-93-227q0-129 86.5-245T440-840Zm400 320q-17 0-28.5-11.5T800-560q0-17 11.5-28.5T840-600q17 0 28.5 11.5T880-560q0 17-11.5 28.5T840-520Zm-40-120v-200h80v200h-80Z"/></svg>
-        </figure>
-        <p>Grande Perigo - Temperaturas Alltas</p>
-      </section>
-
-      <section id="plant-resume-area">
-        <div id="plant-resume-header">
-          <h2>Meus Plantios</h3>
-        <div id="acess-plant-button">
-          <p>Ver Todos</p>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
-        </div>
-
-        </div>
-        <div id="plant-resume-card">
-          <div id="card-body">
-            <figure id="plant-image">
-              <img src="webp/morango.webp" alt="" srcset="">
-            </figure>
-            <div id="plant-resume-data">
-              <h3>Morango</h3>
-              <p>Germinação</p>
-            </div>
-            <figure id="health-indicator-icon">
-              
-            </figure>
-          </div>
-        </div>
-      </section>
-
+<section id="shortcuts" style="position: relative; margin-top: 20px;">
+  <H2>Atalhos</H2>
+  <button type="button" id="all-shortcuts-btn" style="position: absolute; right: -24px; height: 38px; top: -4px; padding-inline:6px; border: none;">Ver Todos</button>
+  <div id="shortcut-button">
+    <button type="button" class="shortcut-button">Tarefas</button>
+    <button type="button" class="shortcut-button"> Tarefas gays</button>
+  </div>
+</section>
       
       {% endblock main %}

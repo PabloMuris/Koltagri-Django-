@@ -66,6 +66,9 @@
   /* Metais */
   --outono-metal-ouro: #d4af37;
   --outono-metal-bronze: #b08d57;
+
+  /* Standard-font-size*/
+  font-size: 16px;
 }
 
 * {
@@ -93,7 +96,7 @@ body {
     "main "
     "footer";
   grid-template-columns: 0.18fr 1fr 0.18fr;
-  grid-template-rows:  1fr 1fr 0.18fr;
+  grid-template-rows:  338px 7fr 1fr;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
@@ -119,14 +122,14 @@ header{
 
 /* BARRA DE PESQUISA */
 #search-bar {
-  margin: 0 auto;
+  margin: 0 24px;
   display: flex;
   align-items: center;
   padding: 0.1rem 24px;
   background: var(--middle-grey);
-  border-radius: 0.5rem;
-  width: 90%;
-  max-width: 500px;
+  border-radius: 10px;
+  width: 100%;
+   z-index: 999;
 }
 
 /* ÍCONE DA LUPA */
@@ -171,6 +174,7 @@ main {
   background-color: transparent;
   grid-row: auto;
   padding: 24px;
+  position: relative;
 }
 
 
@@ -401,13 +405,7 @@ border-radius: 10px;
 }
 
 
-main{
-  display: grid;
-  grid-template-areas: "weather-section other-section"
-  "stati stati";
-  grid-template-columns: 1.25fr 1fr; 
-  grid-template-rows: 1.2fr 1fr;
-}
+
 
 #other-section{
    grid-area: other-section;
@@ -458,9 +456,6 @@ main{
     grid-template-columns: 100px 1fr;
     grid-template-rows: 70px 2fr;
     height: 100vh;
-  }
-  #weather-section{
-    width: 80%;
   }
   .nav-links a {
     align-items: center !important;
