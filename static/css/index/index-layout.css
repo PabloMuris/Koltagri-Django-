@@ -1,0 +1,83 @@
+/* Estrutura */
+@media (max-width: 767px) {
+  .home__mtrl-area .meteorological-prevision-card{
+   flex-flow: column;
+  
+}
+  .home__mtrl-area{
+    position: absolute;
+    top: 0px;
+    min-height: 360px;
+    z-index: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .home__mtrl-area .meteorological-prevision-card{
+  flex-flow: column-reverse;
+  
+}
+.home__mtrl-area{
+  position: relative;
+}
+}
+
+
+
+.home__mtrl-area .meteorological-prevision-card{
+  display: flex;
+  flex: 1;
+  
+}
+
+.home__mtrl-area .meteorological-alert-card{
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  min-height: 44px;
+}
+
+.home__mtrl-area .meteorological-alert-card .mtrl-alert-card__icon{
+  display: flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  
+  
+}
+.home__mtrl-area{
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+
+}
+.mtrl-card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+/* Elementos */
+.mtrl-card__bottom {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: transparent;
+  padding-left: 16px
+}
+
+.mtrl-card__bottom a{
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding-inline: 8px;
+  gap: 4px;
+  border-bottom-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.mtrl-card__body {
+  flex: 1
+}

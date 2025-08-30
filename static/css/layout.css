@@ -1,0 +1,262 @@
+/* ================================
+   RESET / NORMALIZE MODERNO + FONTS + LAYOUT BASE
+   ================================ */
+
+
+:root{
+  /* Variáveis de fonte */
+  --font-outfit: "Outfit", sans-serif;
+  --font-piazzolla: "Piazzolla", serif;
+  
+    /* Cores*/
+  --cor-principal: #3498db; /* Azul */
+  --cor-secundaria: #2c3e50; /* Cinza escuro */
+  --middle-green: #63995b;
+  --middle-grey: #f2f2f2;
+  --tamanho-fonte: 16px;
+
+    /* Neutros */
+  --outono-neutro-1: #f6f1d3;
+  --outono-neutro-2: #c9a77e;
+  --outono-neutro-3: #9c7042;
+  --outono-neutro-4: #6d4b2f;
+  --outono-neutro-5: #4a2a1d;
+  --outono-neutro-6: #3a1a14;
+
+  /* Amarelos */
+  --outono-amarelo-1: #f6a600;
+  --outono-amarelo-2: #e3a900;
+  --outono-amarelo-3: #d49700;
+
+  /* Rosas */
+  --outono-rosa-1: #f7a692;
+  --outono-rosa-2: #f26b72;
+  --outono-rosa-3: #a44852;
+
+  /* Laranjas e Vermelhos */
+  --outono-laranja-1: #f5863e;
+  --outono-laranja-2: #e56142;
+  --outono-laranja-3: #e1462f;
+  --outono-laranja-4: #c55120;
+  --outono-laranja-5: #9a351d;
+  --outono-laranja-6: #f7c49a;
+  --outono-laranja-7: #f2a673;
+  --outono-vermelho-1: #e3221e;
+  --outono-vermelho-2: #b51d1d;
+  --outono-vermelho-3: #7d1614;
+
+  /* Roxos */
+  --outono-roxo-1: #a64063;
+  --outono-roxo-2: #822a35;
+  --outono-roxo-3: #3d1524;
+
+  /* Azuis */
+  --outono-azul-1: #5d8e8f;
+  --outono-azul-2: #2c6575;
+  --outono-azul-3: #183949;
+
+  /* Azuis esverdeados */
+  --outono-azul-esverdeado-1: #b1c37d;
+  --outono-azul-esverdeado-2: #6f7e4e;
+  --outono-azul-esverdeado-3: #4e6942;
+  --outono-azul-esverdeado-4: #1d4f33;
+  --outono-azul-esverdeado-5: #14321c;
+
+  /* Verdes */
+  --outono-verde-1: #8eb17f;
+  --outono-verde-2: #507d53;
+  --outono-verde-3: #2e6344;
+  --outono-verde-4: #14412d;
+  --outono-verde-5: #0f2715;
+
+  /* Metais */
+  --outono-metal-ouro: #d4af37;
+  --outono-metal-bronze: #b08d57;
+
+  /* Standard-font-size*/
+  font-size: 16px;
+}
+
+/* Box sizing universal */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tipografia */
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: var(--font-outfit); /* Outfit como padrão */
+}
+
+/* Corpo */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fff; /* opcional */
+  color: #111;            /* opcional */
+  display: grid;
+}
+
+/* Mídia */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Texto */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  font-weight: normal;
+}
+
+/* Para áreas longas de leitura (ex: artigos, posts, docs) */
+.reading {
+  font-family: var(--font-piazzolla);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* Listas */
+ul, ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Botões e inputs */
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* Tabelas */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* Forms */
+textarea {
+  resize: vertical;
+}
+
+/* Root stacking context (apps React/Next) */
+#root, #__next {
+  isolation: isolate;
+}
+
+
+header {
+    grid-area: header;
+    display: flex;
+    background-color: transparent;
+    margin-right: 10px;
+}
+aside {
+    grid-area: aside;
+    display: flex;
+}
+
+aside nav{
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  gap: 8px;
+  padding: 16px;
+}
+main {
+    display: grid;
+    grid-area: main;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+
+main > * {
+display: flex;
+}
+footer {
+    grid-area: footer;
+    display: flex;
+    align-items: center;
+}
+footer nav{
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  padding-inline: 24px;
+}
+
+/* .mobile e .desktop serão adicionadas através de JS para controle de responsividade */
+
+
+/* ================================
+    General styles
+   ================================ */
+
+@media (max-width: 767px) {
+  
+  body{
+    grid-template: "header" "main" "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: 88px 1fr 60px;
+  }
+  main{
+    grid-template-columns: auto; /* sempre uma coluna */
+    
+  }
+  aside{
+    display: none;
+  }
+  header{
+    padding-inline: 24px;
+    align-items: end;
+  }
+
+  /* estilização*/
+}
+@media (min-width: 768px) {
+  
+  body{
+    grid-template: "aside header" "aside main";
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 70px 1fr;
+    gap: 10px;
+  }
+  main {
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas para spans */
+    grid-auto-flow: row dense; /* garante preenchimento eficiente */
+  }
+
+  header{
+    padding-inline: 0px;
+    align-items: start;
+    margin-top: 10px;
+  }
+  
+
+  /* Garantindo a regra par(60%/40%) e ímpar(100%*/
+    main > :nth-child(odd):last-child { grid-column: 1 / -1; }
+    main > :nth-child(odd):not(:last-child) { grid-column: span 3; }
+    main > :nth-child(even) { grid-column: span 2; }
+   /* fim*/
+  footer{
+    display: none;
+  }
+  
+}

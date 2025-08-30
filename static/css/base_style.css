@@ -1,0 +1,116 @@
+header form{
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    height: 44px;
+    z-index: 1;
+}
+
+header form input{
+    flex: 1;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #f2f2f2;
+    padding-left: 24px;
+}
+header form button{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #f2f2f2;
+    min-width: 38px;
+}
+
+header form button svg{
+    fill: #8f8f8f;
+}
+
+@media (max-width: 767px) {
+    footer nav svg{
+        fill: #f2f2f2;
+        width: 28px;
+        height: 28px;
+    }  
+
+    footer {
+        background-color: #509377;
+    }
+    footer nav #hidden-menu svg {
+        transform: rotate(180deg);
+    }
+    .desktop {
+        display: none;
+    }
+
+
+}
+@media (min-width: 768px) {
+    header{
+        gap: 64px;
+    }
+    aside{
+        background-color: transparent;
+        margin: 10px 0px 10px 10px;
+    }
+
+    aside nav{
+        height: 100%;
+        gap: 16px;
+        background-color: #509377;
+        justify-content: start;
+        border-radius: 10px;
+        width: 100%;
+        padding-inline: 24px;
+    }
+    aside nav .nav-link{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        
+    }
+    aside nav .nav-link svg{
+        width: 28px;
+        height: 28px;
+        fill: #f2f2f2;
+        
+    }
+    aside nav .nav-link p{
+        color: #f2f2f2;
+        font-size: 20px;
+        font-weight: 500;
+        
+    }
+
+    aside nav .nav-section{
+        display: flex;
+        flex-flow: column;
+        gap: 14px;
+    }
+
+
+    aside nav hr{
+        color: rgb(255, 255, 255,0.25) ;
+        height: 0.75px;
+    }
+    #utils-link{
+        display: flex;
+        flex-flow: row-reverse;
+        gap: 16px;
+    }
+    #utils-link button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 44px;
+        width: 44px;
+        /*background-color:#003845;*/
+        background-color: #f2f2f2;
+        border-radius: 10px;
+    
+    }
+    #utils-link button svg{
+        width: 24px;
+        height: 24px;
+        fill: #003845;;
+    }
+}

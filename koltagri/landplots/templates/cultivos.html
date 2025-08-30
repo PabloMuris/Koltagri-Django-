@@ -71,51 +71,12 @@ section#results > div.result-card > div.options {
 </style>
 
 {% endblock css %}
- {% block header %}
-
-
-
-<div id="search-bar">
-      <form action="">
-        <input type="text" placeholder="Pesquisar...">
-      </form>
-</div>
-
-    <div id="user-actions-desktop" style="display: flex; gap: 16px; align-items: center;">
-      <div id="email-button">
-        <button type="button" aria-label="Email">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-            <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"/>
-          </svg>
-        </button>
-      </div>
-
-      <div id="notifications-button">
-        <button type="button" aria-label="Notificações">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-            <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
-          </svg>
-        </button>
-      </div>
-
-      <div id="profile-icon">
-        <button type="button" aria-label="Perfil" style="padding:0; border:none; background:none; cursor:pointer;">
-          <img src="svg/pablo.jpg" alt="Foto de perfil" style="width: 40px; height: 40px; border-radius: 50%;">
-        </button>
-      </div>
-    </div>{% endblock header %}
+ 
 
 
 
 {% block main %} 
-<section id="navigation">
-  <button type="button" class="navigation-button" id="return-button">
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
-  </button>
-  <button type="button" class="navigation-button" id="adding-button">
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-120v-320H120v-80h320v-320h80v320h320v80H520v320h-80Z"/></svg>
-  </button>
-</section>
+
 <section class="preferences" id="customize-searching">
   <button type="button" class="preferences-button" id="ordering">
     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/></svg>

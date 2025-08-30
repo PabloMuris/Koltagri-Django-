@@ -100,6 +100,7 @@ body {
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* NOVO HEADER */
@@ -171,11 +172,12 @@ aside {
 
 main {
   grid-area: main;
+  display: grid;
+  
   background-color: transparent;
-  grid-row: auto;
   padding: 24px;
-  position: relative;
 }
+
 
 
 
@@ -217,6 +219,13 @@ footer nav{
   font-size: 15px;
 }
 
+@media (max-width: 747px) {
+  main{
+    grid-template-columns: 1fr !important;   /* mobile: 1 coluna */
+  gap: 16px;
+  }
+}
+
       @media (min-width: 748px)  {
   body{
     display: grid;
@@ -256,7 +265,15 @@ footer nav{
     background-color: transparent;
     margin-top: 10px;
     padding: 0px !important;
+    grid-template-columns: repeat(2, 1fr); /* sempre 2 colunas */
+  gap: 1rem;
    }
+   main > *:nth-child(odd):last-child {
+  grid-column: span 2;
+}
+main .grid-item{
+  height: 360px;
+}
    body{
     background-color: white;
    }
