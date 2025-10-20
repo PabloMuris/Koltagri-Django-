@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koltagri</title>
+    <link rel="stylesheet" href="{%static 'css/base/base.css'%}">
     
         {% block styles %}{% endblock %}
     
@@ -293,7 +294,7 @@ aside nav{
             </button>
         </div>
     </header>
-    <aside id="aside"><nav class="nav-bar   padding--standard" style="width: 100%; flex-flow: column; align-items: start; gap: 20px; background-color: var(--primary-color); ">
+    <aside id="aside"><nav class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 20px; background-color: var(--primary-color); ">
             <a href="" class="nav-link nav-link--std flex-rw" id="home">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                 <p>Início</p>
@@ -335,5 +336,7 @@ aside nav{
         </nav>
 
     </footer>
+    {% block scripts%}{% endblock %}
+    <script src="{% static 'js/base.js'%}"></script>
 </body>
 </html>

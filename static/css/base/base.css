@@ -1,0 +1,39 @@
+@keyframes expandMenu {
+    to {
+        position: absolute;
+        width: 240px;
+        z-index: 999;
+        top: 0;
+        bottom: 0;
+    }
+}
+
+
+@keyframes retractMenu {
+    from{
+        width: 80px;
+        left: 0;
+    }
+    to {
+        position: fixed;
+        width: 240px;
+        z-index: 999;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+.expandMenu{
+    animation: expandMenu 0.5s forwards ease;
+}
+
+
+.retractMenu{
+    animation: retractMenu 1s forwards linear;
+}
+
+aside .nav-bar{
+    transform-origin: left;
+    left: 0px;
+}
