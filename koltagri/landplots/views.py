@@ -3,10 +3,5 @@ from django.views.generic import TemplateView
 
 # Create your views here.
 
-
-
-class CultivatesView(TemplateView):
-    template_name = 'cultivos.html'
-
-class CultivatesDetailView(TemplateView):
-    template_name = 'cultivate_detail.html'
+class CultivatedPlantsView(TemplateView):
+    template_name = 'cultivated_plants.html'

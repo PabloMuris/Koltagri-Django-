@@ -1,64 +1,32 @@
-{% extends "base.html" %}
-{% load static%}
+{%extends 'base.html'%}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block styles %}
+<style>
+    #main-card{
+        background-image: url("{% static 'application_img/background/card_background.svg' %}");
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="weather-card-area weather-card-area--std" style="position: relative;">
+            <div class="weather-card"></div>
+            <div class="weather-card"></div>
+            <div class="weather-card" id="main-card">
+            </div>
+        </section>
 
+        <section class="weather-advice weather-advice--std flex-rw  .brdr-10" style="margin-top: 24px; gap: 12px; justify-content: start; background-color: #f2f2f2; border-radius: 10px;">
+            <figure class="advice__figure flex-rw align-cntr" aria-label="Ícone de ciclone extratropical" style="background-color: red;border-top-left-radius: 10px;border-bottom-left-radius: 10px; ">
+                <svg aria-label="Ícone de ciclone extratropical"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400ZM661-80q18-56 27-100t14-70q-43 42-100 66t-122 24q-136 0-238.5-18.5T80-214v-85q56 18 100 27t70 14q-42-43-66-100t-24-122q0-137 18.5-239T214-880h85q-18 56-27.5 100T258-710q43-42 100-66t122-24q137 0 239 18.5T880-746v85q-56-18-100-27.5T710-702q42 43 66 100t24 122q0 137-18.5 239T746-80h-85ZM480-240q100 0 170-70t70-170q0-100-70-170t-170-70q-100 0-170 70t-70 170q0 100 70 170t170 70Z"/></svg>
+            </figure>
+            <p class="advice__text flex-rw align-cntr">
+                Ciclone extratopical - Vento em 120 km/h
+            </p>
 
+        </section>
+        <section class="plant-slide">
+            
 
-
-{% block title %} Koltagri{% endblock title %}
-
-
-{% block style %}
-    <link rel="stylesheet" href="{% static 'css/index/index-layout.css' %}">
-     <link rel="stylesheet" href="{% static 'css/index/index-decoration.css' %}">
-    <style>
-      .home__mtrl-area .meteorological-prevision-card{
-  background-image: url("{% static 'imgs/icons/svg/home_page_.svg'%}");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-size: cover;
-  
-}
-    </style>
-{% endblock style %}
-
-
-
-{% block main %}
-<section class="home home--light home__mtrl-area home__mtrl-area--light" >
-  
-  <div class="meteorological-prevision-card">
-    <div class="mtrl-card mtrl-card__body">
-    <figure class="mtrl-figure">
-
-    </figure>
-    <div class="mtrl-data mtrl-data--light">
-      <p><span>22°c</span></p>
-      <p>Parcialmente nublado</p>
-    </div>
-  </div>
-  <div class="mtrl-card mtrl-card__bottom">
-    <p>Riacho de santana - RN</p>
-    <a href="">
-      <p>Detalhar</p>
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg>
-    </a>
-  </div>
-  </div>
-  <div class="meteorological-alert-card">
-    <figure class="mtrl-alert-card__icon mtrl-alert-card__icon--style">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-400q0 52 21 98.5t60 81.5q-1-5-1-9v-9q0-32 12-60t35-51l113-111 113 111q23 23 35 51t12 60v9q0 4-1 9 39-35 60-81.5t21-98.5q0-50-18.5-94.5T608-574q-20 13-42 19.5t-45 6.5q-62 0-107.5-41T361-690q-39 33-69 68.5t-50.5 72Q221-513 210.5-475T200-400Zm240 52-57 56q-11 11-17 25t-6 29q0 32 23.5 55t56.5 23q33 0 56.5-23t23.5-55q0-16-6-29.5T497-292l-57-56Zm0-492v132q0 34 23.5 57t57.5 23q18 0 33.5-7.5T582-658l18-22q74 42 117 117t43 163q0 134-93 227T440-80q-134 0-227-93t-93-227q0-129 86.5-245T440-840Zm400 320q-17 0-28.5-11.5T800-560q0-17 11.5-28.5T840-600q17 0 28.5 11.5T880-560q0 17-11.5 28.5T840-520Zm-40-120v-200h80v200h-80Z"/></svg>
-    </figure>
-    <p>
-      Perigo extremo - Altas Temperaturas e Baixa Umidade
-    </p>
-  </div>
-</section>
-<section class="home home--light">
-
-</section>
-<section class="home home--light">
-
-</section>
-
-      
-{% endblock main %}
+        </section>
+{% endblock %}

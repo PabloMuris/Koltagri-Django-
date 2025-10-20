@@ -124,9 +124,10 @@ class CultivationPlant(BaseModelWithSoftDelete):
         related_name="plantings"
     )
     area = geomodels.MultiPolygonField(null=True, blank=True)
-    planting_day = models.DateField()
+    planting_day = models.DateField(auto_now_add=True)
     harvest_day = models.DateField()
     count = models.PositiveIntegerField(default=1)
+    new_plantation = models.BooleanField(default=True)
 
     def __str__(self):
         return (f"{self.count} x {self.plant_species.name} in "
@@ -134,8 +135,9 @@ class CultivationPlant(BaseModelWithSoftDelete):
     
     def clean(self):
         super().clean()
-
-        if self.harvest_day<self.planting_day:
+        if self.new_plantation == False:
+            pass
+        elif self.harvest_day<self.planting_day:
             raise ValidationError({
                 'harvest_day': 'The harvest day can\'t the same day as planting day'
             })
@@ -182,3 +184,5 @@ class Task(BaseModel):
     cultivation_plant= models.ManyToManyField(CultivationPlant, verbose_name=_(""))
     start_in = models.DateTimeField()
     end_in = models.DateTimeField()
+
+
