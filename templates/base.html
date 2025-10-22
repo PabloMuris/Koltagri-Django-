@@ -106,7 +106,7 @@ body {
     }
     
 }
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1299px) {
     body {
         grid-template-areas:
         "aside header"
@@ -126,7 +126,7 @@ body {
         display: none;
     }
 }
-@media(min-width:1025px){
+@media(min-width:1300px){
     body {
         grid-template-areas:
         "aside header"
@@ -164,6 +164,9 @@ main{
     overflow:hidden;
     flex-direction: column;
     align-items: center;
+    padding-top: 24px;
+    gap: 20px;
+    position: relative;
 }
 
 
@@ -276,6 +279,7 @@ aside nav{
 }
 
 
+
     </style>
 </head>
 <body>
@@ -315,7 +319,7 @@ aside nav{
             </a>
         </nav>
     </aside>
-    <main class="padding--standard">
+    <main class="padding--standard" >
         {% block content %}
         {% endblock %}
     </main>

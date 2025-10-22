@@ -1,0 +1,185 @@
+{%extends 'base.html'%}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block styles %}
+<style>
+    .navigation-section {
+    width: 100%;
+}
+
+/* NOVAS CLASSES */
+.navigation-layout {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.relative {
+    position: relative;
+}
+
+.flex-center-between {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.plant__image {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+}
+
+.container {
+    width: 100%;
+}
+
+.plant-info {
+    width: 100%;
+}
+
+.status-card {
+    align-items: center;
+    justify-content: space-around;
+    width: fit-content;
+    gap: 6px;
+    padding-inline: 8px;
+    min-height: 50px;
+    border-radius: 10px;
+    border: 2px solid #f2f2f2;
+}
+
+.card__description .description__title {
+    font-weight: 300;
+}
+
+.options-section {
+    height: 44px;
+}
+
+.plant-actions {
+    height: 25%;
+    
+    z-index: 999;
+    position: absolute;
+    background-color: white;
+}
+.option{
+    font-size: 16px;
+    background: transparent;
+    
+}
+
+.options-descriptions p{
+    
+    padding-top: 20px;
+    text-align: justify;
+}
+
+@media (max-width: 1299px) {
+    .plant-actions{
+    bottom: 0px;
+    padding: 16px 24px 0px 24px;
+    width: 100%;
+    }
+}
+
+@media(min-width:1300px){
+    .plant-actions{
+        top: 10%;
+        width: 40%;
+        right: 22px;
+    }
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<section class="navigation-section flex-rw" style="justify-content: space-between; align-items: center;">
+    <button type="button" class="return-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
+    </button>
+    <button type="button" class="favorite-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
+    </button>
+
+</section>
+.
+<section class="plant-info" style="position: relative;">
+    <h2 class="plant-name">
+        
+    </h2>
+
+    <div class="container">
+        <div class="ideal-status flex-clmn" style="gap: 24px;">
+            <div class="status-card flex-rw">
+                <figure class="card__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
+                </figure>
+                <div class="card__description">
+                    <p class="description__title">
+                        Irrigação
+                    </p>
+                    <p class="description__text">
+                        Diária
+                    </p>
+                </div>
+            </div>
+            <div class="status-card flex-rw">
+                <figure class="card__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
+                </figure>
+                <div class="card__description">
+                    <p class="description__title">
+                        Irrigação
+                    </p>
+                    <p class="description__text">
+                        Diária
+                    </p>
+                </div>
+            </div>
+            <div class="status-card flex-rw">
+                <figure class="card__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
+                </figure>
+                <div class="card__description">
+                    <p class="description__title">
+                        Irrigação
+                    </p>
+                    <p class="description__text">
+                        Diária
+                    </p>
+                </div>
+            </div>
+            <div class="status-card flex-rw">
+                <figure class="card__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
+                </figure>
+                <div class="card__description">
+                    <p class="description__title">
+                        Irrigação
+                    </p>
+                    <p class="description__text">
+                        Diária
+                    </p>
+                </div>
+            </div>
+        </div>
+        <figure class="plant__image"> 
+            <img src="{% static 'example_img/banana.png' %}" alt="">
+        </figure>
+    </div>
+</section>
+<section class="plant-actions flex-clmn" >
+    <section class="options-section flex-rw" style="height: 44px; align-items: center; justify-content: space-between;">
+        <button type="button" class="option">Descrição</button>
+        <button type="button" class="option">Atividades</button>
+        <button type="button" class="option">Observação</button>
+    </section>
+    <section class="options-descriptions" style="flex: 1;">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique facilisis ipsum vel fringilla. Suspendisse ut efficitur eros, in commodo sem. Sed lobortis ligula non quam tempus dapibus. Donec convallis nisl id quam blandit mollis. Pellentesque fringilla nunc ut tellus aliquam, quis semper massa dictum. Donec ac metus mi. Nulla nec justo id lectus. </p>
+    </section>
+</section>
+{% endblock %}

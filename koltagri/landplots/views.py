@@ -5,3 +5,9 @@ from django.views.generic import TemplateView
 
 class CultivatedPlantsView(TemplateView):
     template_name = 'cultivated_plants.html'
+
+class CultivatedPlantsDetailView(TemplateView):
+    template_name = 'plant_detail.html'
+
+
+
