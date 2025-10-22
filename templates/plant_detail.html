@@ -3,8 +3,17 @@
 {% load static %}
 {% block styles %}
 <style>
-    .navigation-section {
+.navigation-section {
     width: 100%;
+}
+.navigation-section button{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    background-color: transparent;
+}
+.navigation-section svg{
+    fill: black;
 }
 
 /* NOVAS CLASSES */
@@ -45,6 +54,7 @@
     justify-content: space-around;
     width: fit-content;
     gap: 6px;
+    background-color: white !important;
     padding-inline: 8px;
     min-height: 50px;
     border-radius: 10px;
@@ -60,11 +70,12 @@
 }
 
 .plant-actions {
-    height: 25%;
-    
+    height: 30%;
+    padding: 24px;
     z-index: 999;
     position: absolute;
     background-color: white;
+    border-radius: 10px;
 }
 .option{
     font-size: 16px;
@@ -92,6 +103,10 @@
         width: 40%;
         right: 22px;
     }
+}
+
+main{
+background-color: #f2f2f2 !important;
 }
 
 </style>
