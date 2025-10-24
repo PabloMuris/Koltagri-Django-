@@ -186,3 +186,11 @@ class Task(BaseModel):
     end_in = models.DateTimeField()
 
 
+    def clean(self):
+        super().clean()
+        if self.end_in < self.start_in:
+            raise ValidationError({
+                'end_in': 'The end date can\'t be earlier than start date'
+            })
+
+

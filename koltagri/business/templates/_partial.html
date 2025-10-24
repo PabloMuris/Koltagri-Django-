@@ -1,0 +1,62 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+   new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Insumos', 'Salários', 'Irrigação',"Empréstimos","Outros"],
+        datasets: [{
+          data: [45/2,45/2, 30, 15,10],
+          backgroundColor: [
+            '#36A2EB',
+            '#FF6384',
+            '#FFCD56',
+            "#4BC0C0",
+            "#9966FF"
+          ],
+          borderWidth: 0 // sem borda entre as fatias
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom', // legenda embaixo
+            labels: {
+              color: '#000', // cor do texto da legenda (pode ajustar)
+              boxWidth: 20,
+              padding: 15
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        backgroundColor: 'transparent'
+      }
+    });
+</script>
+
+<section class="chart-section">
+  <canvas id="myChart"></canvas>
+</section>
+<section class="planning">
+    <h3>
+        Planejamento Financeiro Anual
+    </h3>
+    
+</section>
+
+
+<style>
+    .chart-section{
+        width: 100%;
+        height: 300px;
+    }
+    #myChart {
+        width: 100%;
+    }
+</style>
