@@ -1,0 +1,98 @@
+
+{%    extends 'base.html'%}
+{% load static%}
+{% block title %}
+Home
+{% endblock %}
+{% load static %}
+{%block rels %}
+<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+{% endblock %}
+{% block styles %}
+<style>
+
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="finance-graphic brdr-10" style="width: 100%;height: 300px; background-color: var(--background-icons-color); padding: 20px;">
+  <canvas id="myChart" style="width: fit-content; height: 300px;"></canvas>
+</section>
+
+<section class="filter-search-section flex-clmn" style="gap:20px">
+    {% include "partials/_search.html" %}
+    {% include "partials/_filter_create.html" %}
+
+</section>
+
+<section class="historic flex-rw">
+    <div>
+        <p>Hoje</p>
+        <hr style="border: 1px solid var(--border-color); height: 1px;">
+    </div>
+    
+
+</section>
+
+<div class="historic-item flex-rw brdr-10">
+        <div class="historic-item-icon" style="background-color: var(--background-icons-color);">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4caf50">
+                <path d="M120-120v-720h720v720H120Zm60-60h600v-600H180v600Zm150-150 300-300-56-56-244 244-122-122-56 56 178 178Z"/>
+            </svg>
+        </div>
+        <div class="historic-item-info flex-clmn">
+            <p class="historic-item-info-title">Venda concluída</p>
+            <p class="historic-item-info-description">Venda do produto XYZ finalizada com sucesso.</p>
+        </div>
+        <div class="historic-item-time">
+            <p>14:35</p>
+        </div>
+
+
+{% endblock %}
+
+{% block scripts%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Produto A', 'Produto B', 'Produto C'],
+        datasets: [{
+          data: [45, 30, 25],
+          backgroundColor: [
+            '#36A2EB',
+            '#FF6384',
+            '#FFCD56'
+          ],
+          borderWidth: 0 // sem borda entre as fatias
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom', // legenda embaixo
+            labels: {
+              color: '#000', // cor do texto da legenda (pode ajustar)
+              boxWidth: 20,
+              padding: 15
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        backgroundColor: 'transparent'
+      }
+    });
+  </script>
+{% endblock %}

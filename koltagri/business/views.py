@@ -7,3 +7,6 @@ class BusinessDashboardView(TemplateView):
 
 class PlanningView(TemplateView):
     template_name = 'planning_form.html'
+
+class StatisticsView(TemplateView):
+    template_name = 'statistics.html'
