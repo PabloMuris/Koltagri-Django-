@@ -1,0 +1,53 @@
+/* ===== Result Items Section ===== */
+.result-items {
+  width: 100%;
+  margin: 16px 0;
+  padding: 0 8px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.plant-card {
+  width: 100%;
+  max-width: 320px;
+  height: 190px;          /* exigido */
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.card__image {
+  flex: 0 0 70%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+
+.card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card__description {
+  flex: 1 1 30%;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #222;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .plant-card {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,218 @@
+{%extends 'base.html'%}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block styles %}
+<style>
+    :root{
+  --primary-color: #2b8aef; /* ajuste se desejar */
+  --btn-on-primary-color: #eaeffb; /* cor do texto/ícone nos botões coloridos (se quiser sobrepor) */
+  --card-border-radius: 8px;
+  --gap: 12px;
+  --max-content-width: 1200px;
+}
+
+/* Reset prático para botões/form */
+.search-items, .filter-create-items, .result-items{
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 8px; /* padding lateral mínimo */
+}
+
+/* Container geral (opcional) */
+.container-full {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+/* ===== Search form ===== */
+.search-form{
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 44px;                /* exigido */
+  border-radius: 10px;         /* exigido */
+  overflow: hidden;            /* faz input e botão se comportarem como uma peça só */
+  background: #fff;            /* ou transparente conforme sua base */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.06);
+  width: 100%;
+  max-width: 700px;            /* opcional: limite visual */
+  margin: 12px 0;
+}
+
+/* input ocupa todo o espaço restante */
+.search-input{
+  flex: 1 1 auto;
+  height: 100%;
+  padding: 0 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  line-height: 1;
+  background: transparent;
+  color: inherit;
+}
+
+/* Botão de enviar (pesquisar) */
+.search-button{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 56px; /* tamanho quadrado confortável */
+  border: none;
+  background: var(--primary-color); /* exigido */
+  color: #fff; /* ícone/texto branco por padrão */
+  cursor: pointer;
+  transition: filter .12s ease, transform .06s ease;
+  padding: 0;
+  gap: 6px;
+}
+
+/* ícone usa currentColor por fill */
+.search-button svg{
+  width: 20px;
+  height: 20px;
+  display: block;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.search-button:active{ transform: translateY(1px); }
+.search-button:focus{ outline: 3px solid rgba(43,138,239,0.25); outline-offset: 2px; }
+
+/* ===== Create / Filter buttons ===== */
+.filter-create-items{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+  flex-wrap: wrap; /* quebra em telas pequenas */
+}
+
+.action-button{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary-color); /* exigido */
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: filter .12s ease, transform .06s ease;
+}
+
+/* icones dentro dos botões */
+.action-button svg{
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  display: block;
+}
+
+/* estados */
+.action-button:focus{ outline: 3px solid rgba(43,138,239,0.22); outline-offset: 2px; }
+.action-button:active{ transform: translateY(1px); }
+
+/* variante visual neutra (caso queira) */
+/* .action-button.secondary { background: transparent; color: var(--primary-color); border: 1px solid var(--primary-color);} */
+
+/* ===== Result card ===== */
+.result-items{
+  margin: 16px 0;
+  display: flex;
+  gap: var(--gap);
+  flex-wrap: wrap;
+}
+
+/* card único */
+.plant-card{
+  width: 100%;
+  max-width: 320px;      /* ajuste conforme layout */
+  height: 190px;         /* exigido */
+  border-radius: var(--card-border-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* imagem ocupa cerca de 70% da altura do card */
+.card__image{
+  flex: 0 0 70%;   /* 70% do card */
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+
+/* img cobre completamente o bloco disponível */
+.card__image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* descrição ocupa o restante (30%) */
+.card__description{
+  flex: 1 1 30%;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #222;
+  display: flex;
+  align-items: center;
+}
+
+/* ===== Responsividade simples ===== */
+@media (max-width: 640px){
+  .search-form{ max-width: 100%; }
+  .plant-card{ max-width: 100%; }
+  .action-button{ height: 40px; padding: 8px 10px; }
+}
+
+</style>
+{% endblock %}
+{% block content %}
+<section class="search-items">
+    <form class="search-form" action="" method="get" role="search" aria-label="Pesquisar itens">
+        <input class="search-input" type="text" name="q" id="q" placeholder="Pesquisar...">
+        <button class="search-button" type="submit" aria-label="Pesquisar">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+        </button>
+    </form>
+</section>
+
+<section class="filter-create-items">
+    <button class="action-button create-item" type="button" aria-label="Criar item">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+        <span>Criar</span>     
+    </button>
+
+    <button class="action-button filter-item" type="button" aria-label="Filtrar itens">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>
+        <span>Filtrar</span>   
+    </button>
+</section>
+
+<section class="result-items">
+    <div class="plant-card card">
+        <div class="card__image">
+            <img src="{% static 'example_img/ananas.jpeg' %}" alt="Exemplo de planta">
+        </div>
+        <div class="card__description">
+            anananananannananan
+        </div>
+    </div>
+</section>
+{% endblock %}

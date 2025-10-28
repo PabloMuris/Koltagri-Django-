@@ -1,0 +1,65 @@
+
+
+/* Opcional: garante que qualquer section que envolva a área ocupe toda a largura */
+section {
+  width: 100%;
+}
+
+/* Estilo comum para botões e links */
+.filter-create button,
+.filter-create .create-button {
+  min-width: 60px;
+  height: 44px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  padding-inline: 10px;
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  color: white;
+  text-decoration: none;  /* remove sublinhado dos <a> */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+
+.filter-create button:hover,
+.filter-create .create-button:hover {
+  background-color: var(--primary-color-hover, #3a3a3a);
+}
+
+
+.filter-create svg {
+  flex-shrink: 0;
+  fill: #e3e3e3;
+}
+
+
+.filter-create p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .filter-create {
+    width: 300px;
+    display: flex;
+  flex-flow: row;
+  gap: 20px;
+  }
+}
+@media (min-width: 601px) {
+ .filter-create {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-flow: row;
+  gap: 20px;
+}
+}
+
+
+

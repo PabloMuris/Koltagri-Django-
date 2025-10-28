@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Quintessential&display=swap');
+
+
+:root{
+    --primary-color: #509377;
+    --background-icons-color: #f2f2f2;   
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Força herança de fontes e line-height mais previsível */
+html, body {
+  height: 100%;
+  font-family: inherit;
+  line-height: 1.15;
+  font-family: "Outfit", sans-serif;
+}
+
+/* Remove listas, citações, tabelas estilos padrões */
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote::before, blockquote::after,
+q::before, q::after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+main{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.site-figure{
+    height: 100%;
+    width: 50%;
+}
+.site-figure img{
+    height: 80%;
+    aspect-ratio: 1/2;
+    min-width: 60%;
+    width: auto;
+    max-width: 80%;
+    border-radius: 10px;
+}
+
+.site-form{
+    width: 50%;
+    flex-flow: column;
+}
+
+.site-form, .site-figure{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo{
+    width: 100%;
+}
+
+.container{
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container form{
+    height: 50%;
+    width: 90%;
+    background-color: var(--background-icons-color);
+    border-radius: 10px;
+}
+
+media 
+
+    </style>
+</head>
+<body>
+    <main>
+        <div class="main-container">
+            <section class="site-figure">
+    <img src="{% static 'core/img/agri.webp'%}" alt="" srcset="">
+</section>
+<section class="site-form">
+    <div class="logo" style="display: flex; align-items: center; margin-bottom: 20px; flex-direction: row;">
+            <img src="{% static 'core/img/logo.png'%}" alt="" srcset="" style="width: 80px; height: 76px;">
+            <p>Koltagri</p>
+        </div>
+    <div class="container">
+        <form action="" method="post">
+        {% csrf_token %}
+        
+            
+        <h1>Bem vindo de volta !</h1>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    </div>
+</section>
+        </div>
+    </main>
+    
+</body>
+</html>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'koltagri.core',
     'koltagri.landplots',
     'koltagri.person',
+    'koltagri.business',
     'rest_framework',
     'djoser',
     'social_django',
