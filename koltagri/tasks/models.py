@@ -18,4 +18,3 @@ class Task(BaseModelWithSoftDelete):
             raise ValidationError({
                 'end_in': 'The end date can\'t be earlier than start date'
             })
-

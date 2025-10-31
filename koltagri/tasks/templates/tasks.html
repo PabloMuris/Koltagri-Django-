@@ -13,7 +13,86 @@ Home
 {% endblock %}
 {% block styles %}
 <style>
+.date-navigation{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    min-width: 334px;
+    
+}
+.result_card{
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  min-height: 40px;
+  height: auto;
+  padding: 16px 12px;
+  border: 1px solid #f2f2f2;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+;
+}
 
+.result_card .card__image{
+  width: 44px;
+}
+
+.result_card .card_description{
+  flex-grow: 1;
+  padding: 0 12px;
+}
+
+.task-indicators{
+  display: flex;
+  align-items: start;
+  padding-top: 50px;
+  position: relative;
+}
+.indicator__card{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+   width: 45%;
+   height: 50%;
+   flex-direction: column;
+   padding: 16px;
+   
+
+}
+
+.indicator__card h3{
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.task-indicators h1{
+  position: absolute;
+  top: 20px;
+  left: 16px;
+  color: #00204b;
+}
+
+.add-task {
+  position: absolute;
+  right: 0px;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 8px;
+  bottom: 36px;
+  border-radius: 5px 0px 0px 5px;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.add-task svg{
+  fill: white;
+}
 
 
 
@@ -21,6 +100,24 @@ Home
 {% endblock %}
 
 {% block content %}
+<section class="task-indicators" style="width: 100%; height: 300px; background-color: #f2f2f2; border-radius: 10px;">
+  <h1>Fazenda Santana's creek </h1>
+<div class="indicator__card">
+<h3><Strong>Tarefas para hoje</Strong></h3>
+<p><Strong>50</Strong></p>
+
+</div>
+<div class="indicator__card">
+<h3><Strong>Avisos</Strong></h3>
+<p><Strong>3</Strong></p>
+</div>
+<button class="add-task flex-rw">
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+  <p>Nova Tarefa</p>
+</button>
+
+</section>
+
 
 <section class="filter-search-section flex-clmn" style="gap:20px">
     {% include "partials/_search.html" %}
@@ -28,31 +125,39 @@ Home
 
 </section>
 
-<section class="historic flex-clmn gap:10px; align-itens:flex-start; margin-top
-:20px;">
-    <div>
-        <p>Hoje</p>
-        <hr style="border: 1px solid var(--border-color); height: 1px;">
-    </div>
+<section class="tasks-result result">
+  <div class="date-navigation">
+    <button class="date-nav-btn" id="prev-day-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg></button>
+    <span class="option-date" id="ontem">29/10</span>
+    <span class="option-date" id="ontem">Ontem</span>
+    <span class="current-date" id="current-date">Hoje</span>
+    <span class="option-date" id="amanha">Amanhã</span>
+    <span class="option-date" id="01.11">01/11</span>
+    <button class="date-nav-btn" id="next-day-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/></svg></button>
+  </div>
 
-    {% for task in tasks%}
-    <div class="historic-item flex-rw brdr-10">
-        <div class="historic-item-icon" style="background-color: var(--background-icons-color);">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#4caf50">
-                <path d="M120-120v-720h720v720H120Zm60-60h600v-600H180v600Zm150-150 300-300-56-56-244 244-122-122-56 56 178 178Z"/>
-            </svg>
-        </div>
-        <div class="historic-item-info flex-clmn">
-            <p class="historic-item-info-title">{{ task.name}}</p>
-            <p class="historic-item-info-description">Venda do produto XYZ finalizada com sucesso.</p>
-        </div>
-        <div class="historic-item-time">
-            <p>14:35</p>
-          </div>
-    </div>
-    {%endfor%}
-    
+  <div class="results">
+    <div class="result_card task_card">
+      <div class="card__image">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+      </div>
+      <div class="card_description">
+        <p class="class__title">
+          Poda de adenium obesum
+        </p>
+        <p class="task__author">
+          Pablo Murilo
+        </p>
 
+
+      </div>
+      <div class="card__datetime">
+        <p>14:35</p>
+      </div>
+
+
+    </div>
+  </div>
 </section>
 
 
@@ -61,43 +166,5 @@ Home
 {% endblock %}
 
 {% block scripts%}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    const ctx = document.getElementById('myChart');
 
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Gastos Fixos', 'Insumos', 'Água','Luz'],
-        datasets: [{
-          data: [45, 30, 15,10],
-          backgroundColor: [
-            '#36A2EB',
-            '#FF6384',
-            '#FFCD56',
-            '#4BC0C0'
-          ],
-          borderWidth: 0 // sem borda entre as fatias
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom', // legenda embaixo
-            labels: {
-              color: '#000', // cor do texto da legenda (pode ajustar)
-              boxWidth: 20,
-              padding: 15
-            }
-          },
-          tooltip: {
-            enabled: true
-          }
-        },
-        backgroundColor: 'transparent'
-      }
-    });
-  </script>
 {% endblock %}
