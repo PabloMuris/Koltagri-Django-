@@ -161,7 +161,7 @@ aside{
 main{
     grid-area: main;
     display: flex;
-    overflow:hidden;
+    overflow-x: hidden;
     flex-direction: column;
     align-items: center;
     padding-top: 24px;
@@ -285,8 +285,10 @@ aside nav{
 <body>
     <header class="padding--standard">
         <div class="presentation">
-            <h1 class="title">Koltagri</h1>
-            <p class="text">Agricultura Inteligente</p>
+            <h1 class="title">{%block header_title%}{%endblock%}</h1>
+            <p class="text">{%block header_text%}
+
+                {%endblock%}</p>
         </div>
 
         <div class="user-area">
@@ -299,12 +301,12 @@ aside nav{
         </div>
     </header>
     <aside id="aside"><nav class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 20px; background-color: var(--primary-color); ">
-            <a href="" class="nav-link nav-link--std flex-rw" id="home">
+            <a href="{% url 'index'%}" class="nav-link nav-link--std flex-rw" id="home">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                 <p>Início</p>
             </a>
 
-            <a href="" class="nav-link nav-link--std flex-rw" id="plants">
+            <a href="{% url 'cultivated_plants'%}" class="nav-link nav-link--std flex-rw" id="plants">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M342-160h276l40-160H302l40 160Zm0 80q-28 0-49-17t-28-44l-45-179h520l-45 179q-7 27-28 44t-49 17H342ZM200-400h560v-80H200v80Zm280-240q0-100 70-170t170-70q0 90-57 156t-143 80v84h320v160q0 33-23.5 56.5T760-320H200q-33 0-56.5-23.5T120-400v-160h320v-84q-86-14-143-80t-57-156q100 0 170 70t70 170Z"/></svg>
                 <p>Cultivos</p>
             
@@ -313,7 +315,7 @@ aside nav{
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm80 240v-80h400v80H280Zm0 160v-80h280v80H280Z"/></svg>
                 <p>Tarefas</p>
             </a>
-            <a href="" class="nav-link nav-link--std flex-rw" id="business">
+            <a href="{% url 'business_board'%}" class="nav-link nav-link--std flex-rw" id="business">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"/></svg>
                 <p>Gerenciamento</p>
             </a>

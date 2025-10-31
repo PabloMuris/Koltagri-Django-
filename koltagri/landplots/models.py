@@ -106,10 +106,10 @@ class Cultivation(BaseModelWithSoftDelete):
         on_delete=models.CASCADE,
         related_name="cultivations"
     )
-    quantity = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.site.name})"
+
 
 
 class CultivationPlant(BaseModelWithSoftDelete):
@@ -123,9 +123,6 @@ class CultivationPlant(BaseModelWithSoftDelete):
         on_delete=models.CASCADE,
         related_name="plantings"
     )
-    area = geomodels.MultiPolygonField(null=True, blank=True)
-    planting_day = models.DateField(auto_now_add=True)
-    harvest_day = models.DateField()
     count = models.PositiveIntegerField(default=1)
     new_plantation = models.BooleanField(default=True)
 
@@ -133,15 +130,50 @@ class CultivationPlant(BaseModelWithSoftDelete):
         return (f"{self.count} x {self.plant_species.name} in "
                 f"{self.cultivation.name}: {self.planting_day} -> {self.harvest_day}")
     
-    def clean(self):
-        super().clean()
-        if self.new_plantation == False:
-            pass
-        elif self.harvest_day<self.planting_day:
-            raise ValidationError({
-                'harvest_day': 'The harvest day can\'t the same day as planting day'
-            })
+    
+
+class PlantingEvent(BaseModel):
+    class EventType(models.TextChoices):
+        THINNING = "thinning", _("Desbaste")
+        PRUNING = "pruning", _("Poda")
+        POLLINATION = "pollination", _("Polinização")
+        FERTILIZATION = "fertilization", _("Fertilização")
+        PEST_CONTROL = "pest_control", _("Controle de Pragas")
         
+
+    
+    cultivation_plant = models.ForeignKey(
+        CultivationPlant,
+        on_delete=models.CASCADE,
+        related_name="events",  
+        verbose_name=_("Plantio")
+    )
+    
+    
+    event_type = models.CharField(
+        max_length=50,
+        choices=EventType.choices,
+        verbose_name=_("Tipo de Evento")
+    )
+    
+    event_date = models.DateField(
+        verbose_name=_("Data do Evento")
+    )
+    
+    # Um campo opcional para notas
+    notes = models.TextField(
+        null=True, 
+        blank=True, 
+        verbose_name=_("Anotações")
+    )
+
+    def __str__(self):
+        return f"{self.get_event_type_display()} em {self.event_date} para {self.cultivation_plant.id}"
+
+    class Meta:
+        verbose_name = _("Evento de Plantio")
+        verbose_name_plural = _("Eventos de Plantio")
+        ordering = ['event_date'] # Ordenar eventos por data
 
 class SiteMembership(BaseModel):
     site = models.ForeignKey("Site", verbose_name=_("Site"), on_delete=models.CASCADE)
@@ -176,21 +208,5 @@ class SiteMembership(BaseModel):
         constraints = [
             models.UniqueConstraint(name="unique_user_site", fields=["user", "site"]),
         ]
-
-
-class Task(BaseModel):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    cultivation_plant= models.ManyToManyField(CultivationPlant, verbose_name=_(""))
-    start_in = models.DateTimeField()
-    end_in = models.DateTimeField()
-
-
-    def clean(self):
-        super().clean()
-        if self.end_in < self.start_in:
-            raise ValidationError({
-                'end_in': 'The end date can\'t be earlier than start date'
-            })
 
 

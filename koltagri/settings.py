@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'djoser',
     'social_django',
     'leaflet',
+    'koltagri.tasks',
 ]
 
 MIDDLEWARE = [
