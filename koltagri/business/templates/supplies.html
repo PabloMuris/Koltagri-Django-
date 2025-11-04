@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Insumos
+{% endblock %}
+{% block header_title %}Koltagri{% endblock %}
+{% block header_text %}insumos{% endblock %}
+
+{% block rels %}
+<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+<style>
+.date-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  min-width: 334px;
+}
+
+.result_card {
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  min-height: 40px;
+  height: auto;
+  padding: 16px 12px;
+  border: 1px solid #f2f2f2;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+}
+
+.result_card .card__image {
+  width: 44px;
+  text-align: center;
+}
+
+.result_card .material-icons {
+  font-size: 32px;
+  color: #4a6fa5;
+}
+
+.result_card .card_description {
+  flex-grow: 1;
+  padding: 0 12px;
+}
+
+.task-indicators {
+  display: flex;
+  align-items: start;
+  padding-top: 50px;
+  position: relative;
+}
+
+.indicator__card {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 30%;
+  height: 50%;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.indicator__card h3 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.task-indicators h1 {
+  position: absolute;
+  top: 20px;
+  left: 16px;
+  color: #00204b;
+}
+
+.add-supply {
+  position: absolute;
+  right: 0px;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 8px;
+  bottom: 36px;
+  border-radius: 5px 0px 0px 5px;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+}
+
+.add-supply .material-icons {
+  color: white;
+}
+
+a.create-button{
+display: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="task-indicators" style="width: 100%; height: 300px; background-color: #f2f2f2; border-radius: 10px;">
+  <h1>Estoque de Insumos</h1>
+
+  <div class="indicator__card">
+    <h3><strong>Total de Insumos</strong></h3>
+    <p><strong>125</strong></p>
+  </div>
+
+  <div class="indicator__card">
+    <h3><strong>Renováveis</strong></h3>
+    <p><strong>78</strong></p>
+  </div>
+
+  <div class="indicator__card">
+    <h3><strong>Não Renováveis</strong></h3>
+    <p><strong>47</strong></p>
+  </div>
+
+  <a class="add-supply" href="#">
+    <span class="material-icons">add_circle_outline</span>
+    <p>Novo Insumo</p>
+  </a>
+</section>
+
+<section class="filter-search-section flex-clmn" style="gap:20px">
+  {% include "partials/_search.html" %}
+  {% include "partials/_filter_create.html" %}
+</section>
+
+<section class="tasks-result result" >
+  <div class="results" style=" display: flex; flex-flow: column; gap: 20px;">
+    <div class="result_card task_card">
+      <div class="card__image">
+        <span class="material-icons">grass</span>
+      </div>
+      <div class="card_description">
+        <p class="class__title"><strong>Adubo Orgânico</strong></p>
+        <p class="task__author">Renovável</p>
+      </div>
+      <div class="card__datetime">
+        <p>Estoque: 320 kg</p>
+      </div>
+    </div>
+
+    <div class="result_card task_card">
+      <div class="card__image">
+        <span class="material-icons">science</span>
+      </div>
+      <div class="card_description">
+        <p class="class__title"><strong>Fertilizante Químico NPK</strong></p>
+        <p class="task__author">Não Renovável</p>
+      </div>
+      <div class="card__datetime">
+        <p>Estoque: 120 kg</p>
+      </div>
+    </div>
+
+    <div class="result_card task_card">
+      <div class="card__image">
+        <span class="material-icons">water_drop</span>
+      </div>
+      <div class="card_description">
+        <p class="class__title"><strong>Irrigação Gotejante</strong></p>
+        <p class="task__author">Renovável</p>
+      </div>
+      <div class="card__datetime">
+        <p>Disponíveis: 40 m</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

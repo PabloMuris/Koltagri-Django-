@@ -29,4 +29,5 @@ urlpatterns = [
     path('cultivos/',include('koltagri.landplots.urls')),
     path('negocios/',include('koltagri.business.urls')),
     path('tarefas/',include('koltagri.tasks.urls')),
+    path('usuario/',include('koltagri.person.urls')),
 ]

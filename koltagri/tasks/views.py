@@ -20,3 +20,6 @@ class TaskboardTemplateView(ListView):
     template_name = "task_board.html"
     context_object_name = "task_d"
     model = Task 
+
+class TaskFormTemplateView(TemplateView):
+    template_name = "task_form.html"

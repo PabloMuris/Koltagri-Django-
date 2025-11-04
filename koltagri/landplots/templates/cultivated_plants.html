@@ -27,23 +27,23 @@
   padding: 0 12px;
 }
 
-/* ===== Search form ===== */
+
 .search-form{
   display: flex;
   align-items: center;
   gap: 0;
-  height: 44px;                /* exigido */
-  border-radius: 10px;         /* exigido */
-  overflow: hidden;            /* faz input e botão se comportarem como uma peça só */
-  background: #fff;            /* ou transparente conforme sua base */
+  height: 44px;                
+  border-radius: 10px;        
+  overflow: hidden;            
+  background: #fff;           
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   border: 1px solid rgba(0,0,0,0.06);
   width: 100%;
-  max-width: 700px;            /* opcional: limite visual */
+  max-width: 700px;           
   margin: 12px 0;
 }
 
-/* input ocupa todo o espaço restante */
+
 .search-input{
   flex: 1 1 auto;
   height: 100%;
@@ -56,23 +56,23 @@
   color: inherit;
 }
 
-/* Botão de enviar (pesquisar) */
+
 .search-button{
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: 56px; /* tamanho quadrado confortável */
+  width: 56px; 
   border: none;
-  background: var(--primary-color); /* exigido */
-  color: #fff; /* ícone/texto branco por padrão */
+  background: var(--primary-color); 
+  color: #fff; 
   cursor: pointer;
   transition: filter .12s ease, transform .06s ease;
   padding: 0;
   gap: 6px;
 }
 
-/* ícone usa currentColor por fill */
+
 .search-button svg{
   width: 20px;
   height: 20px;
@@ -142,7 +142,6 @@
   display: flex;
   flex-direction: column;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   border: 1px solid rgba(0,0,0,0.04);
 }
 
@@ -194,10 +193,10 @@
 </section>
 
 <section class="filter-create-items">
-    <button class="action-button create-item" type="button" aria-label="Criar item">
+    <a class="action-button create-item" type="button" aria-label="Criar item" href="{% url 'cultivation_form'%}" >
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
         <span>Criar</span>     
-    </button>
+    </a>
 
     <button class="action-button filter-item" type="button" aria-label="Filtrar itens">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>
@@ -206,12 +205,12 @@
 </section>
 
 <section class="result-items">
-    <div class="plant-card card">
+    <div class="plant-card card" onclick="window.location.href='{% url 'cultivated_plants_detail' %}'">
         <div class="card__image">
             <img src="{% static 'example_img/ananas.jpeg' %}" alt="Exemplo de planta">
         </div>
         <div class="card__description">
-            anananananannananan
+            banana nanica
         </div>
     </div>
 </section>

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'koltagri.users',
     'koltagri.core',
     'koltagri.landplots',
-    'koltagri.person',
+   'koltagri.person',
     'koltagri.business',
     'rest_framework',
     'djoser',

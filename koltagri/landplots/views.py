@@ -8,5 +8,5 @@ class CultivatedPlantsView(TemplateView):
 class CultivatedPlantsDetailView(TemplateView):
     template_name = 'plant_detail.html'
 
-
-
+class CultivationFormView(TemplateView):
+    template_name = 'cultivation_form.html'

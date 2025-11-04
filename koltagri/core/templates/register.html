@@ -78,12 +78,7 @@ main,aside{
     }
 }
 
-.login-form{
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 12px;
-}
+
 
 main{
     display: flex;
@@ -92,19 +87,8 @@ main{
     gap: 10%;
 }
 
-.login-form input{
-    background-color: #f2f2f2;
-    height: 40px;
-}
 
-.login-form button{
-    height: 44px;
-    margin-top: 40px;
-    background-color: #509377;
-    color: #f2f2f2;
-    font-size: 16px;
-    
-}
+
 
 .main-top{
     display: flex;
@@ -113,9 +97,7 @@ main{
     margin-bottom: 40px;
 }
 
-.login-form button,.login-form input{
-    border-radius: 5px;
-}
+
 
 figure{
     border-radius: 100%;
@@ -123,14 +105,7 @@ figure{
     margin-bottom: 20px;
 }
 
-.aesthetic-div{
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: end;
-    font-size: 15px;
-    color: #509377;
-}
+
 
     </style>
 </head>
@@ -145,21 +120,9 @@ figure{
             </figure>
             <h1 style="font-size: 22px; font-weight: 500;">KOLTAGRI</h1>
         </div>
-        <form action="" method="post" class="login-form">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email">
-            <label for="passwd">Senha</label>
-            <input type="password" name="passwd" id="passwd">
-            <div class="aesthetic-div">
-            <p><strong style="font-size: 15px;">Esqueci a senha</strong></p>
-            </div>
-            <button type="submit">
-                Entrar
-            </button>
+        <form action="" method="post" class="form-wizard">
+            
         </form>
-        <div class="main-bottom">
-            <a> Não têm uma conta? <strong>Registre-se</strong></a>
-        </div>
         
     </main>
 </body>
