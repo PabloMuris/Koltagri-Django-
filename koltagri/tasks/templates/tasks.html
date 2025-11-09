@@ -10,9 +10,14 @@ Home
 {%block rels %}
 <link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
 <link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/base/main.css'%}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
 {% block styles %}
 <style>
+  main{
+    position: relative !important;
+  }
 .date-navigation{
     display: flex;
     align-items: center;
@@ -59,6 +64,7 @@ Home
    height: 50%;
    flex-direction: column;
    padding: 16px;
+   margin-top: 30px;
    
 
 }
@@ -70,9 +76,11 @@ Home
 
 .task-indicators h1{
   position: absolute;
-  top: 20px;
+  top: 18px;
   left: 16px;
   color: #00204b;
+  margin-bottom: 20px;
+  font-size: 26px;
 }
 
 .add-task {
@@ -95,6 +103,47 @@ Home
 }
 
 
+.task-modal{
+  position: fixed;
+  display: none;
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  height: calc(100vh + 84px);
+}
+@media (max-width: 768px){
+  .task-modal{
+    width: 100vw;
+    translate: 0px -110px;
+  }
+  .task-modal form{
+  translate: 5% 50%;
+   width: 90%;
+}
+}
+@media (min-width: 769px) and (max-width: 1299px) {
+  .task-modal{
+    width: calc(100vw);
+    translate: -40px -84px;
+  } 
+  .task-modal form{
+  translate: 5% 50%;
+   width: 90%;
+}
+}
+@media(min-width:1300px){
+  .task-modal{
+    width: calc(100vw + 100px);
+    translate: -74px -84px;
+  } 
+  .task-modal form{
+  translate: 25% 50%;
+   width: 70%;
+}
+}
+
+
+
 
 </style>
 {% endblock %}
@@ -111,7 +160,7 @@ Home
 <h3><Strong>Avisos</Strong></h3>
 <p><Strong>3</Strong></p>
 </div>
-<a class="add-task flex-rw" href="{% url 'task_form'%}">
+<a class="add-task flex-rw" href="{% url 'task_form'%}" >
   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
   <p>Nova Tarefa</p>
 </a>
@@ -126,19 +175,10 @@ Home
 </section>
 
 <section class="tasks-result result">
-  <div class="date-navigation">
-    <button class="date-nav-btn" id="prev-day-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg></button>
-    <span class="option-date" id="ontem">29/10</span>
-    <span class="option-date" id="ontem">Ontem</span>
-    <span class="current-date" id="current-date">Hoje</span>
-    <span class="option-date" id="amanha">Amanhã</span>
-    <span class="option-date" id="01.11">01/11</span>
-    <button class="date-nav-btn" id="next-day-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/></svg></button>
-  </div>
-
+  <h3 style="margin-bottom: 20px; margin-top: 20px;">Hoje</h3>
   <div class="results">
-    <div class="result_card task_card">
-      <div class="card__image">
+    <a class="result_card task_card" href="{% url 'task_detail'%}">
+      <div class="card__image" >
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
       </div>
       <div class="card_description">
@@ -156,15 +196,105 @@ Home
       </div>
 
 
-    </div>
+    </a>
   </div>
 </section>
 
+<div class="model task-modal" id="task-modal">
+  <form action="" method="post" class="modal-form" style="position: absolute; background-color: #f2f2f2; padding: 20px; box-sizing: border-box; border-radius: 8px; ">
+    <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Opções de filtragem</h3>
 
+    <div style="margin-bottom: 15px;">
+        <label for="filtro_tipo" style="display: block; margin-bottom: 5px; font-weight: bold;">Tipo de Evento:</label>
+        <select id="filtro_tipo" name="filtro_tipo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            <option value="">Todos (Tarefa ou Aviso)</option>
+            <option value="tarefa">Apenas Tarefas</option>
+            <option value="aviso">Apenas Avisos</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="filtro_especie" style="display: block; margin-bottom: 5px; font-weight: bold;">Espécie:</label>
+        <select id="filtro_especie" name="filtro_especie" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            <option value="">Todas as Espécies</option>
+            
+            <option value="1">Rosa</option>
+            <option value="2">Samambaia</option>
+            <option value="3">Suculenta</option>
+            <option value="4">Orquídea</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Período:</label>
+        
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+            
+            <div style="flex-grow: 1;">
+                <label for="data_inicio" style="font-size: 0.9em; color: #333;">Data Inicial (ou única)</label>
+                <input type="date" id="data_inicio" name="data_inicio" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" readonly="readonly">
+            </div>
+            
+            <div style="flex-grow: 1;">
+                <label for="data_fim" style="font-size: 0.9em; color: #333;">Data Final</label>
+                <input type="date" id="data_fim" name="data_fim" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+        </div>
+        <small style="display: block; margin-top: 5px; color: #555;">* Para filtrar por data única, preencha apenas a "Data Inicial".</small>
+    </div>
+
+    <div style="text-align: right; margin-top: 20px;">
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em;">
+            Filtrar
+        </button>
+    </div>
+
+</form>
+</div>
 
 
 {% endblock %}
 
 {% block scripts%}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      flatpickr("#data_inicio", {
+        
+        disableMobile: true,
+
+        
+        dateFormat: "d/m/Y",
+      });
+      flatpickr("#data_fim", {
+        
+        disableMobile: true,
+
+        
+        dateFormat: "d/m/Y",
+      });
+    });
+    
+  </script>
+<script>
+
+const taskModal = document.getElementById("task-modal");
+const FilterbuttonTask = document.getElementById("filter-button");
+
+
+taskModal.addEventListener("click", function(event) {
+  
+  
+  if (event.target === this) {
+    taskModal.style.display = "none";
+  }
+
+});
+
+FilterbuttonTask.addEventListener("click", function() {
+  taskModal.style.display = "flex"; 
+});
+</script>
 {% endblock %}

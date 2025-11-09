@@ -15,4 +15,4 @@ class SuppliesView(TemplateView):
     template_name = 'supplies.html'
 
 class SuppliesDetailView(TemplateView):
-    template_name = 'supplies_detail.html'
+    template_name = 'supplies.html'

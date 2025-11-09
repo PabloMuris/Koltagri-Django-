@@ -1,0 +1,306 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Quintessential&display=swap');
+
+
+:root{
+    --primary-color: #509377;
+    --background-icons-color: #f2f2f2;   
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Força herança de fontes e line-height mais previsível */
+html, body {
+  height: 100%;
+  font-family: inherit;
+  line-height: 1.15;
+  font-family: "Outfit", sans-serif;
+}
+
+/* Remove listas, citações, tabelas estilos padrões */
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote::before, blockquote::after,
+q::before, q::after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+    display: grid;
+    position: relative;
+}
+
+a{
+    text-decoration: none;
+    color: #020b36;
+}
+
+.flex-rw{
+    display: flex;
+    flex-direction: row;
+}
+.flex-clmn{
+    display: flex;
+    flex-direction: column;
+}
+
+.align-cntr{
+    align-items: center;
+    justify-content: space-around;
+}
+
+.align-spca{
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brdr-10{
+    border-radius: 10px;
+}
+@media (max-width: 768px) {
+    body {
+        grid-template-areas:
+        "header"
+        "main"
+        "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: 84px 1fr 56px;
+    }
+    footer{
+        display: flex;
+    }
+    aside{
+        display: none;
+    }
+    
+    footer .nav-link svg {
+        height: 28px;
+        width: 28px;
+    }
+    
+}
+@media (min-width: 769px) and (max-width: 1299px) {
+    body {
+        grid-template-areas:
+        "aside header"
+        "aside main";
+        grid-template-columns: 80px 1fr;
+        grid-template-rows: 84px 1fr auto;
+        height: 100vh;
+        
+    }
+    footer {
+        display: none;
+    }
+    aside{
+        display: flex;
+    }
+    .nav-link p{
+        display: none;
+    }
+}
+@media(min-width:1300px){
+    body {
+        grid-template-areas:
+        "aside header"
+        "aside main";
+        grid-template-columns: 240px 1fr;
+        grid-template-rows: 84px 1fr auto;
+        height: 100vh;
+        
+    }
+    footer {
+        display: none;
+    }
+    aside{
+        display: flex;
+        width: 240px !important;
+    }
+
+    aside nav{
+        width: 240px !important;
+    }
+}
+
+
+header > * {
+    display: flex;
+}
+aside{
+    grid-area: aside;
+    width: fit-content;
+
+}
+main{
+    grid-area: main;
+    display: flex;
+    overflow-x: hidden;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 24px;
+    gap: 20px;
+
+}
+
+
+.presentation {
+    flex-direction: column;
+}
+
+.presentation .title {
+    font-size: 16px;
+}
+.presentation .text {
+    font-size: 12px;
+}
+
+.user-area {
+    gap: 12px;
+}
+
+
+
+
+.user-area button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    width: 44px;
+    border-radius: 100%;
+}
+
+.account-button .user__avatar {
+    height: 44px;
+    width: 44px;
+    border-radius: 100%;
+}
+
+.weather-card-area{
+    width: 100%;
+    height: 200px;
+    position: relative;
+    margin-top: 36px;
+    
+    
+    
+
+}
+
+.weather-card{
+    height: 200px;
+    width: 100%;
+    position: absolute;
+    border-radius: 10px;
+}
+#main-card{
+    background-size: cover;
+    background-position: center;
+    z-index: 3;
+
+}
+
+.weather-card-area--standard .weather-card:nth-child(1) {
+    background-color: #c4c4c4;
+    z-index: 1;
+    transform: rotate(-3deg);
+    background-image: linear-gradient(180deg,rgba(126,142,126,0.5),rgba(230, 145, 43, 0.5));
+    
+}
+.weather-card-area--standard .weather-card:nth-child(2) {
+    background-color: #c4c4c4;
+    z-index: 2;
+    transform: rotate(-1.5deg);
+    background-image: linear-gradient(180deg,rgba(95,152,146,0.6),rgba(230, 145, 43, 0.6));
+   
+
+    
+}
+.weather-advice{
+    width: 100%;
+    height: 40px;
+}
+.weather-advice .advice__figure{
+    height: 40px;
+    width: 40px;
+}
+
+footer{
+    grid-area: footer;
+    background-color: var(--primary-color);
+}
+
+.padding--standard{
+    padding-left: 22px;
+    padding-right: 22px;
+}
+footer .flex-rw .align-spca{
+    display: none;
+}
+
+.nav-bar{
+    display: flex;
+}
+.nav-link{
+    color:#f2f2f2 ;
+    text-decoration: none;
+    align-items: center;
+    gap: 6px;
+}
+aside nav{
+    padding-top: 24px;
+    
+}
+
+
+
+
+header::before{
+content: "";
+height: auto;
+width: calc(100% - 44px);
+background-color: #f2f2f2;
+position: absolute;
+z-index: 1;
+border-radius: 10px;
+top: 10px;
+bottom:10px;
+    z-index: -1;
+
+}
+
+header{
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    height: 84px;
+    position: relative !important;
+    z-index: 999;
+}
+
+header .presentation{
+    margin-left: 16px;
+}
+
+header .user-area{
+    margin-right: 16px;
+}

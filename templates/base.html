@@ -9,278 +9,7 @@
     {% block rels %}{% endblock %}
     {% block styles %}{% endblock %}
     
-    <style>
-        
-       
-
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Quintessential&display=swap');
-
-
-:root{
-    --primary-color: #509377;
-    --background-icons-color: #f2f2f2;   
-}
-
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-/* Força herança de fontes e line-height mais previsível */
-html, body {
-  height: 100%;
-  font-family: inherit;
-  line-height: 1.15;
-  font-family: "Outfit", sans-serif;
-}
-
-/* Remove listas, citações, tabelas estilos padrões */
-ol, ul {
-  list-style: none;
-}
-blockquote, q {
-  quotes: none;
-}
-blockquote::before, blockquote::after,
-q::before, q::after {
-  content: "";
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-body {
-    display: grid;
-}
-
-.flex-rw{
-    display: flex;
-    flex-direction: row;
-}
-.flex-clmn{
-    display: flex;
-    flex-direction: column;
-}
-
-.align-cntr{
-    align-items: center;
-    justify-content: space-around;
-}
-
-.align-spca{
-    align-items: center;
-    justify-content: space-between;
-}
-
-.brdr-10{
-    border-radius: 10px;
-}
-@media (max-width: 768px) {
-    body {
-        grid-template-areas:
-        "header"
-        "main"
-        "footer";
-        grid-template-columns: 1fr;
-        grid-template-rows: 84px 1fr 56px;
-    }
-    footer{
-        display: flex;
-    }
-    aside{
-        display: none;
-    }
-    header{
-        padding-top: 40px;
-    }
-    footer .nav-link svg {
-        height: 28px;
-        width: 28px;
-    }
-    
-}
-@media (min-width: 769px) and (max-width: 1299px) {
-    body {
-        grid-template-areas:
-        "aside header"
-        "aside main";
-        grid-template-columns: 80px 1fr;
-        grid-template-rows: 50px 1fr auto;
-        height: 100vh;
-        
-    }
-    footer {
-        display: none;
-    }
-    aside{
-        display: flex;
-    }
-    .nav-link p{
-        display: none;
-    }
-}
-@media(min-width:1300px){
-    body {
-        grid-template-areas:
-        "aside header"
-        "aside main";
-        grid-template-columns: 240px 1fr;
-        grid-template-rows: 50px 1fr auto;
-        height: 100vh;
-        
-    }
-    footer {
-        display: none;
-    }
-    aside{
-        display: flex;
-    }  
-}
-header{
-    grid-area: header;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-}
-
-header > * {
-    display: flex;
-}
-aside{
-    grid-area: aside;
-
-}
-main{
-    grid-area: main;
-    display: flex;
-    overflow-x: hidden;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 24px;
-    gap: 20px;
-    position: relative;
-}
-
-
-.presentation {
-    flex-direction: column;
-}
-
-.presentation .title {
-    font-size: 16px;
-}
-.presentation .text {
-    font-size: 12px;
-}
-
-.user-area {
-    gap: 12px;
-}
-
-
-
-
-.user-area button{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 44px;
-    width: 44px;
-    border-radius: 100%;
-}
-
-.account-button .user__avatar {
-    height: 44px;
-    width: 44px;
-    border-radius: 100%;
-}
-
-.weather-card-area{
-    width: 100%;
-    height: 200px;
-    position: relative;
-    margin-top: 36px;
-    
-    
-    
-
-}
-
-.weather-card{
-    height: 200px;
-    width: 100%;
-    position: absolute;
-    border-radius: 10px;
-}
-#main-card{
-    background-size: cover;
-    background-position: center;
-    z-index: 3;
-
-}
-
-.weather-card-area--standard .weather-card:nth-child(1) {
-    background-color: #c4c4c4;
-    z-index: 1;
-    transform: rotate(-3deg);
-    background-image: linear-gradient(180deg,rgba(126,142,126,0.5),rgba(230, 145, 43, 0.5));
-    
-}
-.weather-card-area--standard .weather-card:nth-child(2) {
-    background-color: #c4c4c4;
-    z-index: 2;
-    transform: rotate(-1.5deg);
-    background-image: linear-gradient(180deg,rgba(95,152,146,0.6),rgba(230, 145, 43, 0.6));
-   
-
-    
-}
-.weather-advice{
-    width: 100%;
-    height: 40px;
-}
-.weather-advice .advice__figure{
-    height: 40px;
-    width: 40px;
-}
-
-footer{
-    grid-area: footer;
-    background-color: var(--primary-color);
-}
-
-.padding--standard{
-    padding-left: 22px;
-    padding-right: 22px;
-}
-footer .flex-rw .align-spca{
-    display: none;
-}
-
-.nav-bar{
-    display: flex;
-}
-.nav-link{
-    color:#f2f2f2 ;
-    text-decoration: none;
-    align-items: center;
-    gap: 6px;
-}
-aside nav{
-    padding-top: 24px;
-}
-
-
-
-    </style>
+<link rel="stylesheet" href="{% static 'core/css/base.css'%}">
 </head>
 <body>
     <header class="padding--standard">
@@ -300,7 +29,7 @@ aside nav{
             </button>
         </div>
     </header>
-    <aside id="aside"><nav class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 20px; background-color: var(--primary-color); ">
+    <aside id="aside"><nav class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 18px; background-color: var(--primary-color); max-width: 240px;">
             <a href="{% url 'index'%}" class="nav-link nav-link--std flex-rw" id="home">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                 <p>Início</p>
@@ -319,10 +48,12 @@ aside nav{
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"/></svg>
                 <p>Gerenciamento</p>
             </a>
+
         </nav>
+        
     </aside>
     <main class="padding--standard" >
-        {% block content %}
+        {%  block content %}
         {% endblock %}
     </main>
     <footer class="align-spca navbar">
@@ -345,4 +76,5 @@ aside nav{
     {% block scripts%}{% endblock %}
     <script src="{% static 'js/base.js'%}"></script>
 </body>
+
 </html>

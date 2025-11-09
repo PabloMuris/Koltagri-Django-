@@ -1,4 +1,3 @@
-
 {% extends 'base.html'%}
 {% load static%}
 {%block header_title%}Tarefa{%endblock%}
@@ -12,6 +11,7 @@ Home
 <link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
 <link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
 {% endblock %}
+
 {% block styles %}
 <style>
 .task-description {
@@ -25,10 +25,56 @@ Home
     flex-flow: column;
     gap: 12px;
 }
+.task-description h1 {
+    font-weight: 500;
+    color: #003845;
+}
+.task-description hr {
+    border: 0.5px solid #f2f2f2;
+    width: 100%;
+}
+.task__text {
+    margin-top: 24px;
+}
+.task__text p {
+    text-align: justify;
+    font-size: 16px;
+}
+.attachments {
+    display: flex;
+    flex-flow: column;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.attachment__card {
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #f2f2f2;
+    padding: 6px 16px;
+    max-width: 300px;
+    width: fit-content;
+}
+.card__image {
+    height: 44px;
+    max-width: 44px;
+    aspect-ratio: 4/3;
+    margin-left: 10px;
+}
+.card__image img {
+    min-width: 44px;
+    height: 44px;
+    aspect-ratio: 4/3;
+}
+
+
 .task-options {
     width: 100%;
     gap: 32px;
-
+    margin-top: 20px;
+    
+    flex-direction: row;
 }
 
 .task__option {
@@ -41,45 +87,43 @@ Home
     cursor: pointer;
     gap: 8px;
     align-items: center;
+    /* Correção: Adicionado display: flex baseado na classe 'flex-rw' */
+    display: flex;
+    flex-direction: row;
 }
-
-
 </style>
 {% endblock %}
 
 {% block content %}
 
 <section class="task-description">
-    <h1 style="font-weight: 500; color: #003845 ;">Atividade - Replantio das oliveiras</h1>
+    <h1>Atividade - Replantio das oliveiras</h1>
     <div class="task__metadata">
         <p><strong>Data de Criação:</strong> 15/11/2025</p>
         <p><strong>Data de Vencimento:</strong> 30/11/2025</p>
         <p><strong>Status:</strong> Pendente</p>
     </div>
 
-    <hr style="border: 0.5px solid #f2f2f2; width: 100%;">
+    <hr>
 
-    <div class="task__text" style="margin-top: 24px;">
-        <p style="text-align: justify; font-size: 16px;"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In massa turpis, faucibus sit amet sem id, ultricies gravida risus. In a ultricies orci. Quisque ultricies arcu sit amet metus tincidunt feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum ante elit, porttitor ac est a, gravida egestas nisi. Phasellus tincidunt elit vitae urna fringilla, non auctor orci blandit. Vestibulum semper dignissim faucibus. Vivamus viverra augue sem, eu lacinia eros semper id. Aenean pellentesque suscipit fringilla. Praesent mi felis, sollicitudin eu feugiat in, commodo nec arcu. Integer quis ullamcorper risus, vitae dignissim elit.
+    <div class="task__text">
+        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In massa turpis, faucibus sit amet sem id, ultricies gravida risus. In a ultricies orci. Quisque ultricies arcu sit amet metus tincidunt feugiat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum ante elit, porttitor ac est a, gravida egestas nisi. Phasellus tincidunt elit vitae urna fringilla, non auctor orci blandit. Vestibulum semper dignissim faucibus. Vivamus viverra augue sem, eu lacinia eros semper id. Aenean pellentesque suscipit fringilla. Praesent mi felis, sollicitudin eu feugiat in, commodo nec arcu. Integer quis ullamcorper risus, vitae dignissim elit.
 
 Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer aliquam congue placerat. Integer vel pellentesque sapien, fringilla accumsan quam. Nulla fermentum bibendum vehicula. In commodo, nisi sed viverra congue, nunc tortor viverra sapien, a placerat magna ipsum a lectus. Donec vel magna ante. Aenean consectetur dignissim nibh, at congue metus sollicitudin sit amet. Duis eu elementum nibh. Aenean quam nulla, ultrices eget magna eget, auctor finibus nibh. Nullam aliquet convallis odio sed pharetra. Nam pulvinar ligula sed lectus feugiat auctor. Sed varius aliquam sapien, ut elementum dolor vestibulum vel. Aliquam ac velit varius, egestas nibh sit amet, sollicitudin sem. Mauris et accumsan nulla. </p>
     </div>
-    <div class="attachments" style=" display: flex; flex-flow: column; align-items: start; flex-wrap: wrap; gap: 10px;">
-    <h2>Anexos</h2>
-    <div class="attachment__card" style="min-height: 44px;">
-        <div class="card__text">
-        <p><strong> Manual de trato de lesma ...</strong></p>
-        <p>PDF</p>
-        </div>
-        <div class="card__image">
-
+    <div class="attachments">
+        <h2>Anexos</h2>
+        <div class="attachment__card">
+            <div class="card__text">
+            <p><strong> Manual de trato de lesma ...</strong></p>
+            <p>PDF</p>
+            </div>
+            <div class="card__image">
+                <img src="{% static 'tasks/imgs/lesma.jpeg'%}" alt="" srcset="">
+            </div>
         </div>
     </div>
-
-</div>
 </section>
-
-
 
 <section class="task-options flex-rw">
     <button class="task__option flex-rw">
@@ -88,11 +132,9 @@ Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac tu
     </button>
     <button class="task__option flex-rw">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
-        <span>Concluir Tarefas</span>
+        <span>Concluir Tarefa</span>
     </button>
 </section>
-
-
 
 {% endblock %}
 
