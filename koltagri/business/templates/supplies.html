@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}
-Insumos
-{% endblock %}
+{% block title %}Insumos{% endblock %}
 {% block header_title %}Koltagri{% endblock %}
 {% block header_text %}insumos{% endblock %}
 
@@ -14,171 +12,294 @@ Insumos
 
 {% block styles %}
 <style>
-.date-navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 15px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-  min-width: 334px;
+/* VARIABLES */
+:root{
+  --bg: #f2f2f2;
+  --muted: #66788f;
+  --primary: #4a6fa5; /* mantendo identidade anterior */
+  --accent: #00204b;
+  --card-bg: #ffffff;
+  --border: #e8eef6;
+  --radius: 10px;
+  --gap: 16px;
+  --container-max: 1200px;
+  --stack-gap: 12px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-.result_card {
-  display: flex;
-  align-items: center;
-  min-width: 100%;
-  min-height: 40px;
-  height: auto;
-  padding: 16px 12px;
-  border: 1px solid #f2f2f2;
-  border-radius: 10px;
-  background-color: #f2f2f2;
+.container-wide {
+  max-width: 100%;
+  margin: 24px 0px;
+  padding: 0 16px;
+  width: 100%;
 }
 
-.result_card .card__image {
-  width: 44px;
-  text-align: center;
-}
-
-.result_card .material-icons {
-  font-size: 32px;
-  color: #4a6fa5;
-}
-
-.result_card .card_description {
-  flex-grow: 1;
-  padding: 0 12px;
-}
-
-.task-indicators {
-  display: flex;
+/* SUPPLIES INDICATORS - header block */
+.supplies-indicators{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gap);
   align-items: start;
-  padding-top: 50px;
+  background-color: var(--bg);
+  border-radius: var(--radius);
+  padding: 20px;
   position: relative;
+  min-height: 120px;
+  box-sizing: border-box;
 }
 
-.indicator__card {
+/* Título e ação */
+.supplies-header{
   display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  width: 30%;
-  height: 50%;
   flex-direction: column;
-  padding: 16px;
+  gap: 6px;
+}
+.supplies-header h1{
+  margin: 0;
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.supplies-header p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-.indicator__card h3 {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.task-indicators h1 {
-  position: absolute;
-  top: 20px;
-  left: 16px;
-  color: #00204b;
-}
-
-.add-supply {
-  position: absolute;
-  right: 0px;
-  min-height: 44px;
+/* Add button */
+.add-supply{
+  display: inline-flex;
   align-items: center;
-  padding-inline: 8px;
-  bottom: 36px;
-  border-radius: 5px 0px 0px 5px;
-  gap: 8px;
-  background-color: var(--primary-color);
+  gap: 10px;
+  background-color: var(--primary);
   color: white;
-  font-size: 16px;
-  font-weight: 400;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  min-height: 44px;
+}
+.add-supply .material-icons{ font-size: 20px; }
+
+/* INDICATOR CARDS: grid that adapts */
+.indicators-grid{
+  grid-column: 1 / -1; /* occupies full width below header */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* individual indicator card */
+.supply-card{
   display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  min-height: 64px;
+  box-sizing: border-box;
+}
+.icon-wrap{
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(74,111,165,0.08);
+  color: var(--primary);
+  font-size: 22px;
+}
+.supply-info h3{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.supply-info p{
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
-.add-supply .material-icons {
-  color: white;
+/* SEARCH & FILTER section */
+.filter-search-section{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
 }
 
-a.create-button{
-display: none;
+/* RESULTS */
+.tasks-result .results{
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
 }
+
+/* result card */
+.result_card{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  min-height: 64px;
+}
+.card__image .material-icons{
+  font-size: 28px;
+  color: var(--primary);
+}
+.card_description .class__title{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.card_description .task__author{
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.card__datetime{
+  text-align: right;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* small screens adjustments */
+@media (max-width: 720px){
+  .supplies-indicators{
+    grid-template-columns: 1fr;
+  }
+  .indicators-grid{ margin-top: 12px; }
+  .result_card{
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .card__datetime{ grid-column: 2 / 3; grid-row: 2 / 3; text-align: left; margin-top: 8px; }
+  .add-supply{ justify-self: start; }
+}
+
+/* optional utility classes */
+.flex-clmn{ display:flex; flex-direction: column; }
+.hidden-on-desktop{ display: none; }
+@media (max-width:720px){ .hidden-on-mobile{ display:none; } .hidden-on-desktop{ display:inline-flex; } }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="task-indicators" style="width: 100%; height: 300px; background-color: #f2f2f2; border-radius: 10px;">
-  <h1>Estoque de Insumos</h1>
+<div class="container-wide">
+  <!-- SUPPLIES INDICATORS -->
+  <section class="supplies-indicators" aria-labelledby="supplies-title">
 
-  <div class="indicator__card">
-    <h3><strong>Total de Insumos</strong></h3>
-    <p><strong>125</strong></p>
-  </div>
-
-  <div class="indicator__card">
-    <h3><strong>Renováveis</strong></h3>
-    <p><strong>78</strong></p>
-  </div>
-
-  <div class="indicator__card">
-    <h3><strong>Não Renováveis</strong></h3>
-    <p><strong>47</strong></p>
-  </div>
-
-  <a class="add-supply" href="#">
-    <span class="material-icons">add_circle_outline</span>
-    <p>Novo Insumo</p>
-  </a>
-</section>
-
-<section class="filter-search-section flex-clmn" style="gap:20px">
-  {% include "partials/_search.html" %}
-  {% include "partials/_filter_create.html" %}
-</section>
-
-<section class="tasks-result result" >
-  <div class="results" style=" display: flex; flex-flow: column; gap: 20px;">
-    <div class="result_card task_card">
-      <div class="card__image">
-        <span class="material-icons">grass</span>
-      </div>
-      <div class="card_description">
-        <p class="class__title"><strong>Adubo Orgânico</strong></p>
-        <p class="task__author">Renovável</p>
-      </div>
-      <div class="card__datetime">
-        <p>Estoque: 320 kg</p>
-      </div>
+    <div class="supplies-header" id="supplies-title">
+      <h1>Estoque de Insumos</h1>
+      <p>Resumo rápido do estoque e categorias</p>
     </div>
 
-    <div class="result_card task_card">
-      <div class="card__image">
-        <span class="material-icons">science</span>
-      </div>
-      <div class="card_description">
-        <p class="class__title"><strong>Fertilizante Químico NPK</strong></p>
-        <p class="task__author">Não Renovável</p>
-      </div>
-      <div class="card__datetime">
-        <p>Estoque: 120 kg</p>
-      </div>
-    </div>
+    <a class="add-supply hidden-on-mobile" href="#" role="button" aria-label="Novo Insumo">
+      <span class="material-icons" aria-hidden="true">add_circle_outline</span>
+      <span>Novo Insumo</span>
+    </a>
 
-    <div class="result_card task_card">
-      <div class="card__image">
-        <span class="material-icons">water_drop</span>
+    <!-- indicators grid -->
+    <div class="indicators-grid" role="list">
+      <div class="supply-card" role="listitem" aria-label="Total de Insumos">
+        <div class="icon-wrap"><span class="material-icons" aria-hidden="true">inventory_2</span></div>
+        <div class="supply-info">
+          <h3>Total de Insumos</h3>
+          <p><strong>125</strong></p>
+        </div>
       </div>
-      <div class="card_description">
-        <p class="class__title"><strong>Irrigação Gotejante</strong></p>
-        <p class="task__author">Renovável</p>
+
+      <div class="supply-card" role="listitem" aria-label="Renováveis">
+        <div class="icon-wrap"><span class="material-icons" aria-hidden="true">autorenew</span></div>
+        <div class="supply-info">
+          <h3>Renováveis</h3>
+          <p><strong>78</strong></p>
+        </div>
       </div>
-      <div class="card__datetime">
-        <p>Disponíveis: 40 m</p>
+
+      <div class="supply-card" role="listitem" aria-label="Não Renováveis">
+        <div class="icon-wrap"><span class="material-icons" aria-hidden="true">science</span></div>
+        <div class="supply-info">
+          <h3>Não Renováveis</h3>
+          <p><strong>47</strong></p>
+        </div>
+      </div>
+    </div><!-- /.indicators-grid -->
+  </section>
+
+  <!-- SEARCH & FILTER -->
+  <section class="filter-search-section" style="margin-top:20px;">
+    {% include "partials/_search.html" %}
+    {% include "partials/_filter_create.html" %}
+  </section>
+
+  <!-- RESULTS -->
+  <section class="tasks-result result" >
+    <div class="results" >
+      <div class="result_card task_card" role="article" aria-label="Adubo Orgânico">
+        <div class="card__image">
+          <span class="material-icons" aria-hidden="true">grass</span>
+        </div>
+        <div class="card_description">
+          <p class="class__title"><strong>Adubo Orgânico</strong></p>
+          <p class="task__author">Renovável</p>
+        </div>
+        <div class="card__datetime">
+          <p>Estoque: 320 kg</p>
+        </div>
+      </div>
+
+      <div class="result_card task_card" role="article" aria-label="Fertilizante Químico NPK">
+        <div class="card__image">
+          <span class="material-icons" aria-hidden="true">science</span>
+        </div>
+        <div class="card_description">
+          <p class="class__title"><strong>Fertilizante Químico NPK</strong></p>
+          <p class="task__author">Não Renovável</p>
+        </div>
+        <div class="card__datetime">
+          <p>Estoque: 120 kg</p>
+        </div>
+      </div>
+
+      <div class="result_card task_card" role="article" aria-label="Irrigação Gotejante">
+        <div class="card__image">
+          <span class="material-icons" aria-hidden="true">water_drop</span>
+        </div>
+        <div class="card_description">
+          <p class="class__title"><strong>Irrigação Gotejante</strong></p>
+          <p class="task__author">Renovável</p>
+        </div>
+        <div class="card__datetime">
+          <p>Disponíveis: 40 m</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
 {% endblock %}
 
 {% block scripts %}
+<!-- se quiser, pode ativar botão mobile aqui -->
+<script>
+  // exemplo: abrir modal de criação ao clicar em add-supply (deixe conforme sua implementação)
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('.add-supply');
+    if(!a) return;
+    e.preventDefault();
+    // abrir modal ou navegar para a página de criação
+    console.log('abrir criação de insumo');
+  });
+</script>
 {% endblock %}

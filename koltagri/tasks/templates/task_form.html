@@ -1,143 +1,109 @@
 {% extends 'base.html' %}
-{% block title %}Enviar conteúdo{% endblock %}
+{% block title %}Enviar Atividade{% endblock %}
 {% load static %}
+
 {% block styles %}
 <style>
-:root{
-    --step-size:32px;
-    --steps: 2;
-    --progress-width: calc( ((var(--steps) - 1) / var(--steps)) * 100% );
-    --primary-color: #4a90e2;
+:root {
+    --primary-color: #3b82a0;     
+    --primary-dark: #2d677f;
+    --bg-light: #f4f7f8;
+    --border-color: #dfe6e8;
+    --text-main: #24333f;
 }
 
-form h1{
-    text-align: center;
-    margin-bottom: 16px;
-}
-
-.form-wizard{
-    background-color: #fff;
-    padding: 32px ;
-    border-radius: 10px;
+.form-wizard {
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
     width: min(720px, 100%);
-    border: 2px solid #f2f2f2;
     box-sizing: border-box;
+    border: 1px solid var(--border-color);
 }
 
-.progress-container{
-    position: relative;
+form h1 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-weight: 500;
+    color: var(--text-main);
 }
 
-.progress-container::before{
-    content: "";
-    height: 4px;
-    width: var(--progress-width);
-    background-color: #e0e0e0;
-    position: absolute;
-    top: calc(var(--step-size) / 2);
-    translate: 50% 50%;
-    z-index: 0;
+.partial {
+    margin-bottom: 20px;
 }
 
-.progress-container ol{
-    list-style-type: none;
-    display: flex;
-    justify-content: flex-start;
-    justify-content: space-between;
-    counter-reset: step-number;
-    position: relative;
-    z-index: 999;
+.form-wizard label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--text-main);
+    font-weight: 500;
 }
 
-.progress-container li{
-    flex: 1;
-    display: flex;
-    flex-direction: column ;
-    align-items: center;
-    gap: 8px;
-    color: #7e7e7e;
-}
-
-.progress-container li::before{
-    counter-increment: step-number;
-    content: counter(step-number);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: #fff;
-    margin-bottom: 8px;
-}
-
-.form-wizard select,
 .form-wizard input[type="text"],
 .form-wizard input[type="file"],
-.form-wizard textarea{
+.form-wizard select,
+.form-wizard textarea {
     width: 100%;
     box-sizing: border-box;
-    background-color: #f2f2f2;
-    border: 1px solid transparent;
-    height: 44px;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 10px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 160px;
     resize: vertical;
 }
 
-.form-wizard label{
-    margin-bottom: 8px;
-    margin-top: 14px;
-    display: block;
-    font-size: 14px;
-    color: #333;
+.note {
+    font-size: 12px;
+    color: #6b6b6b;
+    margin-top: 6px;
 }
 
-.form-wizard .partial{
-    margin-top: 12px;
-}
-
-.form-wizard textarea{
-    min-height: 160px;
-    padding-top: 12px;
-    height: auto;
-}
-
-.form-actions{
-    display:flex;
-    gap:12px;
+.form-actions {
+    display: flex;
+    gap: 12px;
     margin-top: 24px;
 }
 
-.button-primary{
-    height: 44px;
+.button-primary,
+.button-ghost {
+    height: 46px;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.button-primary {
+    background: var(--primary-color);
     color: #fff;
-    background-color: var(--primary-color);
     border: none;
-    width: 100%;
-    border-radius: 6px;
-    cursor: pointer;
+    transition: 0.2s ease;
 }
 
-.button-ghost{
-    height: 44px;
-    color: var(--primary-color);
+.button-primary:hover {
+    background: var(--primary-dark);
+}
+
+.button-ghost {
     background: transparent;
-    border: 1px solid #e0e0e0;
-    width: 100%;
-    border-radius: 6px;
-    cursor: pointer;
+    border: 1px solid var(--border-color);
+    color: var(--primary-color);
+    transition: 0.2s ease;
 }
 
-.note{
-    font-size: 13px;
-    color: #6b6b6b;
-    margin-top: 8px;
+.button-ghost:hover {
+    background: #eef5f7;
 }
 
-@media (max-width:600px){
-    .form-wizard{ padding: 18px; }
+@media (max-width: 600px) {
+    .form-wizard { padding: 20px; }
 }
 </style>
 {% endblock %}
@@ -146,7 +112,7 @@ form h1{
 <form action="" method="post" class="form-wizard" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <h1 style="font-weight: 500; color: #253447;">Enviar conteúdo</h1>
+    <h1>Enviar conteúdo</h1>
 
     <div class="partial">
         <label for="title">Título</label>
@@ -155,7 +121,7 @@ form h1{
 
     <div class="partial">
         <label for="content">Conteúdo</label>
-        <textarea id="content" name="content" placeholder="Escreva aqui o conteúdo que deseja enviar" required></textarea>
+        <textarea id="content" name="content" placeholder="Escreva aqui o conteúdo" required></textarea>
     </div>
 
     <div class="partial">
@@ -169,21 +135,28 @@ form h1{
             <option value="calcario">Calcário</option>
             <option value="outros">Outros</option>
         </select>
-        <div class="note">Use Ctrl (ou ⌘ no Mac) para selecionar mais de um item.</div>
+        <div class="note">Use Ctrl (ou ⌘ no Mac) para selecionar vários.</div>
     </div>
 
     <div class="partial">
         <label for="attachments">Anexar arquivos</label>
         <input type="file" id="attachments" name="attachments" multiple>
-        <div class="note">Você pode anexar vários arquivos. O servidor precisa tratar request.FILES (ver observações abaixo).</div>
+        <div class="note">O servidor deve tratar request.FILES para múltiplos anexos.</div>
     </div>
 
     <div class="form-actions">
-        <button type="button" class="button-ghost" onclick="document.getElementById('title').value=''; document.getElementById('content').value=''; document.getElementById('attachments').value=''; document.getElementById('insumos').selectedIndex=-1;">Limpar</button>
+        <button type="button" class="button-ghost"
+            onclick="
+                document.getElementById('title').value='';
+                document.getElementById('content').value='';
+                document.getElementById('attachments').value='';
+                document.getElementById('insumos').selectedIndex=-1;
+            ">
+            Limpar
+        </button>
+
         <button type="submit" class="button-primary">Enviar</button>
     </div>
 
 </form>
-
 {% endblock %}
-

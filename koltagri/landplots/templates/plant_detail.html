@@ -1,205 +1,179 @@
-{%extends 'base.html'%}
-{% block title %}Home{% endblock %}
+{% extends 'base.html' %}
 {% load static %}
+
+{% block title %}Planta{% endblock %}
+
 {% block styles %}
 <style>
-.navigation-section {
-    width: 100%;
-}
-.navigation-section button{
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    background-color: transparent;
-}
-.navigation-section svg{
-    fill: black;
-}
-
-/* NOVAS CLASSES */
-.navigation-layout {
-    justify-content: space-between;
-    align-items: center;
-}
-
-.relative {
-    position: relative;
-}
-
-.flex-center-between {
-    align-items: center;
-    justify-content: space-between;
-}
-
-.flex-1 {
-    flex: 1;
-}
-
-.plant__image {
-    position: absolute;
-    top: 20%;
-    left: 20%;
-}
-
-.container {
-    width: 100%;
-}
-
-.plant-info {
-    width: 100%;
-}
-
-.status-card {
-    align-items: center;
-    justify-content: space-around;
-    width: fit-content;
-    gap: 6px;
-    background-color: white !important;
-    padding-inline: 8px;
-    min-height: 50px;
-    border-radius: 10px;
-    border: 2px solid #f2f2f2;
-}
-
-.card__description .description__title {
-    font-weight: 300;
-}
-
-.options-section {
-    height: 44px;
-}
-
-.plant-actions {
-    height: 30%;
-    padding: 24px;
-    z-index: 999;
-    position: absolute;
-    background-color: white;
-    border-radius: 10px;
-}
-.option{
-    font-size: 16px;
-    background: transparent;
-    
-}
-
-.options-descriptions p{
-    
-    padding-top: 20px;
-    text-align: justify;
-}
-
-@media (max-width: 1299px) {
-    .plant-actions{
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    padding: 16px 24px 0px 24px;
-    width: auto;
-    position: absolute;
-    }
-}
-
-@media(min-width:1300px){
-    .plant-actions{
-        top: 10%;
-        width: 40%;
-        right: 22px;
-    }
-}
 
 main{
-background-color: #f2f2f2 !important;
-position: relative;
+    background: #f2f2f2;
+    padding: 16px;
+}
+
+/* ======= SEÇÃO 1 – FOTO + NOMES ======= */
+
+.plant-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.plant-header img{
+    width: 260px;
+    height: auto;
+}
+
+.plant-names{
+    text-align: center;
+}
+
+.plant-names .popular{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.plant-names .scientific{
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* ======= SEÇÃO 2 – CARDS DE STATUS ======= */
+
+.status-section{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.status-card{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: white;
+    padding: 14px 18px;
+    border-radius: 12px;
+    width: 220px;
+    border: 2px solid #ececec;
+}
+
+.status-card svg{
+    width: 28px;
+    height: 28px;
+}
+
+.status-card p:first-child{
+    font-size: 14px;
+    opacity: .6;
+}
+
+.status-card p:last-child{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* ======= SEÇÃO 3 – DESCRIÇÃO + OBSERVAÇÕES ======= */
+
+.info-section{
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    border: 2px solid #e8e8e8;
+}
+
+.info-block{
+    margin-bottom: 24px;
+}
+
+.info-block h3{
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.info-block p{
+    text-align: justify;
+    line-height: 1.5;
 }
 
 </style>
 {% endblock %}
+
 {% block content %}
-<section class="navigation-section flex-rw" style="justify-content: space-between; align-items: center;">
-    <button type="button" class="return-button">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
-    </button>
-    <p> Musa x paradisica (banana da terra)</p>
-    <button type="button" class="favorite-button">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
-    </button>
 
-</section>
-.
-<section class="plant-info" style="position: relative;">
-    <h2 class="plant-name">
-        
-    </h2>
+<main>
 
-    <div class="container">
-        <div class="ideal-status flex-clmn" style="gap: 24px;">
-            <div class="status-card flex-rw">
-                <figure class="card__icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
-                </figure>
-                <div class="card__description">
-                    <p class="description__title">
-                        Irrigação
-                    </p>
-                    <p class="description__text">
-                        Diária
-                    </p>
-                </div>
-            </div>
-            <div class="status-card flex-rw">
-                <figure class="card__icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
-                </figure>
-                <div class="card__description">
-                    <p class="description__title">
-                        Irrigação
-                    </p>
-                    <p class="description__text">
-                        Diária
-                    </p>
-                </div>
-            </div>
-            <div class="status-card flex-rw">
-                <figure class="card__icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
-                </figure>
-                <div class="card__description">
-                    <p class="description__title">
-                        Transplante
-                    </p>
-                    <p class="description__text">
-                        Daqui 20 dias
-                    </p>
-                </div>
-            </div>
-            <div class="status-card flex-rw">
-                <figure class="card__icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35ZM480-80q-137 0-228.5-94T160-408q0-100 79.5-217.5T480-880q161 137 240.5 254.5T800-408q0 140-91.5 234T480-80Zm0-80q104 0 172-70.5T720-408q0-73-60.5-165T480-774Q361-665 300.5-573T240-408q0 107 68 177.5T480-160Zm0-320Z"/></svg>
-                </figure>
-                <div class="card__description">
-                    <p class="description__title">
-                        Colheita
-                    </p>
-                    <p class="description__text">
-                        Indeterminado
-                    </p>
-                </div>
+    <!-- ✅ SEÇÃO 1 -->
+    <section class="plant-header">
+        <img src="{% static 'example_img/banana.png' %}" alt="Planta">
+
+        <div class="plant-names">
+            <p class="popular">Banana da terra</p>
+            <p class="scientific">Musa x paradisica</p>
+        </div>
+    </section>
+
+    <!-- ✅ SEÇÃO 2 -->
+    <section class="status-section">
+
+        <div class="status-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
+            </svg>
+            <div>
+                <p>Irrigação</p>
+                <p>Diária</p>
             </div>
         </div>
-        <figure class="plant__image"> 
-            <img src="{% static 'example_img/banana.png' %}" alt="">
-        </figure>
-    </div>
-</section>
-<section class="plant-actions flex-clmn" >
-    <section class="options-section flex-rw" style="height: 44px; align-items: center; justify-content: space-between;">
-        <button type="button" class="option">Descrição</button>
-        <button type="button" class="option">Atividades</button>
-        <button type="button" class="option">Observação</button>
+
+        <div class="status-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
+            </svg>
+            <div>
+                <p>Sol</p>
+                <p>Pleno</p>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
+            </svg>
+            <div>
+                <p>Transplante</p>
+                <p>20 dias</p>
+            </div>
+        </div>
+
     </section>
-    <section class="options-descriptions" style="flex: 1;">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique facilisis ipsum vel fringilla. Suspendisse ut efficitur eros, in commodo sem. Sed lobortis ligula non quam tempus dapibus. Donec convallis nisl id quam blandit mollis. Pellentesque fringilla nunc ut tellus aliquam, quis semper massa dictum. Donec ac metus mi. Nulla nec justo id lectus. </p>
+
+    <!-- ✅ SEÇÃO 3 -->
+    <section class="info-section">
+
+        <div class="info-block">
+            <h3>Descrição</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Cras tristique facilisis ipsum vel fringilla. Suspendisse ut 
+                efficitur eros, in commodo sem.
+            </p>
+        </div>
+
+        <div class="info-block">
+            <h3>Observações</h3>
+            <p>
+                Nulla nec justo id lectus sollicitudin rutrum. 
+                Donec convallis nisl id quam blandit mollis.
+            </p>
+        </div>
+
     </section>
-</section>
+
+</main>
+
 {% endblock %}

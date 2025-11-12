@@ -74,6 +74,16 @@ a{
 .brdr-10{
     border-radius: 10px;
 }
+
+.display-none{
+    display: none;
+}
+
+footer .nav-link svg {
+        height: 28px;
+        width: 28px;
+    }
+
 @media (max-width: 768px) {
     body {
         grid-template-areas:
@@ -90,13 +100,10 @@ a{
         display: none;
     }
     
-    footer .nav-link svg {
-        height: 28px;
-        width: 28px;
-    }
+    
     
 }
-@media (min-width: 769px) and (max-width: 1299px) {
+@media (min-width: 769px){
     body {
         grid-template-areas:
         "aside header"
@@ -115,8 +122,9 @@ a{
     .nav-link p{
         display: none;
     }
+    
 }
-@media(min-width:1300px){
+/* @media(min-width:1300px){
     body {
         grid-template-areas:
         "aside header"
@@ -134,10 +142,8 @@ a{
         width: 240px !important;
     }
 
-    aside nav{
-        width: 240px !important;
-    }
-}
+    
+} */
 
 
 header > * {

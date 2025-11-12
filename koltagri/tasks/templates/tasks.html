@@ -1,300 +1,484 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Painel - Koltagri{% endblock %}
+{% block header_title %}Koltagri{% endblock %}
+{% block header_text %}painel{% endblock %}
 
-{%    extends 'base.html'%}
-{% load static%}
-{% block title %}
-Home
-{% endblock %}
-{%block header_title%}Koltagri{%endblock%}
-{%block header_text%}tarefas{%  endblock %}
-
-{%block rels %}
-<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
-<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
-<link rel="stylesheet" href="{% static 'css/base/main.css'%}">
+{% block rels %}
+<!-- Fonte Outfit e icons -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- flatpickr -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
+
 {% block styles %}
 <style>
-  main{
-    position: relative !important;
-  }
-.date-navigation{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 15px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    min-width: 334px;
-    
+:root{
+  --max-width: 1000px;
+  --bg: #f7f9fb;
+  --panel-bg: #ffffff;
+  --muted: #6b7688;
+  --primary: #4a6fa5;
+  --accent: #00204b;
+  --border: #e9eef6;
+  --radius: 12px;
+  --gap: 16px;
+  --base-font: 16px;
 }
-.result_card{
-  display: flex;
-  align-items: center;
-  min-width: 100%;
-  min-height: 40px;
-  height: auto;
-  padding: 16px 12px;
-  border: 1px solid #f2f2f2;
-  border-radius: 10px;
-  background-color: #f2f2f2;
-;
+* { box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+html { font-size: var(--base-font); color: #071029; }
+
+/* Page wrapper: center + max width 1000px */
+.page {
+  max-width: var(--max-width);
+  width: 100%;
 }
 
-.result_card .card__image{
-  width: 44px;
-}
-
-.result_card .card_description{
-  flex-grow: 1;
-  padding: 0 12px;
-}
-
-.task-indicators{
-  display: flex;
+/* ---------- TOP PANEL (prop + stats) ---------- */
+.top-panel{
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gap);
   align-items: start;
-  padding-top: 50px;
+}
+
+/* property title */
+.property-title h1{
+  margin: 0 0 6px 0;
+  color: var(--accent);
+  font-size: 1.35rem; /* ~21.6px */
+  font-weight: 600;
+}
+.property-title p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* stat mini-cards */
+.stats{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+}
+@media (max-width:720px){
+  .top-panel{ grid-template-columns: 1fr; }
+  .stats{ flex-direction: row; flex-wrap: wrap; }
+}
+
+.stat-card{
+  min-width: 140px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:8px;
+}
+.stat-card .label{ font-size:0.9rem; color:var(--muted); }
+.stat-card .value{ font-weight:700; color:var(--accent); font-size:1.05rem; text-align:right; }
+
+/* ---------- ACTION BAR (search/filter/add) ---------- */
+.action-bar{
+  margin-top: 18px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.search{
+  flex:1;
+  min-width:220px;
+  display:flex;
+  gap:8px;
+  align-items:center;
   position: relative;
 }
-.indicator__card{
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-   width: 45%;
-   height: 50%;
-   flex-direction: column;
-   padding: 16px;
-   margin-top: 30px;
-   
 
-}
-
-.indicator__card h3{
-  font-size: 20px;
-  font-weight: 500;
-}
-
-.task-indicators h1{
+.search .material-icons { 
   position: absolute;
-  top: 18px;
-  left: 16px;
-  color: #00204b;
-  margin-bottom: 20px;
-  font-size: 26px;
+  right: 16px;
+}
+.search input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:1rem;
+}
+.actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+  font-size:0.98rem;
+}
+.btn.primary{
+  background:var(--primary-color);
+  color:#fff;
+  border-color:transparent;
+}
+.btn.icon{ padding:8px; min-width:44px; justify-content:center; }
+
+/* ---------- TASKS LIST ---------- */
+.section-title{ margin-top:22px; margin-bottom:10px; color:var(--accent); font-weight:600; font-size:1.05rem; }
+.results{ display:flex; flex-direction:column; gap:12px; }
+
+/* result card */
+.task-card{
+  display:grid;
+  grid-template-columns: 52px 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:12px;
+  border-radius:10px;
+  background:var(--panel-bg);
+  border:1px solid var(--border);
+  text-decoration:none;
+  color:inherit;
+}
+.task-card:hover, .task-card:focus{ outline: 2px solid rgba(74,111,165,0.12); }
+.card-icon{
+  width:52px; height:52px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--bg);
+}
+.card-icon svg{ width:26px; height:26px; fill:var(--primary); }
+.task-title{ margin:0; font-weight:600; font-size:1rem; color:var(--accent); }
+.task-meta{ margin-top:6px; font-size:0.95rem; color:var(--muted); }
+.task-time{ font-size:0.95rem; color:var(--muted); text-align:right; }
+
+/* mobile adjustments */
+@media (max-width:640px){
+  .task-card{ grid-template-columns: 44px 1fr; grid-template-rows: auto auto; }
+  .task-time{ grid-column:2; grid-row:2; text-align:left; margin-top:8px; }
 }
 
-.add-task {
-  position: absolute;
-  right: 0px;
-  min-height: 44px;
-  align-items: center;
-  padding-inline: 8px;
-  bottom: 36px;
-  border-radius: 5px 0px 0px 5px;
-  gap: 8px;
-  background-color: var(--primary-color);
-  color: white;
-  font-size: 16px;
-  font-weight: 400;
+/* ---------- MODALS ---------- */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.32);
+  z-index:1200;
+  padding:20px;
 }
+.modal-panel{
+  width:100%; max-width:720px; background:#fff; border-radius:10px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.modal-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.form-control{ flex:1; min-width:160px; }
+.form-control label{ display:block; margin-bottom:6px; font-weight:600; color:var(--muted); }
+.form-control input, .form-control select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border); font-size:1rem; }
 
-.add-task svg{
-  fill: white;
-}
+/* modal actions */
+.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:12px; }
+.small{ font-size:0.9rem; color:var(--muted); }
 
-
-.task-modal{
-  position: fixed;
-  display: none;
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-  height: calc(100vh + 84px);
-}
-@media (max-width: 768px){
-  .task-modal{
-    width: 100vw;
-    translate: 0px -110px;
-  }
-  .task-modal form{
-  translate: 5% 50%;
-   width: 90%;
-}
-}
-@media (min-width: 769px) and (max-width: 1299px) {
-  .task-modal{
-    width: calc(100vw);
-    translate: -40px -84px;
-  } 
-  .task-modal form{
-  translate: 5% 50%;
-   width: 90%;
-}
-}
-@media(min-width:1300px){
-  .task-modal{
-    width: calc(100vw + 100px);
-    translate: -74px -84px;
-  } 
-  .task-modal form{
-  translate: 25% 50%;
-   width: 70%;
-}
-}
-
-
-
-
+/* utility */
+.hidden{ display:none !important; }
+.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="task-indicators" style="width: 100%; height: 300px; background-color: #f2f2f2; border-radius: 10px;">
-  <h1>Fazenda Santana's creek </h1>
-<div class="indicator__card">
-<h3><Strong>Tarefas para hoje</Strong></h3>
-<p><Strong>50</Strong></p>
+<div class="page">
 
-</div>
-<div class="indicator__card">
-<h3><Strong>Avisos</Strong></h3>
-<p><Strong>3</Strong></p>
-</div>
-<a class="add-task flex-rw" href="{% url 'task_form'%}" >
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-  <p>Nova Tarefa</p>
-</a>
+  <!-- TOP PANEL -->
+  <section class="top-panel" aria-labelledby="panel-title">
+    <div class="property-title">
+      <h1 id="panel-title">Propriedade EnrichTheSoil</h1>
+      <p>30% da equipe possui tarefas hoje · 80% das atividades da semana concluídas</p>
+    </div>
 
-</section>
-
-
-<section class="filter-search-section flex-clmn" style="gap:20px">
-    {% include "partials/_search.html" %}
-    {% include "partials/_filter_create.html" %}
-
-</section>
-
-<section class="tasks-result result">
-  <h3 style="margin-bottom: 20px; margin-top: 20px;">Hoje</h3>
-  <div class="results">
-    <a class="result_card task_card" href="{% url 'task_detail'%}">
-      <div class="card__image" >
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+    <div class="stats" role="group" aria-label="estatísticas rápidas">
+      <div class="stat-card" aria-hidden="false">
+        <div class="label">Total de tarefas</div>
+        <div class="value">{{ total_tasks|default:"100" }}</div>
       </div>
-      <div class="card_description">
-        <p class="class__title">
-          Poda de adenium obesum
-        </p>
-        <p class="task__author">
-          Pablo Murilo
-        </p>
-
-
+      <div class="stat-card">
+        <div class="label">Não concluídas</div>
+        <div class="value">{{ not_done|default:"34" }}</div>
       </div>
-      <div class="card__datetime">
-        <p>14:35</p>
+      <div class="stat-card">
+        <div class="label">Adiada</div>
+        <div class="value">{{ postponed|default:"8" }}</div>
       </div>
+      <div class="stat-card">
+        <div class="label">Canceladas</div>
+        <div class="value">{{ cancelled|default:"4" }}</div>
+      </div>
+    </div>
+  </section>
 
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <div class="search" role="search">
+      <span class="material-icons" aria-hidden="true" style="color:var(--muted)">search</span>
+      <input id="search-input" type="search" placeholder="Buscar tarefa, responsável, espécie..." aria-label="Buscar tarefas">
+    </div>
 
-    </a>
+    <div class="actions" role="toolbar" aria-label="ações">
+      <button id="filter-open" class="btn" type="button" aria-haspopup="dialog" aria-controls="filter-modal">
+        <span class="material-icons" aria-hidden="true">filter_list</span>
+        Filtrar
+      </button>
+
+      <button id="add-open" class="btn primary" type="button" onclick="">
+        <span class="material-icons" aria-hidden="true">add_circle</span>
+        Nova Tarefa
+      </button>
+    </div>
   </div>
-</section>
 
-<div class="model task-modal" id="task-modal">
-  <form action="" method="post" class="modal-form" style="position: absolute; background-color: #f2f2f2; padding: 20px; box-sizing: border-box; border-radius: 8px; ">
-    <h3 style="margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Opções de filtragem</h3>
+  <!-- TASKS -->
+  <section class="tasks">
+    <div class="section-title">Hoje</div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="filtro_tipo" style="display: block; margin-bottom: 5px; font-weight: bold;">Tipo de Evento:</label>
-        <select id="filtro_tipo" name="filtro_tipo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    <div class="results" id="results-list" aria-live="polite">
+      <!-- Exemplo de item — substitua pelo loop Django -->
+      <a class="task-card" href="{% url 'task_detail' %}">
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
+        </div>
+        <div>
+          <p class="task-title">Poda de adenium obesum</p>
+          <p class="task-meta">Pablo Murilo · Espécie: Adenium</p>
+        </div>
+        <div class="task-time"><time datetime="2025-11-11T14:35">14:35</time></div>
+      </a>
+
+      <a class="task-card" href="#">
+        <div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></div>
+        <div>
+          <p class="task-title">Irrigação setorial</p>
+          <p class="task-meta">Joana Silva · Espécie: Milho</p>
+        </div>
+        <div class="task-time"><time datetime="2025-11-11T09:00">09:00</time></div>
+      </a>
+
+      <!-- Mensagem quando não há resultados -->
+      <div id="no-results" class="stat-card hidden" role="status">
+        <div class="label">Nenhuma tarefa encontrada</div>
+        <div class="small">Tente outro termo de busca ou remova filtros.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FILTER MODAL -->
+<div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
+  <div class="modal-panel" role="document">
+    <h3 id="filter-title">Opções de filtragem</h3>
+    <form id="filter-form">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="filtro_tipo">Tipo de Evento</label>
+          <select id="filtro_tipo" name="filtro_tipo">
             <option value="">Todos (Tarefa ou Aviso)</option>
             <option value="tarefa">Apenas Tarefas</option>
             <option value="aviso">Apenas Avisos</option>
-        </select>
-    </div>
-
-    <div style="margin-bottom: 15px;">
-        <label for="filtro_especie" style="display: block; margin-bottom: 5px; font-weight: bold;">Espécie:</label>
-        <select id="filtro_especie" name="filtro_especie" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            <option value="">Todas as Espécies</option>
-            
-            <option value="1">Rosa</option>
-            <option value="2">Samambaia</option>
-            <option value="3">Suculenta</option>
-            <option value="4">Orquídea</option>
-        </select>
-    </div>
-
-    <div style="margin-bottom: 20px;">
-        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Período:</label>
-        
-        <div style="display: flex; justify-content: space-between; gap: 10px;">
-            
-            <div style="flex-grow: 1;">
-                <label for="data_inicio" style="font-size: 0.9em; color: #333;">Data Inicial (ou única)</label>
-                <input type="date" id="data_inicio" name="data_inicio" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" readonly="readonly">
-            </div>
-            
-            <div style="flex-grow: 1;">
-                <label for="data_fim" style="font-size: 0.9em; color: #333;">Data Final</label>
-                <input type="date" id="data_fim" name="data_fim" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
+          </select>
         </div>
-        <small style="display: block; margin-top: 5px; color: #555;">* Para filtrar por data única, preencha apenas a "Data Inicial".</small>
-    </div>
+        <div class="form-control">
+          <label for="filtro_especie">Espécie</label>
+          <select id="filtro_especie" name="filtro_especie">
+            <option value="">Todas as Espécies</option>
+            <option value="rosa">Rosa</option>
+            <option value="samambaia">Samambaia</option>
+            <option value="suculenta">Suculenta</option>
+            <option value="orquidea">Orquídea</option>
+          </select>
+        </div>
+      </div>
 
-    <div style="text-align: right; margin-top: 20px;">
-        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em;">
-            Filtrar
-        </button>
-    </div>
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="data_inicio">Data Inicial (ou única)</label>
+          <input id="data_inicio" name="data_inicio" readonly>
+        </div>
+        <div class="form-control">
+          <label for="data_fim">Data Final</label>
+          <input id="data_fim" name="data_fim" readonly>
+        </div>
+      </div>
 
-</form>
+      <div class="modal-actions">
+        <button id="filter-cancel" type="button" class="btn">Cancelar</button>
+        <button id="filter-apply" type="submit" class="btn primary">Filtrar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
+<!-- ADD / CREATE MODAL -->
+<div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title">
+  <div class="modal-panel" role="document">
+    <h3 id="add-title">Nova Insumo</h3>
+    <form id="add-form" method="post" action="#">
+      <!-- se for usar Django, adicione {% csrf_token %} -->
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="name">Nome</label>
+          <input id="name" name="name" type="text" required>
+        </div>
+        <div class="form-control">
+          <label for="kind">Tipo</label>
+          <select id="kind" name="kind">
+            <option value="renovavel">Renovável</option>
+            <option value="nao-renovavel">Não Renovável</option>
+          </select>
+        </div>
+      </div>
 
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="qty">Quantidade</label>
+          <input id="qty" name="qty" type="text" placeholder="ex: 320 kg">
+        </div>
+        <div class="form-control">
+          <label for="unit">Unidade</label>
+          <input id="unit" name="unit" type="text" placeholder="kg / m / un">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="add-cancel" type="button" class="btn">Cancelar</button>
+        <button id="add-save" type="submit" class="btn primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
-{% block scripts%}
+{% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-      flatpickr("#data_inicio", {
-        
-        disableMobile: true,
-
-        
-        dateFormat: "d/m/Y",
-      });
-      flatpickr("#data_fim", {
-        
-        disableMobile: true,
-
-        
-        dateFormat: "d/m/Y",
-      });
-    });
-    
-  </script>
 <script>
+/* Safe DOM helpers */
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-const taskModal = document.getElementById("task-modal");
-const FilterbuttonTask = document.getElementById("filter-button");
-
-
-taskModal.addEventListener("click", function(event) {
-  
-  
-  if (event.target === this) {
-    taskModal.style.display = "none";
+/* Initialize flatpickr when elements exist */
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof flatpickr === 'function') {
+    const d1 = $('#data_inicio');
+    const d2 = $('#data_fim');
+    if (d1) flatpickr(d1, { disableMobile: true, dateFormat: "d/m/Y" });
+    if (d2) flatpickr(d2, { disableMobile: true, dateFormat: "d/m/Y" });
   }
 
-});
+  /* Modal open/close helpers */
+  function openModal(el){ if(!el) return; el.style.display = 'flex'; el.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; const focusable = el.querySelector('select, input, button'); if(focusable) focusable.focus(); }
+  function closeModal(el){ if(!el) return; el.style.display = 'none'; el.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
 
-FilterbuttonTask.addEventListener("click", function() {
-  taskModal.style.display = "flex"; 
+  /* Filter modal */
+  const filterModal = $('#filter-modal');
+  const filterOpenBtn = $('#filter-open');
+  const filterCancel = $('#filter-cancel');
+  if (filterOpenBtn) filterOpenBtn.addEventListener('click', (e)=> { e.preventDefault(); openModal(filterModal); });
+  if (filterCancel) filterCancel.addEventListener('click', ()=> closeModal(filterModal));
+  if (filterModal){
+    filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeModal(filterModal); });
+  }
+
+  /* Add modal */
+  const addModal = $('#add-modal');
+  const addOpenBtn = $('#add-open');
+  const addCancel = $('#add-cancel');
+  if (addOpenBtn) addOpenBtn.addEventListener('click', (e)=> { e.preventDefault(); openModal(addModal); });
+  if (addCancel) addCancel.addEventListener('click', ()=> closeModal(addModal));
+  if (addModal){
+    addModal.addEventListener('click', (e) => { if (e.target === addModal) closeModal(addModal); });
+  }
+
+  /* Close modals on Escape */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape'){
+      closeModal(filterModal);
+      closeModal(addModal);
+    }
+  });
+
+  /* Client-side search (simple) */
+  const searchInput = $('#search-input');
+  const resultsList = $('#results-list');
+  const items = resultsList ? $$('.task-card', resultsList) : [];
+  const noResults = $('#no-results');
+
+  function applySearch(){
+    const q = (searchInput && searchInput.value) ? searchInput.value.trim().toLowerCase() : '';
+    let visible = 0;
+    items.forEach(it => {
+      const title = (it.querySelector('.task-title')?.textContent || '').toLowerCase();
+      const meta = (it.querySelector('.task-meta')?.textContent || '').toLowerCase();
+      const ok = (title + ' ' + meta).includes(q);
+      it.style.display = ok ? '' : 'none';
+      if (ok) visible++;
+    });
+    if (noResults) noResults.classList.toggle('hidden', visible > 0);
+  }
+  if (searchInput) searchInput.addEventListener('input', applySearch);
+
+  /* Filter form (client demo): prevent submit, filter simple fields */
+  const filterForm = $('#filter-form');
+  if (filterForm){
+    filterForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      // read filters (demo: we only match strings inside title/meta)
+      const tipo = (this.filtro_tipo?.value || '').toLowerCase();
+      const especie = (this.filtro_especie?.value || '').toLowerCase();
+      let visible = 0;
+      items.forEach(it => {
+        const title = (it.querySelector('.task-title')?.textContent || '').toLowerCase();
+        const meta = (it.querySelector('.task-meta')?.textContent || '').toLowerCase();
+        let ok = true;
+        if (tipo && !(title.includes(tipo) || meta.includes(tipo))) ok = false;
+        if (especie && !(title.includes(especie) || meta.includes(especie))) ok = false;
+        it.style.display = ok ? '' : 'none';
+        if (ok) visible++;
+      });
+      if (noResults) noResults.classList.toggle('hidden', visible > 0);
+      // close modal after apply
+      closeModal(filterModal);
+    });
+  }
+
+  /* Add form: example preventing default and closing modal (replace with real POST) */
+  const addForm = $('#add-form');
+  if (addForm){
+    addForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      // demo: get values
+      const name = this.name?.value || '';
+      // TODO: submit via fetch / form POST to server
+      // For now: close modal and optionally show notification
+      closeModal(addModal);
+      // optionally clear form
+      this.reset();
+      // user feedback (console)
+      console.log('Novo insumo (demo):', name);
+    });
+  }
+
 });
 </script>
 {% endblock %}

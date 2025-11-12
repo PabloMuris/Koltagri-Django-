@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +8,33 @@
     <link rel="stylesheet" href="{%static 'css/base/base.css'%}">
     {% block rels %}{% endblock %}
     {% block styles %}{% endblock %}
+    <style>
+        #adjust-sidebar{
+  height: 44px;
+  width: 44px;
+  position: absolute;
+  bottom: 24px;
+  left: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#adjust-sidebar svg{
+  fill: var(--primary-color);
+  height: 30px;
+  width: 30px;
+}
+
+aside {
+    position: relative;
+}
+    </style>
     
 <link rel="stylesheet" href="{% static 'core/css/base.css'%}">
 </head>
-<body>
+<body id="body">
     <header class="padding--standard">
         <div class="presentation">
             <h1 class="title">{%block header_title%}{%endblock%}</h1>
@@ -29,7 +52,9 @@
             </button>
         </div>
     </header>
-    <aside id="aside"><nav class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 18px; background-color: var(--primary-color); max-width: 240px;">
+    <aside id="aside">
+        <nav id= "aside-nav" class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 18px; background-color: var(--primary-color); max-width: 240px;">
+        
             <a href="{% url 'index'%}" class="nav-link nav-link--std flex-rw" id="home">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                 <p>Início</p>
@@ -48,6 +73,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"/></svg>
                 <p>Gerenciamento</p>
             </a>
+
+
+            <button type="button" id="adjust-sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M507-480 384-357l56 57 180-180-180-180-56 57 123 123ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+            </button>
 
         </nav>
         
@@ -75,6 +105,96 @@
     </footer>
     {% block scripts%}{% endblock %}
     <script src="{% static 'js/base.js'%}"></script>
+    <script>
+    const adjustSidebar = document.getElementById("adjust-sidebar");
+    const body = document.getElementById("body");
+    const aside = document.getElementById("aside");
+    const navbar = document.getElementById("aside-nav");
+
+    const navLink = navbar.querySelectorAll(".navlink p");
+    let opening = false;
+    let overlay_aside = false;
+
+    
+    window.addEventListener("resize",function(e) {
+        if (window.innerWidth<=768){
+            if (opening || !opening){
+                opening = false;
+                mobile_side_menu()
+            }
+
+        };
+
+        if(window.innerWidth>768 && !opening){
+            reduced_side_menu()
+        }
+
+        if(window.innerWidth>=768 &&  opening){
+            expanded__side_menu()
+        }
+    
+    });
+
+
+    adjustSidebar.addEventListener("click",function(e) {
+        opening = !opening;
+
+        if(window.innerWidth>=768 && !opening){
+            reduced_side_menu()
+        }
+
+        if(window.innerWidth>=768 &&  opening){
+            expanded__side_menu()
+        }
+
+    });
+
+    function mobile_side_menu(){
+        // body.style.gridTemplateAreas = `"header" "main" "footer"`;
+        body.style.gridTemplateColumns = "1fr";
+        body.style.gridTemplateRows = ' 84px 1fr 56px';
+
+        aside.style.display = 'none';
+
+    }
+
+    function reduced_side_menu(){
+        // body.style.gridTemplateAreas = `""aside header" "aside main"`;
+        body.style.gridTemplateColumns = " 80px 1fr";
+        body.style.gridTemplateRows = '84px 1fr auto';
+
+
+        aside.style.display = 'flex';
+        aside.style.width= '80px';
+
+        navbar.style.width = "80px"
+
+        navLink.forEach( p => {
+            p.style.display = none;
+        })
+    }
+
+    function expanded__side_menu(){
+        // body.style.gridTemplateAreas = `""aside header" "aside main"`;
+        body.style.gridTemplateColumns = " 240px 1fr";
+        body.style.gridTemplateRows = '84px 1fr auto';
+
+
+        aside.style.display = 'flex';
+        aside.style.width = '240px';
+
+        navbar.style.width = "240px";
+
+        navLink.forEach( p => {
+            p.style.display = flex;
+        })
+        
+    }
+
+
+
+
+</script>
 </body>
 
 </html>

@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - Estilo Oltagri</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      width: 420px;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);} 
+      to {opacity: 1; transform: translateY(0);} 
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #2b7a3d;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    button:hover {
+      background: #256a35;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Cadastro</h2>
+
+    <!-- STEP 1 -->
+    <div class="step" id="step1">
+      <label>Nome completo</label>
+      <input type="text" id="nome">
+
+      <label>Telefone</label>
+      <input type="text" id="telefone">
+
+      <label>Cidade</label>
+      <input type="text" id="cidade">
+
+      <label>País</label>
+      <input type="text" id="pais">
+
+      <button onclick="nextStep(1)">Continuar</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step hidden" id="step2">
+      <label>CPF</label>
+      <input type="text" id="cpf">
+
+      <label>Data de nascimento</label>
+      <input type="date" id="nascimento">
+
+      <button onclick="nextStep(2)">Continuar</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step hidden" id="step3">
+      <label>Email</label>
+      <input type="email" id="email">
+
+      <label>Senha</label>
+      <input type="password" id="senha">
+
+      <button onclick="finalizar()">Finalizar cadastro</button>
+    </div>
+
+    <!-- STEP FINAL -->
+    <div class="step hidden" id="step4">
+      <h3 style="text-align:center;">✅ Cadastro concluído!</h3>
+      <p style="text-align:center;">Seus dados foram registrados.</p>
+    </div>
+  </div>
+
+  <script>
+    function nextStep(atual) {
+      document.getElementById("step" + atual).classList.add("hidden");
+      document.getElementById("step" + (atual + 1)).classList.remove("hidden");
+    }
+
+    function finalizar() {
+      document.getElementById("step3").classList.add("hidden");
+      document.getElementById("step4").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>

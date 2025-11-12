@@ -1,108 +1,212 @@
-
-{%    extends 'base.html'%}
-{% load static%}
-{% block title %}
-Home
-{% endblock %}
+{% extends 'base.html' %}
 {% load static %}
-{%block rels %}
-<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
-<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+{% block title %}Home{% endblock %}
+
+{% block rels %}
+<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css' %}">
 {% endblock %}
+
 {% block styles %}
 <style>
+:root {
+  --primary-color: #2b8aef;
+  --border-color: #f2f2f2;
+  --bg-color: #f7f9fb;
+  --text-dark: #102734;
+  --text-muted: #6b777a;
+  --radius: 12px;
+}
 
-.historic-item-icon{
+/* layout geral */
+body {
+  background: var(--bg-color);
+}
+
+section {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* gráfico financeiro */
+.finance-graphic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 320px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-sizing: border-box;
+  margin-bottom: 28px;
+}
+
+/* filtro e busca */
+.filter-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+/* histórico */
+.historic {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.historic-header p {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 6px 0;
+}
+
+.historic-header hr {
+  border: 1px solid var(--border-color);
+  margin: 0;
+}
+
+.historic-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: #fff;
+  transition: background 0.18s ease;
+}
+
+.historic-item:hover {
+  background: #f9fafb;
+}
+
+/* ícone à esquerda */
+.historic-item-icon {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: column;
-  height: 100%;
-  width: 36px;
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
 }
 
+.historic-item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
+.historic-item-info-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+  color: var(--text-dark);
+}
+
+.historic-item-info-description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+}
+
+.historic-item-time {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* responsividade */
+@media (max-width: 720px) {
+  .historic-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .historic-item-time {
+    align-self: flex-end;
+  }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-
-<section class="finance-graphic brdr-10" style="width: 100%;height: 300px; background-color: var(--background-icons-color); padding: 20px;">
-  <canvas id="myChart" style="width: fit-content; height: 300px;"></canvas>
+<section class="finance-graphic">
+  <canvas id="myChart"></canvas>
 </section>
 
-<section class="filter-search-section flex-clmn" style="gap:20px">
-    {% include "partials/_search.html" %}
-    {% include "partials/_filter_create.html" %}
-
+<section class="filter-search-section">
+  {% include "partials/_search.html" %}
+  {% include "partials/_filter_create.html" %}
 </section>
 
-<section class="historic flex-clmn gap:10px;">
-    <div class="historic-header">
-        <p>Hoje</p>
-        <hr style="border: 1px solid var(--border-color); ">
-    </div>
-    <div class="historic-item">
-      <div class="historic-item flex-rw brdr-10">
-        <div class="historic-item-icon" style="background-color: white; height: 100%; width: 36px ;">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M856-390 570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z"/></svg>
-        </div>
-        <div class="historic-item-info flex-clmn">
-            <p class="historic-item-info-title">Venda Realizada</p>
-            <p class="historic-item-info-description">Venda de {produto} realizada.</p>
-        </div>
-        <div class="historic-item-time">
-            <p>14:35</p>
-        </div>
-    </div>
-    </div>
-    
+<section class="historic">
+  <div class="historic-header">
+    <p>Hoje</p>
+    <hr>
+  </div>
 
+  <div class="historic-item">
+    <div class="historic-item-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#e3e3e3">
+        <path d="M856-390 570-104q-12 12-27 18t-30 6q-15 0-30-6t-27-18L103-457q-11-11-17-25.5T80-513v-287q0-33 23.5-56.5T160-880h287q16 0 31 6.5t26 17.5l352 353q12 12 17.5 27t5.5 30q0 15-5.5 29.5T856-390ZM513-160l286-286-353-354H160v286l353 354ZM260-640q25 0 42.5-17.5T320-700q0-25-17.5-42.5T260-760q-25 0-42.5 17.5T200-700q0 25 17.5 42.5T260-640Zm220 160Z"/>
+      </svg>
+    </div>
+    <div class="historic-item-info">
+      <p class="historic-item-info-title">Venda Realizada</p>
+      <p class="historic-item-info-description">Venda de produto realizada.</p>
+    </div>
+    <div class="historic-item-time">
+      <p>14:35</p>
+    </div>
+  </div>
 </section>
-
-
-
-
 {% endblock %}
 
-{% block scripts%}
+{% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    const ctx = document.getElementById('myChart');
 
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Gastos Fixos', 'Insumos', 'Água','Luz'],
-        datasets: [{
-          data: [45, 30, 15,10],
-          backgroundColor: [
-            '#36A2EB',
-            '#FF6384',
-            '#FFCD56',
-            '#4BC0C0'
-          ],
-          borderWidth: 0 // sem borda entre as fatias
-        }]
+<script>
+const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+  type: 'pie',
+  data: {
+    labels: ['Gastos Fixos', 'Insumos', 'Água', 'Luz'],
+    datasets: [{
+      data: [45, 30, 15, 10],
+      backgroundColor: ['#36A2EB', '#FF6384', '#FFCD56', '#4BC0C0'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#000',
+          boxWidth: 20,
+          padding: 15
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom', // legenda embaixo
-            labels: {
-              color: '#000', // cor do texto da legenda (pode ajustar)
-              boxWidth: 20,
-              padding: 15
-            }
-          },
-          tooltip: {
-            enabled: true
-          }
-        },
-        backgroundColor: 'transparent'
+      tooltip: {
+        enabled: true
       }
-    });
-  </script>
+    },
+    backgroundColor: 'transparent'
+  }
+});
+</script>
 {% endblock %}

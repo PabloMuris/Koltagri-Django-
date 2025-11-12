@@ -5,54 +5,245 @@
 {% load static %}
 {% block styles %}
 <style>
-    #main-card{
-        background-image: url("{% static 'application_img/background/card_background.svg' %}");
-    }
+   
 
-    .plant-summary{
+    .climatological-info{
+        height: 330px;
         width: 100%;
+        display: flex;
+        
+        
+    }
+
+    .climate-card,.climate-alert{
+        padding: 16px; 
+    }
+
+    .climate-card{
+        height: 60px;
+        width: 100%;
+        flex-flow: column;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url("{% static 'application_img/background/card_background.svg' %}");
+        color: white;
+    }
+
+    .city-data{
         align-items: center;
-        margin-top: 24px;
+        justify-content: space-between;
+        padding-inline: 16px;
+        height: 44px;
+
+    }
+
+    .climate-card > *{
+        width: 100%;
+        display: flex;
+    }
+    .climate-card--style{
+        background-color: #f2f2f2;
+        border-radius: 10px;
+    }
+
+    .climate-alert > *{
+        display: flex;
+    }
+
+    .climate-alert{
+        display: flex;
+        flex-flow:row;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+
+    }
+
+    .climate-alert .text-title{
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+    }
+
+    .text-title{
+        flex-flow: row;
+        align-items: center;
+
+    }
+    
+
+    .climate-alert
+    .climate-alert--style{
+        background-color: #f2f2f2;
+        border-radius: 10px;
+    }
+
+    @media(max-width: 768px){
+        .climatological-info{
+            flex-flow: column;
+            gap: 20px;
+        }
+
+        .climate-card{
+            flex: 1;
+        }
+
+        .climate-alert{
+            height: 44px;
+            flex-flow: row;
+            width: 100%;
+
+        }
+        .text-body,.alert-shortcut{
+            display: none;
+        }
+        .text-title svg{
+            width: 24px;
+            height: 24px;;
+        }
+    }
+
+    @media(min-width: 769px){
+        .climatological-info{
+            flex-flow: row;
+            gap: 2%;
+            
+        }
+        .climate-card{
+            flex: 0.6;
+            height: 100%;
+        }
+        .climate-alert{
+            min-height: fit-content;
+            height: 100%;
+            flex: 0.4;
+            width: 50%;
+            flex-flow: column;
+            background-color: #dc4800;
+            color: white;
+        } 
+        .alert-text{
+            flex-flow: column;
+        } 
+        .text-title svg{
+        height: 66px;
+        width: 66px;
+        margin: 10px 0px;
+    }
+    .text-title p{
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+        
+    }
+
+    .card{
+        display: flex;
+    }
+
+    .temperature-data {
+        gap: 10px;
+    }
+
+    .temperature-data svg{
+        width: 66px;
+  height: 66px;
+    }
+
+    .temperature-data .description{
+        display: flex;
+        flex-flow: column;
+        align-items: start;
+        justify-content: center;
+
+    }
+
+    .alert-shortcut{
+        height: fit-content;
+        font-size: 18px;
         justify-content: space-between;
     }
 
-    .header-summary{
-        align-items: center;
-        justify-content: space-between;
+    .text-body .advice{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+  text-overflow: ellipsis;
     }
+
+.text-body{
+    flex: 1;
+}
+
+p.provided-by{ margin-top: 24px;}
+
+
 </style>
 
 {% endblock %}
 {% block content %}
-<section class="weather-card-area weather-card-area--std" style="position: relative;">
-            <div class="weather-card"></div>
-            <div class="weather-card"></div>
-            <div class="weather-card" id="main-card">
-                
-            </div>
-        </section>
 
-        <section class="weather-advice weather-advice--std flex-rw  " style="margin-top: 24px; gap: 12px; justify-content: start; background-color: #f2f2f2; border-radius: 10px;">
-            <figure class="advice__figure flex-rw align-cntr" aria-label="Ícone de ciclone extratropical" style="background-color: red;border-top-left-radius: 10px;border-bottom-left-radius: 10px; ">
-                <svg aria-label="Ícone de ciclone extratropical"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400ZM661-80q18-56 27-100t14-70q-43 42-100 66t-122 24q-136 0-238.5-18.5T80-214v-85q56 18 100 27t70 14q-42-43-66-100t-24-122q0-137 18.5-239T214-880h85q-18 56-27.5 100T258-710q43-42 100-66t122-24q137 0 239 18.5T880-746v85q-56-18-100-27.5T710-702q42 43 66 100t24 122q0 137-18.5 239T746-80h-85ZM480-240q100 0 170-70t70-170q0-100-70-170t-170-70q-100 0-170 70t-70 170q0 100 70 170t170 70Z"/></svg>
-            </figure>
-            <p class="advice__text flex-rw align-cntr">
-                Ciclone extratopical - Vento em 120 km/h
-            </p>
+<section class="climatological-info climatological-info--style">
+    <div class="climate-card climate-card--style card" >
+        <div class="card-header city-data">
+            <p class="city-name">Riacho de Santana - RN</p>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z"/></svg>
+        </div>
 
-        </section>
-        <section class="plant-summary ">
-            <div class="header-summary flex-rw">
-                <h1>Minhas plantas</h1>
-                <a href="">Ver todas</a>
+        <div class="temperature-data">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Zm0 160q17 0 28.5-11.5T520-360q0-17-11.5-28.5T480-400q-17 0-28.5 11.5T440-360q0 17 11.5 28.5T480-320Zm-40-140h80v-180h-80v180Z"/></svg>
+            <div class="description">
+                <p>22°c</p>
+                <p>Nublado</p>
             </div>
-            <div class="body-summary">
-                <div class="plant-summary__card">
 
-                </div>
+            
+        </div>
+        <div class="water-data">
+                <p> Precipitação: 80%</p>
+                <p> Umidade: 80%</p>
             </div>
-        </section>
+    </div>
+    <div class="climate-alert climate-alert--style card">
+        <div class=" card_header alert-shortcut">
+            <p><span> Condições meteorológicas</span></p>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z"/></svg>
+        </div>
+
+        <div class="alert-text">
+            <div class="text-title">
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400ZM661-80q18-56 27-100t14-70q-43 42-100 66t-122 24q-136 0-238.5-18.5T80-214v-85q56 18 100 27t70 14q-42-43-66-100t-24-122q0-137 18.5-239T214-880h85q-18 56-27.5 100T258-710q43-42 100-66t122-24q137 0 239 18.5T880-746v85q-56-18-100-27.5T710-702q42 43 66 100t24 122q0 137-18.5 239T746-80h-85ZM480-240q100 0 170-70t70-170q0-100-70-170t-170-70q-100 0-170 70t-70 170q0 100 70 170t170 70Z"/></svg>
+<p> Ciclone Extratropical</p>
+            </div>
+
+            <div class="text-body">
+                <p class="advice">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu odio et lacus feugiat varius quis sed libero. Vivamus non dolor ac nisl pharetra tristique. Mauris dapibus quam eget metus condimentum mattis sit amet ut justo. Morbi eget dictum odio, vel pellentesque arcu. In mi sapien, euismod a sem vitae, viverra semper elit. Integer sit amet tortor eget nisl iaculis ultrices non sit amet nisi. Sed pretium quam quis sagittis mattis. Aliquam vel lacus id libero faucibus ornare. Ut non orci congue, finibus elit et, tristique ex. Donec eu lobortis quam. Nunc nec felis id purus sagittis feugiat vel a erat. 
+                </p>
+                <p class="provided-by">
+                    <strong>Fonte:</strong> inmetro
+                </p>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+</section>
+
+<section class="property-info">
+    <div class="tasks"></div>
+    <div class="supplies"></div>
+    <div class="plants"></div>
+</section>
 {% endblock %}
 
 {% block scripts%}
+
 {% endblock %}
