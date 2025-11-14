@@ -1,51 +1,44 @@
-:root {
-  --primary-color: #2b8aef;
-}
-
-/* ===== Filter & Create Section ===== */
-.filter-create-items {
+.action-bar {
   width: 100%;
   display: flex;
-  gap: 12px;
-  align-items: center;
-  margin: 12px 0;
+  flex-flow: row;
   flex-wrap: wrap;
-  padding: 0 8px;
 }
 
-.action-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+.action-bar .actions button{
   height: 40px;
-  border-radius: 8px;
-  border: none;
-  background: var(--primary-color);
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: filter 0.12s ease, transform 0.06s ease;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 10px;
+  color: white;
+  font-weight: 400;
+  
 }
 
-.action-button svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
+.action-bar #filter-open{
+  background-color: white;
+  color: black;
+  border: 1px solid wheat;
 }
 
-.action-button:focus {
-  outline: 3px solid rgba(43, 138, 239, 0.22);
-  outline-offset: 2px;
+
+.actions{
+  display: flex;
+  gap: 10px;
+  width: fit-content;
 }
 
-.action-button:active {
-  transform: translateY(1px);
-}
-
-@media (max-width: 640px) {
-  .action-button {
-    height: 40px;
-    padding: 8px 10px;
-  }
+.search{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+    border: 1px solid wheat;
+  margin-right: 16px;
+  border-radius: 10px;
+  padding-inline: 6px
 }

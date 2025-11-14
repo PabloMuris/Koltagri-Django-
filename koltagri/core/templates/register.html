@@ -1,129 +1,680 @@
-{% load static%}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastro - Koltagri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Quintessential&display=swap');
-
         :root{
-    --primary-color: #509377;
-    --background-icons-color: #f2f2f2;   
-}
+            --max-width: 1000px;
+            --bg: #f7f9fb;
+            --panel-bg: #ffffff;
+            --muted: #6b7688;
+            --primary: #1b9c30;
+            --accent: #00204b;
+            --border: #e9eef6;
+            --radius: 12px;
+            --gap: 16px;
+            --base-font: 16px;
+        }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
+        }
+        html { 
+            font-size: var(--base-font); 
+            color: #071029; 
+            background-color: var(--bg);
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
+        /* Page wrapper */
+        .signup-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            background: var(--panel-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
+        /* Image side */
+        .signup-image {
+            flex: 1;
+            background: linear-gradient(rgba(74, 111, 165, 0.7), rgba(0, 32, 75, 0.7)), 
+                        url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
 
-/* Força herança de fontes e line-height mais previsível */
-html, body {
-  height: 100%;
-  font-family: inherit;
-  line-height: 1.15;
-  font-family: "Outfit", sans-serif;
-}
+        .signup-image h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
 
-/* Remove listas, citações, tabelas estilos padrões */
-ol, ul {
-  list-style: none;
-}
-blockquote, q {
-  quotes: none;
-}
-blockquote::before, blockquote::after,
-q::before, q::after {
-  content: "";
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
+        .signup-image p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
 
+        /* Form side */
+        .signup-form {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-/* PAGE STYLE*/
-body{
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-    padding: 40px 36px;
-    gap: 10%;
-}
+        .form-header {
+            margin-bottom: 30px;
+        }
 
-aside{
+        .form-header h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
 
-    background-image: url("{% static 'core/img/agri.webp'%}");
-    background-repeat: no-repeat;
-    border-radius: 10px;
-}
+        .form-header p {
+            color: var(--muted);
+            margin: 0;
+        }
 
-main,aside{
-    max-height: 80%;
-    height: 80%;
-    flex: 1;
+        /* Progress steps */
+        .progress-steps {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
 
-}
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
 
-@media(min-width:0px) and (max-width:800px){
-    aside{
-        display: none;
-    }
-}
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
 
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
 
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
 
-main{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 10%;
-}
+        .step.completed .step-number {
+            background: var(--accent);
+            color: white;
+        }
 
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-align: center;
+        }
 
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 500;
+        }
 
+        .step.completed .step-label {
+            color: var(--accent);
+        }
 
-.main-top{
-    display: flex;
-    align-items: center;
-    flex-flow: column;
-    margin-bottom: 40px;
-}
+        /* Form styles */
+        .form-step {
+            display: none;
+        }
 
+        .form-step.active {
+            display: block;
+        }
 
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
 
-figure{
-    border-radius: 100%;
-    background-color: #f2f2f2;
-    margin-bottom: 20px;
-}
+        .form-control {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
+        .form-control label {
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
 
+        .form-control input, .form-control select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
 
+        .form-control input:focus, .form-control select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-control.error input, .form-control.error select {
+            border-color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-control.error .error-message {
+            display: block;
+        }
+
+        /* Password strength */
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        /* Form actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--bg);
+        }
+
+        .btn.primary {
+            background: var(--primary);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .btn.primary:hover {
+            background: #3a5a85;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Success message */
+        .success-message {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .signup-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+            
+            .signup-image {
+                padding: 30px;
+                min-height: 200px;
+            }
+            
+            .signup-form {
+                padding: 30px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-image, .signup-form {
+                padding: 20px;
+            }
+            
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <aside style="height: 90%; width: 50%; background-color: #509377;">
-
-    </aside>
-    <main>
-        <div class="main-top">
-            <figure>
-                <img src="{% static 'core/img/logo.png'%}" alt="" srcset="">
-            </figure>
-            <h1 style="font-size: 22px; font-weight: 500;">KOLTAGRI</h1>
+    <div class="signup-container">
+        <!-- Image side -->
+        <div class="signup-image">
+            <h1>Koltagri</h1>
+            <p>Junte-se à nossa comunidade agrícola e gerencie suas propriedades de forma eficiente.</p>
         </div>
-        <form action="" method="post" class="form-wizard">
+
+        <!-- Form side -->
+        <div class="signup-form">
+            <div class="form-header">
+                <h2>Criar sua conta</h2>
+                <p>Preencha as informações abaixo para se cadastrar</p>
+            </div>
+
+            <!-- Progress steps -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Informações Pessoais</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Dados de Acesso</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Personal Information -->
+            <form id="signup-form">
+                <div class="form-step active" id="step-1">
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="firstName">Nome</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                            <div class="error-message">Por favor, insira seu nome</div>
+                        </div>
+                        <div class="form-control">
+                            <label for="lastName">Sobrenome</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                            <div class="error-message">Por favor, insira seu sobrenome</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="cpf">CPF</label>
+                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                            <div class="error-message">CPF inválido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="birthDate">Data de Nascimento</label>
+                            <input type="text" id="birthDate" name="birthDate" placeholder="DD/MM/AAAA" required>
+                            <div class="error-message">Data de nascimento inválida</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="city">Cidade Atual</label>
+                            <input type="text" id="city" name="city" required>
+                            <div class="error-message">Por favor, insira sua cidade</div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div></div> <!-- Empty div for spacing -->
+                        <button type="button" class="btn primary" id="next-step-1">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Account Information -->
+                <div class="form-step" id="step-2">
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" required>
+                            <div class="error-message">E-mail inválido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="password">Senha</label>
+                            <input type="password" id="password" name="password" required>
+                            <div class="error-message">A senha deve ter pelo menos 6 caracteres</div>
+                            <div class="password-strength">
+                                <div class="password-strength-bar" id="password-strength-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label for="confirmPassword">Confirmar Senha</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            <div class="error-message">As senhas não coincidem</div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn" id="prev-step-2">Voltar</button>
+                        <button type="submit" class="btn primary" id="submit-form">Criar Conta</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="success-message">
+                <div class="success-icon">
+                    <span class="material-icons">check_circle</span>
+                </div>
+                <h3>Cadastro realizado com sucesso!</h3>
+                <p>Bem-vindo à Koltagri. Em instantes você receberá um e-mail de confirmação.</p>
+                <button type="button" class="btn primary" id="go-to-login">Fazer Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize flatpickr for date input
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr('#birthDate', {
+                    disableMobile: true,
+                    dateFormat: "d/m/Y",
+                    maxDate: "today",
+                    locale: "pt"
+                });
+            }
+
+            // Initialize CPF mask
+            if (typeof Cleave !== 'undefined') {
+                new Cleave('#cpf', {
+                    blocks: [3, 3, 3, 2],
+                    delimiters: ['.', '.', '-'],
+                    numericOnly: true
+                });
+            }
+
+            // Step navigation
+            const steps = document.querySelectorAll('.step');
+            const formSteps = document.querySelectorAll('.form-step');
+            const nextStep1Btn = document.getElementById('next-step-1');
+            const prevStep2Btn = document.getElementById('prev-step-2');
+            const submitBtn = document.getElementById('submit-form');
+            const form = document.getElementById('signup-form');
+            const successMessage = document.getElementById('success-message');
+            const goToLoginBtn = document.getElementById('go-to-login');
+
+            // Move to step 2
+            nextStep1Btn.addEventListener('click', function() {
+                if (validateStep1()) {
+                    setActiveStep(2);
+                }
+            });
+
+            // Move back to step 1
+            prevStep2Btn.addEventListener('click', function() {
+                setActiveStep(1);
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (validateStep1() && validateStep2()) {
+                    // In a real application, you would submit the form data to a server here
+                    // For demonstration, we'll just show the success message
+                    form.style.display = 'none';
+                    successMessage.classList.add('active');
+                }
+            });
+
+            // Go to login button
+            goToLoginBtn.addEventListener('click', function() {
+                alert('Redirecionando para a página de login...');
+                // In a real application, you would redirect to the login page
+            });
+
+            // Set active step
+            function setActiveStep(stepNumber) {
+                // Update step indicators
+                steps.forEach(step => {
+                    const stepData = parseInt(step.getAttribute('data-step'));
+                    step.classList.remove('active', 'completed');
+                    
+                    if (stepData < stepNumber) {
+                        step.classList.add('completed');
+                    } else if (stepData === stepNumber) {
+                        step.classList.add('active');
+                    }
+                });
+
+                // Update form steps
+                formSteps.forEach(step => {
+                    step.classList.remove('active');
+                    if (step.id === `step-${stepNumber}`) {
+                        step.classList.add('active');
+                    }
+                });
+            }
+
+            // Step 1 validation
+            function validateStep1() {
+                let isValid = true;
+                const firstName = document.getElementById('firstName');
+                const lastName = document.getElementById('lastName');
+                const cpf = document.getElementById('cpf');
+                const birthDate = document.getElementById('birthDate');
+                const city = document.getElementById('city');
+
+                // Validate first name
+                if (!firstName.value.trim()) {
+                    markFieldInvalid(firstName);
+                    isValid = false;
+                } else {
+                    markFieldValid(firstName);
+                }
+
+                // Validate last name
+                if (!lastName.value.trim()) {
+                    markFieldInvalid(lastName);
+                    isValid = false;
+                } else {
+                    markFieldValid(lastName);
+                }
+
+                // Validate CPF
+                const cpfValue = cpf.value.replace(/\D/g, '');
+                if (cpfValue.length !== 11 || !validateCPF(cpfValue)) {
+                    markFieldInvalid(cpf);
+                    isValid = false;
+                } else {
+                    markFieldValid(cpf);
+                }
+
+                // Validate birth date
+                if (!birthDate.value.trim()) {
+                    markFieldInvalid(birthDate);
+                    isValid = false;
+                } else {
+                    markFieldValid(birthDate);
+                }
+
+                // Validate city
+                if (!city.value.trim()) {
+                    markFieldInvalid(city);
+                    isValid = false;
+                } else {
+                    markFieldValid(city);
+                }
+
+                return isValid;
+            }
+
+            // Step 2 validation
+            function validateStep2() {
+                let isValid = true;
+                const email = document.getElementById('email');
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirmPassword');
+
+                // Validate email
+                if (!email.value.trim() || !isValidEmail(email.value)) {
+                    markFieldInvalid(email);
+                    isValid = false;
+                } else {
+                    markFieldValid(email);
+                }
+
+                // Validate password
+                if (!password.value || password.value.length < 6) {
+                    markFieldInvalid(password);
+                    isValid = false;
+                } else {
+                    markFieldValid(password);
+                }
+
+                // Validate password confirmation
+                if (!confirmPassword.value || password.value !== confirmPassword.value) {
+                    markFieldInvalid(confirmPassword);
+                    isValid = false;
+                } else {
+                    markFieldValid(confirmPassword);
+                }
+
+                return isValid;
+            }
+
+            // Mark field as invalid
+            function markFieldInvalid(field) {
+                field.parentElement.classList.add('error');
+            }
+
+            // Mark field as valid
+            function markFieldValid(field) {
+                field.parentElement.classList.remove('error');
+            }
+
+            // Email validation
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            // CPF validation (simplified)
+            function validateCPF(cpf) {
+                // This is a simplified CPF validation for demonstration
+                // In a real application, you would use a more robust validation
+                if (cpf.length !== 11) return false;
+                
+                // Check for known invalid CPFs (all same digits)
+                if (/^(\d)\1+$/.test(cpf)) return false;
+                
+                // Simple digit validation (not the complete algorithm)
+                return true;
+            }
+
+            // Password strength indicator
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('password-strength-bar');
             
-        </form>
-        
-    </main>
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                if (password.length >= 6) strength += 25;
+                if (/[a-z]/.test(password)) strength += 25;
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                
+                strengthBar.style.width = strength + '%';
+                
+                if (strength < 50) {
+                    strengthBar.style.backgroundColor = '#e74c3c';
+                } else if (strength < 75) {
+                    strengthBar.style.backgroundColor = '#f39c12';
+                } else {
+                    strengthBar.style.backgroundColor = '#27ae60';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,34 +1,47 @@
-.search-area {
-    width: 100%;
-    max-width: 480px;
-    height: 44px;
-    display: flex;              /* herdado de .flex-rw, se quiser deixar aqui */
-    border-radius: 10px;
+.action-bar {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Input de pesquisa */
-.search-area input[type="text"] {
-    background-color: var(--background-icons-color);
-    padding-left: 12px;
-    flex: 1;
-    border-radius: 10px 0 0 10px;
-    border: none; /* opcional, melhora o visual */
-    outline: none;
+.action-bar .actions button{
+  height: 40px;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 10px;
+  color: white;
+  font-weight: 400;
+  min-height: 44px;
+  
 }
 
-/* Botão de envio */
-.search-area button {
-    min-width: 44px;
-    border-radius: 0 10px 10px 0;
-    background-color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
+.action-bar #filter-open{
+  background-color: white;
+  color: black;
+  border: 1px solid wheat;
 }
 
-/* Ícone dentro do botão */
-.search-area button svg {
-    fill: #e3e3e3;
+
+.actions{
+  display: flex;
+  gap: 10px;
+  width: fit-content;
+}
+
+.search{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+    border: 1px solid wheat;
+  margin-right: 16px;
+  border-radius: 10px;
+  padding-inline: 6px;
+  min-height: 44px;
 }

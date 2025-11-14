@@ -230,7 +230,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </section>
 
-  <!-- ACTION BAR -->
+
   <div class="action-bar">
     <div class="search" role="search">
       <span class="material-icons" aria-hidden="true" style="color:var(--muted)">search</span>
@@ -330,12 +330,11 @@ html { font-size: var(--base-font); color: #071029; }
   </div>
 </div>
 
-<!-- ADD / CREATE MODAL -->
+
 <div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title">
   <div class="modal-panel" role="document">
     <h3 id="add-title">Nova Insumo</h3>
     <form id="add-form" method="post" action="#">
-      <!-- se for usar Django, adicione {% csrf_token %} -->
       <div class="modal-row">
         <div class="form-control">
           <label for="name">Nome</label>

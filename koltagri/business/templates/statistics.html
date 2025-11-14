@@ -3,8 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block rels %}
-<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css' %}">
-<link rel="stylesheet" href="{% static 'css/partials/_search.css' %}">
+<link rel="stylesheet" href="{% static 'partials/css/_filter-create.css' %}">
 {% endblock %}
 
 {% block styles %}
@@ -147,7 +146,6 @@ section {
 
 <section class="filter-search-section">
   {% include "partials/_search.html" %}
-  {% include "partials/_filter_create.html" %}
 </section>
 
 <section class="historic">

@@ -5,10 +5,10 @@
 {% block header_text %}insumos{% endblock %}
 
 {% block rels %}
-<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css' %}">
-<link rel="stylesheet" href="{% static 'css/partials/_search.css' %}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'partials/css/_search.css'%}">
 {% endblock %}
+
 
 {% block styles %}
 <style>
@@ -16,7 +16,7 @@
 :root{
   --bg: #f2f2f2;
   --muted: #66788f;
-  --primary: #4a6fa5; /* mantendo identidade anterior */
+  --primary: #4aa58a; /* mantendo identidade anterior */
   --accent: #00204b;
   --card-bg: #ffffff;
   --border: #e8eef6;
@@ -30,7 +30,6 @@
 .container-wide {
   max-width: 100%;
   margin: 24px 0px;
-  padding: 0 16px;
   width: 100%;
 }
 
@@ -241,7 +240,7 @@
   <!-- SEARCH & FILTER -->
   <section class="filter-search-section" style="margin-top:20px;">
     {% include "partials/_search.html" %}
-    {% include "partials/_filter_create.html" %}
+    
   </section>
 
   <!-- RESULTS -->

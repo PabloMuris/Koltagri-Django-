@@ -8,7 +8,6 @@
 
 main{
     background: #f2f2f2;
-    padding: 16px;
 }
 
 /* ======= SEÇÃO 1 – FOTO + NOMES ======= */
@@ -105,7 +104,7 @@ main{
 
 {% block content %}
 
-<main>
+
 
     <!-- ✅ SEÇÃO 1 -->
     <section class="plant-header">
@@ -150,6 +149,16 @@ main{
             </div>
         </div>
 
+        <div class="status-card">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
+            </svg>
+            <div>
+                <p>Temperatura ideal</p>
+                <p>20°-34°</p>
+            </div>
+        </div>
+
     </section>
 
     <!-- ✅ SEÇÃO 3 -->
@@ -174,6 +183,5 @@ main{
 
     </section>
 
-</main>
 
 {% endblock %}

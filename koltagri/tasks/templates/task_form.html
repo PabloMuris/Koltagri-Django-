@@ -4,129 +4,137 @@
 
 {% block styles %}
 <style>
-:root {
-    --primary-color: #3b82a0;     
-    --primary-dark: #2d677f;
-    --bg-light: #f4f7f8;
-    --border-color: #dfe6e8;
-    --text-main: #24333f;
-}
 
-.form-wizard {
+.form-box{
     background: #fff;
-    padding: 32px;
+    padding: 28px;
     border-radius: 12px;
     width: min(720px, 100%);
-    box-sizing: border-box;
-    border: 1px solid var(--border-color);
+    border: 1px solid #f2f2f2;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-form h1 {
+/* título */
+.form-box h1{
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #253447;
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
+}
+
+/* blocos */
+.field-block{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* labels */
+.field-block label{
+    font-size: .95rem;
+    color: #253447;
     font-weight: 500;
-    color: var(--text-main);
 }
 
-.partial {
-    margin-bottom: 20px;
-}
-
-.form-wizard label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    color: var(--text-main);
-    font-weight: 500;
-}
-
-.form-wizard input[type="text"],
-.form-wizard input[type="file"],
-.form-wizard select,
-.form-wizard textarea {
-    width: 100%;
-    box-sizing: border-box;
-    background: var(--bg-light);
-    border: 1px solid var(--border-color);
+/* inputs padrão Koltagri */
+.field-block input,
+.field-block select,
+.field-block textarea{
+    background: #fafafa;
+    border: 1px solid #f2f2f2;
     border-radius: 6px;
-    padding: 10px;
-    font-size: 15px;
+    height: 44px;
+    padding: 0 12px;
+    font-size: .95rem;
 }
 
-textarea {
+textarea{
+    height: auto;
+    padding: 12px;
     min-height: 160px;
     resize: vertical;
 }
 
-.note {
-    font-size: 12px;
+.note{
+    font-size: .8rem;
     color: #6b6b6b;
-    margin-top: 6px;
 }
 
-.form-actions {
+/* ações */
+.actions{
     display: flex;
     gap: 12px;
-    margin-top: 24px;
+    margin-top: 16px;
 }
 
-.button-primary,
-.button-ghost {
+.btn{
     height: 46px;
     width: 100%;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
     font-weight: 500;
+    cursor: pointer;
 }
 
-.button-primary {
+/* ghost */
+.btn-ghost{
+    background: transparent;
+    border: 1px solid #e6e6e6;
+    color: var(--primary-color);
+}
+
+.btn-ghost:hover{
+    background: #f6fafb;
+}
+
+/* primary */
+.btn-primary{
     background: var(--primary-color);
     color: #fff;
     border: none;
-    transition: 0.2s ease;
 }
 
-.button-primary:hover {
+.btn-primary:hover{
     background: var(--primary-dark);
 }
 
-.button-ghost {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--primary-color);
-    transition: 0.2s ease;
+/* responsivo */
+@media (max-width: 600px){
+    .form-box{
+        padding: 18px;
+        border-radius: 10px;
+    }
 }
 
-.button-ghost:hover {
-    background: #eef5f7;
-}
-
-@media (max-width: 600px) {
-    .form-wizard { padding: 20px; }
-}
 </style>
 {% endblock %}
 
 {% block content %}
-<form action="" method="post" class="form-wizard" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="form-box">
     {% csrf_token %}
 
     <h1>Enviar conteúdo</h1>
 
-    <div class="partial">
+    <!-- TÍTULO -->
+    <div class="field-block">
         <label for="title">Título</label>
-        <input type="text" id="title" name="title" placeholder="Digite o título do conteúdo" required>
+        <input id="title" name="title" type="text" placeholder="Digite o título do conteúdo" required>
     </div>
 
-    <div class="partial">
+    <!-- TEXTO -->
+    <div class="field-block">
         <label for="content">Conteúdo</label>
         <textarea id="content" name="content" placeholder="Escreva aqui o conteúdo" required></textarea>
     </div>
 
-    <div class="partial">
-        <label for="insumos">Insumos utilizados</label>
-        <select id="insumos" name="insumos" multiple size="5">
+    <!-- INSUMOS -->
+    <div class="field-block">
+        <label for="ins">Insumos utilizados</label>
+        <select id="ins" name="insumos" multiple size="5">
             <option value="fertilizante">Fertilizante</option>
             <option value="pesticida">Pesticida</option>
             <option value="sementes">Sementes</option>
@@ -135,27 +143,31 @@ textarea {
             <option value="calcario">Calcário</option>
             <option value="outros">Outros</option>
         </select>
-        <div class="note">Use Ctrl (ou ⌘ no Mac) para selecionar vários.</div>
+        <span class="note">Use Ctrl (ou ⌘ no Mac) para selecionar vários.</span>
     </div>
 
-    <div class="partial">
-        <label for="attachments">Anexar arquivos</label>
+    <!-- ARQUIVOS -->
+    <div class="field-block">
+        <label for="attachments">Anexos</label>
         <input type="file" id="attachments" name="attachments" multiple>
-        <div class="note">O servidor deve tratar request.FILES para múltiplos anexos.</div>
+        <span class="note">O servidor deve tratar request.FILES para múltiplos anexos.</span>
     </div>
 
-    <div class="form-actions">
-        <button type="button" class="button-ghost"
+    <!-- AÇÕES -->
+    <div class="actions">
+
+        <button type="button" class="btn btn-ghost"
             onclick="
                 document.getElementById('title').value='';
                 document.getElementById('content').value='';
                 document.getElementById('attachments').value='';
-                document.getElementById('insumos').selectedIndex=-1;
+                document.getElementById('ins').selectedIndex=-1;
             ">
             Limpar
         </button>
 
-        <button type="submit" class="button-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+
     </div>
 
 </form>

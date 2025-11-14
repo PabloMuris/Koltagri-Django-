@@ -2,6 +2,10 @@
 {% block title %}Plantas{% endblock %}
 {% load static %}
 
+{% block rels %}
+<link rel="stylesheet" href="{% static 'partials/css/_search.css'%}">
+{% endblock %}
+
 {% block styles %}
 <style>
 :root {
@@ -152,26 +156,7 @@
 
 {% block content %}
 
-  <div class="header-bar">
-    <form class="search-form" role="search" method="get">
-      <input type="text" name="q" placeholder="Pesquisar planta..." aria-label="Pesquisar">
-      <button type="submit" aria-label="Pesquisar">
-       
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56Z"/></svg>
-      </button>
-    </form>
-
-    <div class="action-buttons">
-      <a class="action-button" href="#" role="button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-        Criar
-      </a>
-      <button class="action-button" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 -960 960 960" fill="currentColor"><path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z"/></svg>
-        Filtrar
-      </button>
-    </div>
-  </div>
+  {% include "partials/_search.html" %}
 
   <section class="plant-grid">
     <article class="plant-card" onclick="location.href='#'">
@@ -186,7 +171,7 @@
 
     <article class="plant-card" onclick="location.href='#'">
       <div class="card__image">
-        <img src="{% static 'example_img/laranja.jpeg' %}" alt="Laranjeira">
+        <img src="{% static 'example_img/laranjeira.png' %}" alt="Laranjeira">
       </div>
       <div class="card__description">
         <p class="title">Laranjeira</p>
@@ -196,7 +181,7 @@
 
     <article class="plant-card" onclick="location.href='#'">
       <div class="card__image">
-        <img src="{% static 'example_img/maracuja.jpeg' %}" alt="Maracujá">
+        <img src="{% static 'example_img/maracuja.png' %}" alt="Maracujá">
       </div>
       <div class="card__description">
         <p class="title">Maracujá</p>
