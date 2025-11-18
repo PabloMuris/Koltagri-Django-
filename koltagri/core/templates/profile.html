@@ -28,7 +28,7 @@
 }
 html { font-size: var(--base-font); color: #071029; }
 
-/* Page container */
+ 
 .profile-page {
   width: 100%;
   max-width: var(--max-width);
@@ -38,7 +38,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: var(--gap);
 }
 
-/* ---------- PROFILE HEADER ---------- */
+ 
 .profile-header{
   background: var(--bg);
   border: 1px solid var(--border);
@@ -50,7 +50,7 @@ html { font-size: var(--base-font); color: #071029; }
   align-items: center;
 }
 
-/* Avatar */
+ 
 .profile-avatar{
   width: 100px;
   height: 100px;
@@ -73,7 +73,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* Profile info */
+ 
 .profile-info{ 
   display: flex; 
   flex-direction: column; 
@@ -96,14 +96,14 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 0.95rem;
 }
 
-/* Profile actions */
+ 
 .profile-actions{
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-/* ---------- MAIN CONTENT GRID ---------- */
+ 
 .profile-content{
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -117,7 +117,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* ---------- PROFILE DETAILS ---------- */
+ 
 .profile-details{
   display: flex;
   flex-direction: column;
@@ -134,7 +134,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 8px;
 }
 
-/* Info cards */
+ 
 .info-card{
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -145,7 +145,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 16px;
 }
 
-/* Field rows */
+ 
 .field{
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -167,7 +167,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-weight: 500;
 }
 
-/* Card actions */
+ 
 .card-actions{
   display: flex;
   gap: 10px;
@@ -177,7 +177,7 @@ html { font-size: var(--base-font); color: #071029; }
   border-top: 1px solid var(--bg);
 }
 
-/* ---------- PROPERTY SIDEBAR ---------- */
+ 
 .property-sidebar{
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -190,7 +190,7 @@ html { font-size: var(--base-font); color: #071029; }
   top: 20px;
 }
 
-/* Sidebar header */
+ 
 .sidebar-header{
   display: flex;
   justify-content: space-between;
@@ -204,7 +204,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-weight: 600;
 }
 
-/* Property list */
+ 
 .property-list{
   display: flex;
   flex-direction: column;
@@ -214,7 +214,7 @@ html { font-size: var(--base-font); color: #071029; }
   padding-right: 8px;
 }
 
-/* Property card */
+ 
 .property-card{
   display: flex;
   gap: 12px;
@@ -236,7 +236,7 @@ html { font-size: var(--base-font); color: #071029; }
   background: rgba(74, 111, 165, 0.03);
 }
 
-/* Property thumb */
+ 
 .property-thumb{
   width: 60px;
   height: 45px;
@@ -259,7 +259,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* Property info */
+ 
 .property-info{
   display: flex;
   flex-direction: column;
@@ -276,14 +276,14 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* Sidebar actions */
+ 
 .sidebar-actions{
   display: flex;
   gap: 8px;
   margin-top: 8px;
 }
 
-/* ---------- BUTTONS ---------- */
+ 
 .btn{
   display: inline-flex;
   align-items: center;
@@ -314,7 +314,7 @@ html { font-size: var(--base-font); color: #071029; }
   justify-content: center;
 }
 
-/* ---------- QUICK ACTIONS ---------- */
+ 
 .quick-actions{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -366,7 +366,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* ---------- MOBILE ADJUSTMENTS ---------- */
+ 
 @media (max-width: 768px){
   .profile-header{
     grid-template-columns: 1fr;
@@ -408,7 +408,7 @@ html { font-size: var(--base-font); color: #071029; }
 {% block content %}
 <div class="profile-page">
 
-  <!-- PROFILE HEADER -->
+   
   <section class="profile-header" role="region" aria-label="Informações do usuário">
     <div class="profile-avatar" id="avatar">
       <img src="{% static 'users_img/avatar/pa_avatar.jpeg' %}" alt="Avatar de Pablo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -429,7 +429,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </section>
 
-  <!-- QUICK ACTIONS -->
+   
   <section class="quick-actions" aria-label="Ações rápidas">
     <a href="{% url 'team_participants' %}" class="action-card">
       <div class="action-icon">
@@ -449,13 +449,13 @@ html { font-size: var(--base-font); color: #071029; }
     
   </section>
 
-  <!-- MAIN CONTENT -->
+   
   <div class="profile-content">
     
-    <!-- LEFT COLUMN: Profile Details -->
+     
     <div class="profile-details">
       
-      <!-- Personal Data Card -->
+       
       <div class="info-card" aria-labelledby="personal-title">
         <h3 class="section-title">
           <span class="material-icons">person</span>
@@ -490,7 +490,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Property Data Card -->
+       
       <div class="info-card" aria-labelledby="propdata-title">
         <h3 class="section-title">
           <span class="material-icons">business</span>
@@ -516,7 +516,7 @@ html { font-size: var(--base-font); color: #071029; }
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: Property Sidebar -->
+     
     <div class="property-sidebar" aria-label="Seleção de propriedades">
       <div class="sidebar-header">
         <h3 class="sidebar-title">Propriedades</h3>
@@ -526,7 +526,7 @@ html { font-size: var(--base-font); color: #071029; }
       </div>
 
       <div id="prop-list" class="property-list" role="list" aria-label="Lista de propriedades">
-        <!-- Property cards will be populated by JavaScript -->
+         
       </div>
 
       <div class="sidebar-actions" >

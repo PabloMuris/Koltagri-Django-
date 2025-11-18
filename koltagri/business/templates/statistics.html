@@ -50,7 +50,7 @@ body {
   padding: 0;
 }
 
-/* Layout Container */
+ 
 .page-container {
   width: 100%;
   max-width: 1200px;
@@ -61,7 +61,7 @@ body {
   gap: 24px;
 }
 
-/* User Actions */
+ 
 .user-actions {
   display: flex;
   gap: 12px;
@@ -88,7 +88,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* Finance Overview */
+ 
 .finance-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -133,7 +133,7 @@ body {
   color: #d32f2f;
 }
 
-/* Finance Graphic */
+ 
 .finance-graphic {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -146,12 +146,12 @@ body {
   align-items: center;
 }
 
-/* Filter Search Section */
+ 
 .filter-search-section {
   margin-bottom: 24px;
 }
 
-/* Historic Section */
+ 
 .historic-section {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -199,7 +199,7 @@ body {
   border-color: var(--primary);
 }
 
-/* Historic Items */
+ 
 .historic-items {
   display: flex;
   flex-direction: column;
@@ -225,7 +225,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* Historic Item Icon */
+ 
 .historic-item-icon {
   width: 48px;
   height: 48px;
@@ -242,7 +242,7 @@ body {
   color: var(--primary);
 }
 
-/* Historic Item Info */
+ 
 .historic-item-info {
   display: flex;
   flex-direction: column;
@@ -262,7 +262,7 @@ body {
   margin: 0;
 }
 
-/* Historic Item Meta */
+ 
 .historic-item-meta {
   display: flex;
   flex-direction: column;
@@ -281,7 +281,7 @@ body {
   color: var(--muted);
 }
 
-/* Category Badges */
+ 
 .category-badge {
   display: inline-flex;
   align-items: center;
@@ -298,7 +298,7 @@ body {
 .category-energia { background: #fff3e0; color: #f57c00; }
 .category-agua { background: #e8eaf6; color: #3f51b5; }
 
-/* MODALS */
+ 
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -374,7 +374,7 @@ body {
   margin-top: 24px;
 }
 
-/* Buttons */
+ 
 .btn {
   display: inline-flex;
   align-items: center;
@@ -402,7 +402,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Responsive */
+ 
 @media (max-width: 768px) {
   .finance-overview {
     grid-template-columns: 1fr;
@@ -458,7 +458,7 @@ body {
 {% block content %}
 <div class="page-container">
 
-  <!-- User Actions -->
+   
   <div class="user-actions">
     <button type="button" id="back-button" onclick="location.href='{% url 'business_board' %}'">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
@@ -472,7 +472,7 @@ body {
     </button>
   </div>
 
-  <!-- Finance Overview -->
+   
   <div class="finance-overview">
     <div class="overview-card">
       <div class="label">Total de Gastos</div>
@@ -508,17 +508,17 @@ body {
     </div>
   </div>
 
-  <!-- Finance Graphic -->
+   
   <section class="finance-graphic">
     <canvas id="myChart"></canvas>
   </section>
 
-  <!-- Filter and Search -->
+   
   <section class="filter-search-section">
     {% include "partials/_search.html" with label="Novo Gasto" %}
   </section>
 
-  <!-- Historic Section -->
+   
   <section class="historic-section">
     <div class="section-header">
       <h3 class="section-title">Histórico de Gastos</h3>
@@ -531,7 +531,7 @@ body {
     </div>
 
     <div class="historic-items">
-      <!-- Gastos de Hoje -->
+       
       <div class="historic-item">
         <div class="historic-item-icon">
           <span class="material-icons">shopping_cart</span>
@@ -607,7 +607,7 @@ body {
   </section>
 </div>
 
-<!-- MODAL FILTRAR GASTOS -->
+ 
 <div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-panel" role="document">
     <div class="modal-header">
@@ -675,7 +675,7 @@ body {
   </div>
 </div>
 
-<!-- MODAL ADICIONAR GASTO -->
+ 
 <div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-panel" role="document">
     <div class="modal-header">

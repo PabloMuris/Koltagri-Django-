@@ -37,7 +37,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: var(--gap);
 }
 
-/* Task Header */
+ 
 .task-header {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -91,7 +91,7 @@ html { font-size: var(--base-font); color: #071029; }
   align-items: center;
 }
 
-/* Task Details */
+ 
 .task-details {
   display: flex;
   grid-template-columns: 2fr 1fr;
@@ -125,7 +125,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* Task Description */
+ 
 .task-description {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -148,7 +148,7 @@ html { font-size: var(--base-font); color: #071029; }
   line-height: 1.6;
 }
 
-/* Task Sidebar */
+ 
 .task-sidebar {
   display: flex;
   flex-direction: column;
@@ -191,7 +191,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-weight: 500;
 }
 
-/* Attachments Section */
+ 
 .attachments-section {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -271,7 +271,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 8px;
 }
 
-/* Participants Section */
+ 
 .participants-section {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -359,7 +359,7 @@ html { font-size: var(--base-font); color: #071029; }
 .status-active { background: #e8f5e8; color: #2e7d32; }
 .status-pending { background: #fff3e0; color: #f57c00; }
 
-/* Buttons */
+ 
 .btn {
   display: inline-flex;
   align-items: center;
@@ -387,7 +387,7 @@ html { font-size: var(--base-font); color: #071029; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Empty State */
+ 
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -421,7 +421,7 @@ html { font-size: var(--base-font); color: #071029; }
   </div>
 <div class="page">
 
-  <!-- Task Header -->
+   
   <section class="task-header">
     <div class="task-icon">
       <span class="material-icons">assignment</span>
@@ -447,10 +447,10 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </section>
 
-  <!-- Task Details -->
+   
   <div class="task-details">
     
-    <!-- Left Column: Description and Details -->
+     
     <div class="task-description">
       <h3 class="section-title">
         <span class="material-icons">description</span>
@@ -469,7 +469,7 @@ html { font-size: var(--base-font); color: #071029; }
       </div>
     </div>
 
-    <!-- Right Column: Sidebar Info -->
+     
     <div class="task-sidebar">
       <div class="info-card">
         <h3 class="section-title">
@@ -498,7 +498,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </div>
 
-  <!-- Attachments Section -->
+   
   <section class="attachments-section">
     <div class="attachments-header">
       <h3 class="section-title">
@@ -512,7 +512,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
 
     <div class="attachments-list">
-      <!-- Anexo 1 -->
+       
       <div class="attachment-card">
         <div class="attachment-icon">
           <span class="material-icons">image</span>
@@ -531,7 +531,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Anexo 2 -->
+       
       <div class="attachment-card">
         <div class="attachment-icon">
           <span class="material-icons">description</span>
@@ -550,7 +550,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Anexo 3 -->
+       
       <div class="attachment-card">
         <div class="attachment-icon">
           <span class="material-icons">note</span>
@@ -572,7 +572,7 @@ html { font-size: var(--base-font); color: #071029; }
   </section>
   
 
-  <!-- Participants Section -->
+   
   <section class="participants-section">
     <div class="participants-header">
       <h3 class="section-title">
@@ -586,7 +586,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
 
     <div class="participants-list">
-      <!-- Participante 1 -->
+       
       <div class="participant-card" onclick="location.href='{% url 'docs' %}'">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user1.jpg' %}" alt="Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -602,7 +602,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Participante 2 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <span class="material-icons">person</span>
@@ -617,7 +617,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Participante 3 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user2.jpg' %}" alt="Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">

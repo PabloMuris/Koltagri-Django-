@@ -5,7 +5,7 @@
 {% block header_text %}Propriedade{% endblock %}
 
 {% block rels %}
-<!-- Fonte Outfit e icons -->
+ 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
@@ -27,7 +27,7 @@
 * { box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
 html { font-size: var(--base-font); color: #071029; }
 
-/* Page wrapper */
+ 
 .page {
   width: 100%;
   max-width: var(--max-width);
@@ -35,7 +35,7 @@ html { font-size: var(--base-font); color: #071029; }
   padding: 0 16px;
 }
 
-/* ---------- TOP PANEL (property info + stats) ---------- */
+ 
 .top-panel{
   background: var(--bg);
   border: 1px solid var(--border);
@@ -48,7 +48,7 @@ html { font-size: var(--base-font); color: #071029; }
   margin-bottom: 24px;
 }
 
-/* property title */
+ 
 .property-title h1{
   margin: 0 0 6px 0;
   color: var(--accent);
@@ -61,7 +61,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 0.95rem;
 }
 
-/* stat mini-cards */
+ 
 .stats{
   display: flex;
   gap: 10px;
@@ -87,7 +87,7 @@ html { font-size: var(--base-font); color: #071029; }
 .stat-card .label{ font-size:0.9rem; color:var(--muted); }
 .stat-card .value{ font-weight:700; color:var(--accent); font-size:1.05rem; text-align:right; }
 
-/* ---------- ACTION BAR (search/invite) ---------- */
+ 
 .action-bar{
   margin-bottom: 24px;
   display:flex;
@@ -147,7 +147,7 @@ html { font-size: var(--base-font); color: #071029; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* ---------- PARTICIPANTS LIST ---------- */
+ 
 .section-title{ 
   margin-bottom: 16px; 
   color: var(--accent); 
@@ -159,7 +159,7 @@ html { font-size: var(--base-font); color: #071029; }
 }
 .results{ display:flex; flex-direction:column; gap:12px; }
 
-/* participant card */
+ 
 .participant-card{
   display:grid;
   grid-template-columns: 60px 1fr auto auto;
@@ -178,7 +178,7 @@ html { font-size: var(--base-font); color: #071029; }
   transform: translateY(-1px);
 }
 
-/* participant avatar */
+ 
 .participant-avatar{
   width:60px;
   height:60px;
@@ -200,7 +200,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* participant info */
+ 
 .participant-info{ display:flex; flex-direction:column; gap:4px; }
 .participant-name{ 
   margin:0; 
@@ -214,7 +214,7 @@ html { font-size: var(--base-font); color: #071029; }
   color:var(--muted);
 }
 
-/* participant role */
+ 
 .role-selector {
   position: relative;
   display: inline-block;
@@ -276,7 +276,7 @@ html { font-size: var(--base-font); color: #071029; }
   border-radius: 0 0 8px 8px;
 }
 
-/* participant actions */
+ 
 .participant-actions{
   display: flex;
   gap: 8px;
@@ -296,7 +296,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--accent);
 }
 
-/* mobile adjustments */
+ 
 @media (max-width:640px){
   .participant-card{ 
     grid-template-columns: 50px 1fr; 
@@ -313,7 +313,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* ---------- MODALS ---------- */
+ 
 .modal-backdrop{
   position:fixed;
   inset:0;
@@ -372,7 +372,7 @@ html { font-size: var(--base-font); color: #071029; }
   min-height: 80px;
 }
 
-/* Link de convite */
+ 
 .invite-link-container {
   display: flex;
   gap: 8px;
@@ -408,7 +408,7 @@ html { font-size: var(--base-font); color: #071029; }
   background: #3a5f8a;
 }
 
-/* modal actions */
+ 
 .modal-actions{ 
   display:flex; 
   justify-content:flex-end; 
@@ -417,11 +417,11 @@ html { font-size: var(--base-font); color: #071029; }
 }
 .small{ font-size:0.9rem; color:var(--muted); }
 
-/* utility */
+ 
 .hidden{ display:none !important; }
 .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-/* empty state */
+ 
 .empty-state{
   text-align: center;
   padding: 40px 20px;
@@ -433,7 +433,7 @@ html { font-size: var(--base-font); color: #071029; }
   opacity: 0.5;
 }
 
-/* notification */
+ 
 .notification {
   position: fixed;
   top: 20px;
@@ -460,7 +460,7 @@ html { font-size: var(--base-font); color: #071029; }
 {% block content %}
 <div class="page">
 
-  <!-- TOP PANEL -->
+   
   <section class="top-panel" aria-labelledby="panel-title">
     <div class="property-title">
       <h1 id="panel-title">Propriedade EnrichTheSoil</h1>
@@ -487,7 +487,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </section>
 
-  <!-- ACTION BAR -->
+   
   <div class="action-bar">
     <div class="search" role="search">
       <span class="material-icons" aria-hidden="true">search</span>
@@ -502,7 +502,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
   </div>
 
-  <!-- PARTICIPANTS LIST -->
+   
   <section class="participants-section">
     <div class="section-title">
       <span class="material-icons">groups</span>
@@ -510,7 +510,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
 
     <div class="results" id="results-list" aria-live="polite">
-      <!-- Participante 1 - Gerente -->
+       
       <div class="participant-card" data-role="gerente">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Ana Silva" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -551,7 +551,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Participante 2 - Técnico -->
+       
       <div class="participant-card" data-role="tecnico">
         <div class="participant-avatar">
           <span class="material-icons">person</span>
@@ -591,7 +591,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Participante 3 - Colaborador -->
+       
       <div class="participant-card" data-role="colaborador">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Mariana Costa" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -632,7 +632,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Participante 4 - Técnico -->
+       
       <div class="participant-card" data-role="tecnico">
         <div class="participant-avatar">
           <span class="material-icons">person</span>
@@ -672,7 +672,7 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
-      <!-- Mensagem quando não há resultados -->
+       
       <div id="no-results" class="empty-state hidden" role="status">
         <span class="material-icons">search_off</span>
         <h3>Nenhum participante encontrado</h3>
@@ -682,7 +682,7 @@ html { font-size: var(--base-font); color: #071029; }
   </section>
 </div>
 
-<!-- MODAL CONVIDAR PARTICIPANTE -->
+ 
 <div id="invite-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="invite-title">
   <div class="modal-panel" role="document">
     <div class="modal-header">
@@ -732,7 +732,7 @@ html { font-size: var(--base-font); color: #071029; }
   </div>
 </div>
 
-<!-- Notificação -->
+ 
 <div id="notification" class="notification">
   <span class="material-icons">check_circle</span>
   <span id="notification-text">Link copiado para a área de transferência!</span>

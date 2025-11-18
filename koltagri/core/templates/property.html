@@ -36,7 +36,7 @@
     gap: var(--gap);
 }
 
-/* Header Styles */
+ 
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -56,7 +56,7 @@
     gap: 12px;
 }
 
-/* Filter and Search */
+ 
 .filter-section {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
@@ -99,7 +99,7 @@
     gap: 10px;
 }
 
-/* Properties Grid */
+ 
 .properties-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -163,7 +163,7 @@
     margin: 0;
 }
 
-/* Status Badge */
+ 
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -184,7 +184,7 @@
     color: var(--muted-color);
 }
 
-/* Buttons */
+ 
 .btn {
     display: inline-flex;
     align-items: center;
@@ -221,7 +221,7 @@
     padding: 8px;
 }
 
-/* Modal Styles */
+ 
 .modal-overlay {
     display: none;
     position: fixed;
@@ -270,7 +270,7 @@
     margin: 0 0 20px 0;
 }
 
-/* Form Styles */
+ 
 .form-group {
     display: flex;
     flex-direction: column;
@@ -341,7 +341,7 @@
     font-weight: 600;
 }
 
-/* Empty State */
+ 
 .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -359,7 +359,7 @@
     margin-bottom: 20px;
 }
 
-/* Responsive */
+ 
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
@@ -390,7 +390,7 @@
 
 {% block content %}
 <div class="page-container">
-    <!-- Page Header -->
+     
     <div class="page-header">
         <h1 class="page-title">Propriedades</h1>
         <div class="page-actions">
@@ -405,7 +405,7 @@
         </div>
     </div>
 
-    <!-- Filter Section -->
+     
     <div class="filter-section" id="filter-section">
         <div class="filter-row">
             <div class="search-box">
@@ -433,12 +433,12 @@
         </div>
     </div>
 
-    <!-- Properties Grid -->
+     
     <div class="properties-grid" id="properties-container">
-        <!-- Propriedades serão carregadas aqui via JavaScript -->
+         
     </div>
 
-    <!-- Empty State -->
+     
     <div class="empty-state" id="empty-state" style="display: none;">
         <span class="material-icons">home</span>
         <p>Nenhuma propriedade encontrada</p>
@@ -449,7 +449,7 @@
     </div>
 </div>
 
-<!-- Modal para Adicionar/Editar Propriedade -->
+ 
 <div class="modal-overlay" id="property-modal" style="translate: 0 0;">
     <div class="modal-content">
         <button type="button" class="close-btn" id="close-property-modal">
@@ -497,7 +497,7 @@
     </div>
 </div>
 
-<!-- Modal para Confirmar Exclusão -->
+ 
 <div class="modal-overlay delete-modal" id="delete-modal">
     <div class="modal-content">
         <button type="button" class="close-btn" id="close-delete-modal">

@@ -5,7 +5,7 @@
 {% block header_text %}Propriedade{% endblock %}
 
 {% block rels %}
-<!-- Fonte Outfit e icons -->
+ 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/task_team.css' %}">
@@ -19,12 +19,12 @@
 {% block content %}
 <div class="page">
 
-  <!-- TOP PANEL -->
+   
   <section class="top-panel" aria-labelledby="panel-title">
 
   </section>
 
-  <!-- ACTION BAR -->
+   
   <div class="action-bar">
     <div class="search" role="search">
       <span class="material-icons" aria-hidden="true">search</span>
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <!-- PARTICIPANTS LIST -->
+   
   <section class="participants-section">
     <div class="section-title">
       <span class="material-icons">groups</span>
@@ -52,7 +52,7 @@
     </div>
 
     <div class="results" id="results-list" aria-live="polite">
-      <!-- Participante 1 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <!-- Participante 2 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <span class="material-icons">person</span>
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <!-- Participante 3 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -132,7 +132,7 @@
         </div>
       </div>
 
-      <!-- Participante 4 -->
+       
       <div class="participant-card">
         <div class="participant-avatar">
           <span class="material-icons">person</span>
@@ -158,7 +158,7 @@
         </div>
       </div>
 
-      <!-- Mensagem quando não há resultados -->
+       
       <div id="no-results" class="empty-state hidden" role="status">
         <span class="material-icons">search_off</span>
         <h3>Nenhum participante encontrado</h3>
@@ -168,7 +168,7 @@
   </section>
 </div>
 
-<!-- MODAL ADICIONAR PARTICIPANTE -->
+ 
 <div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title">
   <div class="modal-panel" role="document">
     <div class="modal-header">
@@ -223,7 +223,7 @@
   </div>
 </div>
 
-<!-- MODAL FILTRAR PARTICIPANTES -->
+ 
 <div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
   <div class="modal-panel" role="document">
     <div class="modal-header">

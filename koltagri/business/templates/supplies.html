@@ -17,11 +17,11 @@
   #edit-button{
     visibility: hidden;
   }
-/* VARIABLES */
+ 
 :root{
   --bg: #f2f2f2;
   --muted: #66788f;
-  --primary: #4aa58a; /* mantendo identidade anterior */
+  --primary: #4aa58a;  
   --accent: #00204b;
   --card-bg: #ffffff;
   --border: #e8eef6;
@@ -38,7 +38,7 @@
   width: 100%;
 }
 
-/* SUPPLIES INDICATORS - header block */
+ 
 .supplies-indicators{
   display: grid;
   grid-template-columns: 1fr auto;
@@ -52,7 +52,7 @@
   box-sizing: border-box;
 }
 
-/* Título e ação */
+ 
 .supplies-header{
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@
   font-size: 13px;
 }
 
-/* Add button */
+ 
 .add-supply{
   display: none;
   align-items: center;
@@ -86,16 +86,16 @@
 }
 .add-supply .material-icons{ font-size: 20px; }
 
-/* INDICATOR CARDS: grid that adapts */
+ 
 .indicators-grid{
-  grid-column: 1 / -1; /* occupies full width below header */
+  grid-column: 1 / -1;  
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
   margin-top: 12px;
 }
 
-/* individual indicator card */
+ 
 .supply-card{
   display: flex;
   align-items: center;
@@ -130,7 +130,7 @@
   color: var(--muted);
 }
 
-/* SEARCH & FILTER section */
+ 
 .filter-search-section{
   display: flex;
   flex-wrap: wrap;
@@ -138,14 +138,14 @@
   margin-top: 20px;
 }
 
-/* RESULTS */
+ 
 .tasks-result .results{
   display: grid;
   gap: 12px;
   margin-top: 20px;
 }
 
-/* result card */
+ 
 .result_card{
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -178,7 +178,7 @@
   color: var(--muted);
 }
 
-/* small screens adjustments */
+ 
 @media (max-width: 720px){
   .supplies-indicators{
     grid-template-columns: 1fr;
@@ -192,7 +192,7 @@
   .add-supply{ justify-self: start; }
 }
 
-/* optional utility classes */
+ 
 .flex-clmn{ display:flex; flex-direction: column; }
 .hidden-on-desktop{ display: none; }
 @media (max-width:720px){ .hidden-on-mobile{ display:none; } .hidden-on-desktop{ display:inline-flex; } }
@@ -209,7 +209,7 @@
             </button>
 </div>
 <div class="container-wide">
-  <!-- SUPPLIES INDICATORS -->
+   
   <section class="supplies-indicators" aria-labelledby="supplies-title">
 
     <div class="supplies-header" id="supplies-title">
@@ -222,7 +222,7 @@
       <span>Novo Insumo</span>
     </a>
 
-    <!-- indicators grid -->
+     
     <div class="indicators-grid" role="list">
       <div class="supply-card" role="listitem" aria-label="Total de Insumos">
         <div class="icon-wrap"><span class="material-icons" aria-hidden="true">inventory_2</span></div>
@@ -247,16 +247,16 @@
           <p><strong>47</strong></p>
         </div>
       </div>
-    </div><!-- /.indicators-grid -->
+    </div> 
   </section>
 
-  <!-- SEARCH & FILTER -->
+   
   <section class="filter-search-section" style="margin-top:20px;">
     {% include "partials/_search.html" %}
     
   </section>
 
-  <!-- RESULTS -->
+   
   <section class="tasks-result result" >
     <div class="results" >
       <div class="result_card task_card" role="article" aria-label="Adubo Orgânico">
@@ -303,7 +303,7 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- se quiser, pode ativar botão mobile aqui -->
+ 
 <script>
   // exemplo: abrir modal de criação ao clicar em add-supply (deixe conforme sua implementação)
   document.addEventListener('click', function(e){

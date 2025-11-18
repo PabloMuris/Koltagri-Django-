@@ -6,85 +6,490 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/plant_detail.css' %}">
 <link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
-    .content-layer{
-  display: flex;
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+main{
+    background: #f2f2f2;
+    position: relative;
+    margin-inline: 16px;
+    border-radius: 10px 00px 0px 10px;
+}
+
+.content-layer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    position: relative;
 }
 
 .plant-detail-form{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  margin-top: 60px;
-  gap: 20px;
-  
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    gap: 20px;
 }
 
-.plant-detail-form button{
-  height: 44px;
-  border-radius: 10px;
-  background-color: var(--primary-color);
-  padding: 16px;
-  color: white;
-  font-weight: 400;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
-.plant-detail-form input{
-  height: 44px;
-  border-radius: 10px;
-  padding: 10px
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
 }
-.plant-detail-form select{
-  height: 44px;
-  border-radius: 10px;
-  padding: 10px
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
 }
 
 .buttons-area{
-  display: flex;
-  align-items: center;
-  justify-content: space-between
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn.danger {
+    background: #d32f2f;
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Plant Header */
+.plant-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-top: 60px;
+}
+
+.plant-header img{
+    width: 260px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.plant-names{
+    text-align: center;
+}
+
+.plant-names .popular{
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.plant-names .scientific{
+    font-size: 16px;
+    font-style: italic;
+    opacity: 0.7;
+    margin: 0;
+    color: var(--muted-color);
+}
+
+/* Status Section */
+.status-section{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 0 16px;
+}
+
+.status-card{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    width: 220px;
+    border: 2px solid #ececec;
+    transition: all 0.3s ease;
+}
+
+.status-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.status-card .material-icons {
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+.status-card p:first-child{
+    font-size: 14px;
+    opacity: .6;
+    margin: 0;
+}
+
+.status-card p:last-child{
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Info Section */
+.info-section{
+    background: white;
+    padding: 30px 24px;
+    border-radius: 14px;
+    border: 2px solid #e8e8e8;
+    margin: 0 16px 32px;
+}
+
+.info-block{
+    margin-bottom: 32px;
+}
+
+.info-block h3{
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-block h3 .material-icons {
+    font-size: 20px;
+}
+
+.info-block p{
+    text-align: justify;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Attachments Section */
+.attachments-container {
+    margin-top: 24px;
+}
+
+.attachment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.attachment-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+}
+
+.attachment-icon .material-icons {
+    font-size: 20px;
+    color: var(--muted-color);
+}
+
+.attachment-info {
+    flex: 1;
+}
+
+.attachment-name {
+    font-weight: 500;
+    color: var(--accent-color);
+    margin: 0;
+    font-size: 14px;
+}
+
+.attachment-meta {
+    color: var(--muted-color);
+    font-size: 12px;
+    margin: 0;
+}
+
+.attachment-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.attachment-actions .btn {
+    padding: 6px;
+    flex: none;
+}
+
+.add-attachment-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.add-attachment-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Actions */
+.actions{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    z-index: 10;
+}
+
+.actions button{
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.actions button:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.actions button svg{
+    fill: var(--text-color);
+}
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .status-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .status-card {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .buttons-area {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .plant-header img {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-layer {
+        padding: 20px;
+    }
+    
+    .info-section {
+        padding: 20px 16px;
+        margin: 0 8px 24px;
+    }
+    
+    .plant-header {
+        padding-top: 50px;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="modal-overlay climate-modal" id="modal-overlay">
+<!-- Modal de Edição -->
+<div class="modal-overlay climate-modal" id="modal-overlay" style="translate: 0 0;">
     <div class="content-layer">
         <button type="button" class="close-btn" id="close-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
             </svg>
         </button>
 
-        <form action="" class="plant-detail-form">
+        <h2 style="margin: 0 0 20px 0; color: var(--accent-color);">Editar Planta</h2>
 
-            <label for="period">Safra</label>
-            <select name="period" id="period">
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-            </select>
+        <form class="plant-detail-form">
 
-            <label for="transplant_date">Data de Transplante</label>
-            <input type="date" name="transplant_date" id="transplant_date">
+            <div class="form-group">
+                <label for="period">Safra</label>
+                <select name="period" id="period">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
 
-            <label for="harvest_date">Data de Colheita</label>
-            <input type="date" name="harvest_date" id="harvest_date">
+            <div class="form-group">
+                <label for="transplant_date">Data de Transplante</label>
+                <input type="date" name="transplant_date" id="transplant_date">
+            </div>
+
+            <div class="form-group">
+                <label for="harvest_date">Data de Colheita</label>
+                <input type="date" name="harvest_date" id="harvest_date">
+            </div>
 
             <div class="buttons-area">
-                <button type="submit" class="confirm-btn">Confirmar edição</button>
-                <button type="button" class="delete-btn">Apagar planta</button>
+                <button type="submit" class="btn primary">Confirmar edição</button>
+                <button type="button" class="btn danger">Apagar planta</button>
             </div>
 
         </form>
     </div>
 </div>
 
+<!-- Conteúdo Principal -->
+<main>
+    <section class="actions">
+        <button type="button" id="back-button" onclick="location.href='{% url 'cultivated_plants'%}'">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+            </svg>
+        </button>
+        <button type="button" id="edit-button">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+            </svg>
+        </button>
+    </section>
 
-    <!-- ✅ SEÇÃO 1 -->
     <section class="plant-header">
         <img src="{% static 'example_img/banana.png' %}" alt="Planta">
 
@@ -92,24 +497,11 @@
             <p class="popular">Banana da terra</p>
             <p class="scientific">Musa x paradisica</p>
         </div>
-
-        <div class="actions">
-            <button type="button" id="back-button" onclick="location.href='{% url 'cultivated_plants'%}'" >
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-            </button>
-            <button type="button" id="edit-button">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
-            </button>
-        </div>
     </section>
 
-    <!-- ✅ SEÇÃO 2 -->
     <section class="status-section">
-
         <div class="status-card">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
-            </svg>
+            <span class="material-icons">water_drop</span>
             <div>
                 <p>Irrigação</p>
                 <p>Diária</p>
@@ -117,9 +509,7 @@
         </div>
 
         <div class="status-card">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
-            </svg>
+            <span class="material-icons">wb_sunny</span>
             <div>
                 <p>Sol</p>
                 <p>Pleno</p>
@@ -127,9 +517,7 @@
         </div>
 
         <div class="status-card">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
-            </svg>
+            <span class="material-icons">eco</span>
             <div>
                 <p>Transplante</p>
                 <p>20 dias</p>
@@ -137,63 +525,173 @@
         </div>
 
         <div class="status-card">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                <path d="M491-200q12-1 20.5-9.5T520-230q0-14-9-22.5t-23-7.5q-41 3-87-22.5T343-375q-2-11-10.5-18t-19.5-7q-14 0-23 10.5t-6 24.5q17 91 80 130t127 35Z"/>
-            </svg>
+            <span class="material-icons">device_thermostat</span>
             <div>
                 <p>Temperatura ideal</p>
                 <p>20°-34°</p>
             </div>
         </div>
-
     </section>
 
-    <!-- ✅ SEÇÃO 3 -->
     <section class="info-section">
-
         <div class="info-block">
-            <h3>Descrição</h3>
+            <h3>
+                <span class="material-icons">description</span>
+                Descrição
+            </h3>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Cras tristique facilisis ipsum vel fringilla. Suspendisse ut 
-                efficitur eros, in commodo sem.
+                A banana-da-terra é uma variedade de banana mais robusta e rica em amido, 
+                geralmente consumida cozida, frita ou assada. É uma excelente fonte de 
+                energia, potássio e vitaminas A e C. Cultivada em climas tropicais, 
+                necessita de solo fértil e bem drenado para um desenvolvimento ideal.
             </p>
         </div>
 
         <div class="info-block">
-            <h3>Observações</h3>
+            <h3>
+                <span class="material-icons">notes</span>
+                Observações
+            </h3>
             <p>
-                <a href="">
-
-                </a>
+                A planta apresenta bom desenvolvimento nas condições atuais. Recomenda-se 
+                monitorar a umidade do solo durante períodos de seca. As folhas mostram 
+                sinais saudáveis de crescimento, indicando boa adaptação ao ambiente.
             </p>
         </div>
         
-        
-
+        <div class="info-block">
+            <h3>
+                <span class="material-icons">attach_file</span>
+                Anexos
+            </h3>
+            <div class="attachments-container">
+                <div class="attachment-list">
+                    <div class="attachment-item">
+                        <div class="attachment-icon">
+                            <span class="material-icons">image</span>
+                        </div>
+                        <div class="attachment-info">
+                            <p class="attachment-name">crescimento_fase1.jpg</p>
+                            <p class="attachment-meta">Adicionado em 15/03/2024 • 2.4 MB</p>
+                        </div>
+                        <div class="attachment-actions">
+                            <button class="btn small icon-only" title="Visualizar">
+                                <span class="material-icons">visibility</span>
+                            </button>
+                            <button class="btn small icon-only" title="Download">
+                                <span class="material-icons">download</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="attachment-item">
+                        <div class="attachment-icon">
+                            <span class="material-icons">description</span>
+                        </div>
+                        <div class="attachment-info">
+                            <p class="attachment-name">relatorio_solo.pdf</p>
+                            <p class="attachment-meta">Adicionado em 10/03/2024 • 1.8 MB</p>
+                        </div>
+                        <div class="attachment-actions">
+                            <button class="btn small icon-only" title="Visualizar">
+                                <span class="material-icons">visibility</span>
+                            </button>
+                            <button class="btn small icon-only" title="Download">
+                                <span class="material-icons">download</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="add-attachment-btn" id="add-attachment">
+                    <span class="material-icons">add</span>
+                    Adicionar Anexo
+                </button>
+            </div>
+        </div>
     </section>
+</main>
 
+<!-- Modal para Adicionar Anexo -->
+<div class="modal-overlay" id="attachment-modal" style="display: none;">
+    <div class="content-layer">
+        <button type="button" class="close-btn" id="close-attachment-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        
+        <h2 style="margin: 0 0 20px 0; color: var(--accent-color);">Adicionar Anexo</h2>
+        
+        <form id="attachment-form">
+            <div class="form-group">
+                <label for="attachment-file">Selecionar Arquivo</label>
+                <input type="file" id="attachment-file" accept="image/*, .pdf, .doc, .docx">
+            </div>
+            
+            <div class="form-group">
+                <label for="attachment-description">Descrição (opcional)</label>
+                <input type="text" id="attachment-description" placeholder="Descreva o anexo...">
+            </div>
+            
+            <div class="buttons-area">
+                <button type="button" class="btn" id="cancel-attachment">Cancelar</button>
+                <button type="submit" class="btn primary">Adicionar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
-
 
 {% block scripts %}
 <script>
     const modalOverlay = document.getElementById("modal-overlay");
-    const editbutton = document.getElementById("edit-button");
-    const closebtn =  document.getElementById("close-btn");
-
-    editbutton.addEventListener("click", (e) => {
-        modalOverlay.style.display = "flex";
-    })
-
-    closebtn.addEventListener("click", (e) =>{
-        modalOverlay.style.display = "none";
-    })
-
-
-
+    const editButton = document.getElementById("edit-button");
+    const closeBtn = document.getElementById("close-btn");
     
-</script>
+    const attachmentModal = document.getElementById("attachment-modal");
+    const addAttachmentBtn = document.getElementById("add-attachment");
+    const closeAttachmentModal = document.getElementById("close-attachment-modal");
+    const cancelAttachment = document.getElementById("cancel-attachment");
+    const attachmentForm = document.getElementById("attachment-form");
 
-{% endblock%}
+    editButton.addEventListener("click", (e) => {
+        modalOverlay.style.display = "flex";
+    });
+
+    closeBtn.addEventListener("click", (e) => {
+        modalOverlay.style.display = "none";
+    });
+
+    addAttachmentBtn.addEventListener("click", (e) => {
+        attachmentModal.style.display = "flex";
+    });
+
+    closeAttachmentModal.addEventListener("click", (e) => {
+        attachmentModal.style.display = "none";
+    });
+
+    cancelAttachment.addEventListener("click", (e) => {
+        attachmentModal.style.display = "none";
+    });
+
+    attachmentForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // Aqui você adicionaria a lógica para upload do arquivo
+        alert('Anexo adicionado com sucesso!');
+        attachmentModal.style.display = "none";
+        attachmentForm.reset();
+    });
+
+    // Fechar modais ao clicar fora do conteúdo
+    window.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+        if (e.target === attachmentModal) {
+            attachmentModal.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

@@ -7,17 +7,15 @@
 }
 
 .action-bar .actions button{
-  height: 40px;
-  border-radius: 10px;
-  background-color: var(--primary-color);
-  display: flex;
-  flex-flow: row;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding-inline: 10px;
-  color: white;
-  font-weight: 400;
-  min-height: 44px;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.98rem;
   
 }
 
@@ -44,4 +42,8 @@
   border-radius: 10px;
   padding-inline: 6px;
   min-height: 44px;
+}
+
+#add-open{
+  background-color: var(--primary-color);
 }

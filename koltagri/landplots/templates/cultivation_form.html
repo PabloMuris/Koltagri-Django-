@@ -11,7 +11,7 @@
 {% block styles %}
 <style>
 :root{
-  --primary-color: #3b82a0;   /* azul-esverdeado */
+  --primary-color: #3b82a0;    
   --primary-dark: #2d677f;
   --bg: #f7f9fb;
   --card-bg: #fff;
@@ -24,14 +24,14 @@
 
 *{ box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
 
-/* page background handled by base; keep form centered */
+ 
 .form-shell {
   max-width: 800px;
   margin: 18px auto;
   padding: 0 16px;
 }
 
-/* panel */
+ 
 .form-panel{
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -40,7 +40,7 @@
   width: 100%;
 }
 
-/* title */
+ 
 .form-panel h1{
   margin:0 0 6px 0;
   font-size: 1.25rem;
@@ -48,14 +48,14 @@
   font-weight: 600;
 }
 
-/* subtitle / meta */
+ 
 .form-sub {
   font-size: 0.95rem;
   color: var(--muted);
   margin-bottom: 12px;
 }
 
-/* layout groups */
+ 
 .row {
   display:flex;
   gap: 12px;
@@ -64,14 +64,14 @@
   flex: 1;
 }
 
-/* stack helpers */
+ 
 .stack {
   display:flex;
   flex-direction:column;
   gap:10px;
 }
 
-/* labels & inputs */
+ 
 label{
   font-size: 14px;
   color: var(--text);
@@ -95,23 +95,23 @@ select {
 }
 
 input[type="date"] {
-  padding-left: 12px; /* keeps label spacing consistent */
+  padding-left: 12px;  
 }
 
-/* focus */
+ 
 input:focus,
 select:focus{
   border-color: var(--primary-color);
   box-shadow: 0 0 0 4px rgba(59,130,112,0.06);
 }
 
-/* safra smaller hint */
+ 
 .helper {
   font-size: 13px;
   color: var(--muted);
 }
 
-/* action area */
+ 
 .actions {
   display:flex;
   gap:16px;
@@ -141,14 +141,14 @@ select:focus{
   color: var(--primary-color);
 }
 
-/* responsive layout: on small widths stack columns */
+ 
 @media (max-width: 760px){
   .row{ flex-direction: column; }
   .actions{ flex-direction: column-reverse; gap: 10px; }
   .actions .btn{ width: 100%; }
 }
 
-/* small visual polish */
+ 
 .small-note { font-size: 13px; color: var(--muted); margin-top: 6px; }
 
 
@@ -176,7 +176,7 @@ select:focus{
     <h1 id="form-title">Cadastro de Cultivo</h1>
     <div class="form-sub">Preencha os dados básicos do cultivo. Campos com * são obrigatórios.</div>
 
-    <!-- LOCAIS + ESPÉCIE + SAFRA -->
+     
     <div class="stack" role="group" aria-label="Dados principais">
       <div class="row">
         <div class="col">
@@ -209,7 +209,7 @@ select:focus{
       </div>
     </div>
 
-    <!-- DATAS: plantio, transplante, colheita -->
+     
     <fieldset class="stack" style="border:0; padding:0; margin:0;" aria-labelledby="dates-legend">
       <legend id="dates-legend" style="font-weight:600; color:var(--text); margin-bottom:4px;">Datas principais</legend>
 
@@ -233,7 +233,7 @@ select:focus{
       <div class="small-note">Em dispositivos móveis, o seletor nativo de data será usado para melhor acessibilidade. Em desktop, o navegador mostrará o seletor padrão.</div>
     </fieldset>
 
-    <!-- actions -->
+     
     <div class="actions" role="group" aria-label="Ações do formulário">
       <button type="reset" class="btn ghost" aria-label="Limpar formulário">Limpar</button>
       <button type="submit" class="btn primary" aria-label="Enviar formulário">Concluir</button>

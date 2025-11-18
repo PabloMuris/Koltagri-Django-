@@ -15,7 +15,7 @@
 {% block content %}
 <div class="page-container">
 
-  <!-- User Actions -->
+   
   <div class="user-actions">
     <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
@@ -29,10 +29,10 @@
     </button>
   </div>
 
-  <!-- Form Container -->
+   
   <div class="form-container">
     
-    <!-- Main Form -->
+     
     <form method="post" enctype="multipart/form-data" class="form-box">
       {% csrf_token %}
 
@@ -42,7 +42,7 @@
       </div>
 
       <div class="form-grid">
-        <!-- TÍTULO -->
+         
         <div class="field-block">
           <label for="title" class="field-label">
             <span class="material-icons">title</span>
@@ -51,7 +51,7 @@
           <input type="text" id="title" name="title" class="form-input" placeholder="Digite o título do conteúdo" required>
         </div>
 
-        <!-- CONTEÚDO -->
+         
         <div class="field-block">
           <label for="content" class="field-label">
             <span class="material-icons">description</span>
@@ -60,7 +60,7 @@
           <textarea id="content" name="content" class="form-textarea" placeholder="Descreva em detalhes a atividade realizada, procedimentos, observações e resultados..." required></textarea>
         </div>
 
-        <!-- INSUMOS -->
+         
         <div class="field-block">
           <label for="ins" class="field-label">
             <span class="material-icons">inventory_2</span>
@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <!-- ARQUIVOS -->
+         
         <div class="field-block">
           <label for="attachments" class="field-label">
             <span class="material-icons">attach_file</span>
@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <!-- AÇÕES -->
+       
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" id="clear-button">
           <span class="material-icons">delete</span>
@@ -110,7 +110,7 @@
       </div>
     </form>
 
-    <!-- Activity Details Sidebar -->
+     
     <div class="activity-details">
       <h3 class="details-title">
         <span class="material-icons">tune</span>
@@ -118,7 +118,7 @@
       </h3>
       
       <div class="details-content">
-        <!-- DATA DE ENTREGA -->
+         
         <div class="field-block">
           <label for="due_date" class="field-label">
             <span class="material-icons">event</span>
@@ -127,7 +127,7 @@
           <input type="date" id="due_date" name="due_date" class="form-input" required>
         </div>
 
-        <!-- NÍVEL DE PRIORIDADE -->
+         
         <div class="field-block">
           <label class="field-label">
             <span class="material-icons">flag</span>
@@ -154,7 +154,7 @@
           <input type="hidden" id="priority" name="priority" value="medium">
         </div>
 
-        <!-- ESPÉCIE DA PLANTA -->
+         
         <div class="field-block">
           <label class="field-label">
             <span class="material-icons">grass</span>

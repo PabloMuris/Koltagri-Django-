@@ -16,3 +16,9 @@ class SuppliesView(TemplateView):
 
 class SuppliesDetailView(TemplateView):
     template_name = 'supplies_detail.html'
+
+
+class SuppliesFormView(TemplateView):
+    template_name = 'supplies_form.html'
+
+

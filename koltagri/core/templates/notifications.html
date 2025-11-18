@@ -16,10 +16,10 @@
   --radius:12px;
 }
 
-/* page base */
+ 
 main { background: var(--bg); padding: 18px; }
 
-/* overall grid: on wide screens 2 columns (list | detail) */
+ 
 .notif-page {
   display: grid;
   grid-template-columns: 1fr;
@@ -28,19 +28,19 @@ main { background: var(--bg); padding: 18px; }
   margin: 0 auto;
 }
 
-/* >=1301 -> split view */
+ 
 @media (min-width:1301px){
   .notif-page { grid-template-columns: 1fr 420px; align-items: start; }
 }
 
-/* left column: search + filters + list */
+ 
 .left-panel {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* search bar */
+ 
 .search-bar {
   display:flex;
   gap:8px;
@@ -59,7 +59,7 @@ main { background: var(--bg); padding: 18px; }
   flex:1;
 }
 
-/* control row (filter + actions) */
+ 
 .controls {
   display:flex;
   gap:8px;
@@ -83,7 +83,7 @@ main { background: var(--bg); padding: 18px; }
   background:transparent;
 }
 
-/* list of notifications */
+ 
 .notif-list {
   display:flex;
   flex-direction:column;
@@ -91,7 +91,7 @@ main { background: var(--bg); padding: 18px; }
   margin-top:4px;
 }
 
-/* single item */
+ 
 .notif-item {
   display:flex;
   gap:12px;
@@ -105,13 +105,13 @@ main { background: var(--bg); padding: 18px; }
 }
 .notif-item:hover { transform: translateY(-3px); border-color: rgba(43,138,239,0.08); }
 
-/* unread accent */
+ 
 .notif-item.unread {
   background: linear-gradient(180deg, rgba(43,138,239,0.03), transparent);
   border-color: rgba(43,138,239,0.12);
 }
 
-/* item icon */
+ 
 .notif-icon {
   width:46px; height:46px; border-radius:10px;
   display:flex; align-items:center; justify-content:center;
@@ -119,7 +119,7 @@ main { background: var(--bg); padding: 18px; }
   background:#fff; color:var(--primary-color);
 }
 
-/* item body */
+ 
 .notif-body {
   flex:1;
   display:flex;
@@ -140,7 +140,7 @@ main { background: var(--bg); padding: 18px; }
   overflow:hidden;
 }
 
-/* item meta/actions */
+ 
 .notif-meta {
   display:flex;
   flex-direction:column;
@@ -151,16 +151,16 @@ main { background: var(--bg); padding: 18px; }
 .notif-time { font-size:13px; color:var(--muted); }
 .item-actions { display:flex; gap:6px; }
 
-/* small icon button */
+ 
 .icon-btn {
   width:34px; height:34px; border-radius:8px;
   background:#fff; border:1px solid var(--card-border);
   display:flex; align-items:center; justify-content:center; cursor:pointer;
 }
 
-/* right panel (detail) */
+ 
 .detail-panel {
-  display:none; /* hidden on small screens */
+  display:none;  
   background:#fff;
   border:1px solid var(--card-border);
   border-radius:12px;
@@ -172,12 +172,12 @@ main { background: var(--bg); padding: 18px; }
   .detail-panel { display:block; }
 }
 
-/* detail content */
+ 
 .detail-title { font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; }
 .detail-time { color:var(--muted); font-size:13px; margin-bottom:12px; }
 .detail-body { color:var(--text); line-height:1.5; }
 
-/* modal overlay for small screens */
+ 
 .modal-overlay{
   position:fixed; inset:0; display:none; align-items:center; justify-content:center;
   background: rgba(0,0,0,0.45); z-index:1400; padding:16px;
@@ -187,15 +187,15 @@ main { background: var(--bg); padding: 18px; }
   box-sizing:border-box; max-height:88vh; overflow:auto;
 }
 
-/* empty state */
+ 
 .empty {
   text-align:center; color:var(--muted); padding:24px; border:1px dashed var(--card-border); border-radius:10px;
 }
 
-/* accessibility focus outlines */
+ 
 .notif-item:focus, .btn:focus, .icon-btn:focus { outline: 3px solid rgba(43,138,239,0.12); outline-offset:3px; }
 
-/* small screens adjustments */
+ 
 @media (max-width:420px){
   body { padding:12px; }
   .notif-meta { min-width:72px; font-size:13px; }
@@ -207,7 +207,7 @@ main { background: var(--bg); padding: 18px; }
 <main>
   <section class="notif-page" aria-label="Notificações">
 
-    <!-- LEFT PANEL: search + filters + list -->
+     
     <div class="left-panel" role="region" aria-label="Lista de notificações">
 
       <div class="search-bar" role="search">
@@ -228,7 +228,7 @@ main { background: var(--bg); padding: 18px; }
 
       <div id="notif-list" class="notif-list" aria-live="polite" tabindex="0">
 
-        <!-- sample notification items (static). Each has data-* with full content -->
+         
         <article class="notif-item unread" tabindex="0" role="button"
                  data-type="alert"
                  data-title="Ciclone Extratropical"
@@ -236,7 +236,7 @@ main { background: var(--bg); padding: 18px; }
                  data-time="23 Nov • 06:00"
                  aria-label="Alerta: Ciclone Extratropical">
           <div class="notif-icon" aria-hidden="true">
-            <!-- alert icon -->
+             
             <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-80q-137 0-228.5-94T160-408q0-137 94-228.5T480-730q137 0 228.5 93.5T802-408q0 137-94 228.5T480-80Zm0-80q96 0 164-68t68-164q0-96-68-164t-164-68q-96 0-164 68t-68 164q0 96 68 164t164 68Z"/></svg>
           </div>
 
@@ -302,13 +302,13 @@ main { background: var(--bg); padding: 18px; }
           </div>
         </article>
 
-        <!-- empty placeholder -->
+         
         <div id="empty" class="empty" style="display:none">Nenhuma notificação encontrada.</div>
 
       </div>
     </div>
 
-    <!-- RIGHT PANEL: detail (visible on wide screens) -->
+     
     <div class="detail-panel" role="region" aria-label="Detalhes da notificação" id="detail-panel" hidden>
       <div id="detail-content">
         <div class="detail-title" id="detail-title">Selecione uma notificação</div>
@@ -317,7 +317,7 @@ main { background: var(--bg); padding: 18px; }
       </div>
     </div>
 
-    <!-- MODAL: shown on small screens -->
+     
     <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
       <div class="modal" role="document" aria-labelledby="modal-title">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px;">

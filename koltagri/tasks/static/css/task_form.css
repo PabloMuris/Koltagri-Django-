@@ -16,7 +16,7 @@
 }
 html { font-size: var(--base-font); color: #071029; }
 
-/* Page Container */
+ 
 .page-container {
   width: 100%;
   max-width: var(--max-width);
@@ -27,7 +27,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 24px;
 }
 
-/* User Actions */
+ 
 .user-actions {
   display: flex;
   gap: 12px;
@@ -54,7 +54,7 @@ html { font-size: var(--base-font); color: #071029; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* Form Container */
+ 
 .form-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -68,7 +68,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* Form Box */
+ 
 .form-box {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -86,7 +86,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* Form Header */
+ 
 .form-header {
   text-align: center;
   margin-bottom: 8px;
@@ -105,7 +105,7 @@ html { font-size: var(--base-font); color: #071029; }
   margin: 0;
 }
 
-/* Form Grid */
+ 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -118,7 +118,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* Field Block */
+ 
 .field-block {
   display: flex;
   flex-direction: column;
@@ -139,7 +139,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* Inputs */
+ 
 .form-input,
 .form-select,
 .form-textarea {
@@ -193,7 +193,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: white;
 }
 
-/* Priority Styles */
+ 
 .priority-option {
   display: flex;
   align-items: center;
@@ -223,7 +223,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 18px;
 }
 
-/* File Input */
+ 
 .file-input-container {
   position: relative;
   display: flex;
@@ -258,7 +258,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: white;
 }
 
-/* Form Notes */
+ 
 .form-note {
   font-size: 0.85rem;
   color: var(--muted);
@@ -272,7 +272,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 16px;
 }
 
-/* Form Actions */
+ 
 .form-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -286,7 +286,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* Buttons */
+ 
 .btn {
   display: inline-flex;
   align-items: center;
@@ -332,7 +332,7 @@ html { font-size: var(--base-font); color: #071029; }
   box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
 }
 
-/* Activity Details Sidebar */
+ 
 .activity-details {
   background: var(--panel-bg);
   border: 1px solid var(--border);
@@ -367,7 +367,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 16px;
 }
 
-/* Priority Selector */
+ 
 .priority-selector {
   display: flex;
   flex-direction: column;
@@ -380,7 +380,7 @@ html { font-size: var(--base-font); color: #071029; }
   gap: 6px;
 }
 
-/* Species Grid */
+ 
 .species-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -415,7 +415,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 18px;
 }
 
-/* Quick Tips */
+ 
 .quick-tips {
   background: #f0f7ff;
   border: 1px solid #d1e7ff;
@@ -448,12 +448,12 @@ html { font-size: var(--base-font); color: #071029; }
   line-height: 1.4;
 }
 
-/* Utility */
+ 
 .hidden {
   display: none !important;
 }
 
-/* Responsive */
+ 
 @media (max-width: 600px) {
   .form-box {
     padding: 20px;

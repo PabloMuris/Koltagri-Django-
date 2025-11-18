@@ -1,0 +1,1540 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Insumos{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+
+.modal-overlay{
+    translate: 0 0;
+}
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+/* Header Styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Search and Filter Row */
+.search-filter-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 701px) {
+    .search-filter-row {
+        grid-template-columns: 1fr auto auto;
+    }
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-color);
+}
+
+/* Filtros Ativos */
+.active-filters {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.filter-tag .material-icons {
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.filter-tag .material-icons:hover {
+    opacity: 1;
+}
+
+.clear-all-filters {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.clear-all-filters:hover {
+    text-decoration: underline;
+}
+
+/* Insumos Grid */
+.insumos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.insumo-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.insumo-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.insumo-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insumo-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.insumo-card:hover .insumo-image img {
+    transform: scale(1.05);
+}
+
+.insumo-image .material-icons {
+    font-size: 48px;
+    color: var(--muted-color);
+}
+
+.insumo-content {
+    padding: 20px;
+}
+
+.insumo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.insumo-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+    flex: 1;
+    text-decoration: none;
+}
+
+.insumo-name:hover {
+    color: var(--primary-color);
+}
+
+.insumo-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.insumo-details {
+    color: var(--muted-color);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.insumo-detail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.insumo-description {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Status e Badges */
+.quantidade-baixa {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.quantidade-normal {
+    color: var(--primary-dark);
+}
+
+.renovavel-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.renovavel-sim {
+    background-color: rgba(74, 165, 130, 0.1);
+    color: var(--primary-dark);
+}
+
+.renovavel-nao {
+    background-color: rgba(107, 118, 136, 0.1);
+    color: var(--muted-color);
+}
+
+.validade-proxima {
+    color: #ff9800;
+    font-weight: 500;
+}
+
+.validade-expirada {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.btn.icon-only {
+    padding: 8px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0 0 20px 0;
+}
+
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+    transform: scale(1.2);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.delete-modal .modal-content {
+    max-width: 400px;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.warning-text {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-preview .material-icons {
+    font-size: 48px;
+    color: var(--muted-color);
+}
+
+.image-upload-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.image-upload-actions .btn {
+    flex: 1;
+}
+
+/* Modal de Filtros Específico */
+.filter-modal .modal-content {
+    max-width: 450px;
+}
+
+.filter-section-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.filter-option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-option-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.range-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.range-inputs input {
+    flex: 1;
+}
+
+.range-separator {
+    color: var(--muted-color);
+    font-weight: 500;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-color);
+}
+
+.empty-state .material-icons {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-filter-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .insumos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .active-filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .clear-all-filters {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .image-upload-actions {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+    .search-filter-row {
+        grid-template-columns: 1fr auto;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-left">
+            <button class="back-button" onclick="window.history.back()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                    <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+                </svg>
+            </button>
+            <h1 class="page-title">Insumos</h1>
+        </div>
+        <div class="page-actions">
+            <button class="btn primary" id="add-insumo-btn">
+                <span class="material-icons">add</span>
+                Novo Insumo
+            </button>
+        </div>
+    </div>
+
+    <!-- Search and Filter Row -->
+    <div class="search-filter-row">
+        <div class="search-box">
+            <span class="material-icons search-icon">search</span>
+            <input type="text" id="search-input" placeholder="Buscar insumos por nome, descrição...">
+        </div>
+        <button class="btn" id="filter-modal-btn">
+            <span class="material-icons">filter_list</span>
+            Filtrar
+        </button>
+        
+    </div>
+
+    <!-- Filtros Ativos -->
+    <div class="active-filters" id="active-filters" style="display: none;">
+        <span>Filtros ativos:</span>
+        <!-- Filtros ativos serão inseridos aqui via JavaScript -->
+        <span class="clear-all-filters" id="clear-all-filters">Limpar todos</span>
+    </div>
+
+    <!-- Insumos Grid -->
+    <div class="insumos-grid" id="insumos-container">
+        <!-- Insumos serão carregados aqui via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <span class="material-icons">inventory_2</span>
+        <p>Nenhum insumo encontrado</p>
+        <button class="btn primary" id="add-first-insumo">
+            <span class="material-icons">add</span>
+            Cadastrar Primeiro Insumo
+        </button>
+    </div>
+</div>
+
+<!-- Modal para Filtros -->
+<div class="modal-overlay filter-modal" id="filter-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-filter-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title">Filtrar Insumos</h2>
+        <div class="filter-section-modal">
+            <div class="filter-options">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filter-quantidade-min">Quantidade mínima</label>
+                        <input type="number" id="filter-quantidade-min" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-quantidade-max">Quantidade máxima</label>
+                        <input type="number" id="filter-quantidade-max" min="0" placeholder="1000">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="filter-preco-min">Preço mínimo (R$)</label>
+                        <input type="number" id="filter-preco-min" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-preco-max">Preço máximo (R$)</label>
+                        <input type="number" id="filter-preco-max" min="0" step="0.01" placeholder="1000.00">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="filter-renovavel">Renovável</label>
+                    <select id="filter-renovavel">
+                        <option value="">Todos</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="filter-unidade">Unidade de medida</label>
+                    <select id="filter-unidade">
+                        <option value="">Todas</option>
+                        <option value="kg">kg</option>
+                        <option value="g">g</option>
+                        <option value="L">L</option>
+                        <option value="mL">mL</option>
+                        <option value="un">un</option>
+                        <option value="cx">cx</option>
+                        <option value="sc">sc</option>
+                        <option value="pct">pct</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="filter-validade">Validade</label>
+                    <select id="filter-validade">
+                        <option value="">Todas</option>
+                        <option value="expirado">Expirados</option>
+                        <option value="proximo">Próximos do vencimento</option>
+                        <option value="valido">Válidos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn" id="cancel-filters">Cancelar</button>
+                <button type="button" class="btn" id="clear-filters">Limpar Filtros</button>
+                <button type="button" class="btn primary" id="apply-filters">Aplicar Filtros</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Insumo -->
+<div class="modal-overlay" id="insumo-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-insumo-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title" id="insumo-modal-title">Novo Insumo</h2>
+        <form id="insumo-form">
+            <input type="hidden" id="insumo-id">
+            
+            <div class="form-group">
+                <label for="insumo-nome">Nome do Insumo *</label>
+                <input type="text" id="insumo-nome" required maxlength="60">
+            </div>
+            
+            <div class="form-group">
+                <label>Imagem do Insumo</label>
+                <div class="image-upload-container">
+                    <div class="image-preview" id="image-preview">
+                        <span class="material-icons">image</span>
+                        <img id="image-preview-img" style="display: none;">
+                    </div>
+                    <div class="image-upload-actions">
+                        <button type="button" class="btn" id="upload-image-btn">
+                            <span class="material-icons">upload</span>
+                            Carregar Imagem
+                        </button>
+                        <input type="file" id="insumo-imagem" accept="image/*" style="display: none;">
+                        <button type="button" class="btn" id="remove-image-btn" style="display: none;">
+                            <span class="material-icons">delete</span>
+                            Remover
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="insumo-quantidade">Quantidade *</label>
+                    <input type="number" id="insumo-quantidade" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="insumo-unidade">Unidade de Medida *</label>
+                    <select id="insumo-unidade" required>
+                        <option value="">Selecione</option>
+                        <option value="kg">kg</option>
+                        <option value="g">g</option>
+                        <option value="L">L</option>
+                        <option value="mL">mL</option>
+                        <option value="un">un</option>
+                        <option value="cx">cx</option>
+                        <option value="sc">sc</option>
+                        <option value="pct">pct</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="insumo-preco">Preço (R$) *</label>
+                    <input type="number" id="insumo-preco" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="insumo-validade">Validade</label>
+                    <input type="date" id="insumo-validade">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="insumo-descricao">Descrição</label>
+                <textarea id="insumo-descricao" placeholder="Descreva o insumo..."></textarea>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="insumo-renovavel">
+                <label for="insumo-renovavel">Insumo renovável</label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn" id="cancel-insumo">Cancelar</button>
+                <button type="submit" class="btn primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Confirmar Exclusão -->
+<div class="modal-overlay delete-modal" id="delete-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-delete-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title">Excluir Insumo</h2>
+        <div class="delete-message">
+            <p>Tem certeza que deseja excluir o insumo <span class="warning-text" id="delete-insumo-nome"></span>?</p>
+            <p>Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn" id="cancel-delete">Cancelar</button>
+            <button type="button" class="btn primary" id="confirm-delete" style="background: #d32f2f;">Excluir</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Dados de exemplo para demonstração
+let insumos = [
+    {
+        id: 1,
+        nome: "Adubo NPK 10-10-10",
+        quantidade: 50,
+        descricao: "Fertilizante balanceado para cultivo geral",
+        preco: 45.90,
+        renovavel: false,
+        unidade_de_medida: "kg",
+        validade: "2025-06-30",
+        imagem: "{% static 'example_img/fertilizer.jpg' %}"
+    },
+    {
+        id: 2,
+        nome: "Sementes de Milho",
+        quantidade: 200,
+        descricao: "Sementes híbridas de alta produtividade",
+        preco: 120.00,
+        renovavel: true,
+        unidade_de_medida: "sc",
+        validade: "2026-01-15",
+        imagem: "{% static 'example_img/seeds.jpg' %}"
+    },
+    {
+        id: 3,
+        nome: "Herbicida Glifosato",
+        quantidade: 5,
+        descricao: "Herbicida sistêmico não seletivo",
+        preco: 89.90,
+        renovavel: false,
+        unidade_de_medida: "L",
+        validade: "2024-12-31",
+        imagem: "{% static 'example_img/herbicide.jpg' %}"
+    },
+    {
+        id: 4,
+        nome: "Calcário Dolomítico",
+        quantidade: 1000,
+        descricao: "Corretivo de acidez do solo",
+        preco: 25.50,
+        renovavel: false,
+        unidade_de_medida: "kg",
+        validade: "2027-03-20",
+        imagem: null
+    }
+];
+
+// Elementos DOM
+const insumosContainer = document.getElementById('insumos-container');
+const emptyState = document.getElementById('empty-state');
+const searchInput = document.getElementById('search-input');
+const clearSearchBtn = document.getElementById('clear-search');
+const activeFiltersContainer = document.getElementById('active-filters');
+const clearAllFiltersBtn = document.getElementById('clear-all-filters');
+const addInsumoBtn = document.getElementById('add-insumo-btn');
+const addFirstInsumoBtn = document.getElementById('add-first-insumo');
+const insumoModal = document.getElementById('insumo-modal');
+const insumoForm = document.getElementById('insumo-form');
+const insumoModalTitle = document.getElementById('insumo-modal-title');
+const closeInsumoModal = document.getElementById('close-insumo-modal');
+const cancelInsumo = document.getElementById('cancel-insumo');
+const deleteModal = document.getElementById('delete-modal');
+const closeDeleteModal = document.getElementById('close-delete-modal');
+const cancelDelete = document.getElementById('cancel-delete');
+const confirmDelete = document.getElementById('confirm-delete');
+const deleteInsumoNome = document.getElementById('delete-insumo-nome');
+
+// Elementos do Modal de Filtros
+const filterModal = document.getElementById('filter-modal');
+const filterModalBtn = document.getElementById('filter-modal-btn');
+const closeFilterModal = document.getElementById('close-filter-modal');
+const cancelFilters = document.getElementById('cancel-filters');
+const clearFiltersBtn = document.getElementById('clear-filters');
+const applyFiltersBtn = document.getElementById('apply-filters');
+
+// Elementos de Upload de Imagem
+const uploadImageBtn = document.getElementById('upload-image-btn');
+const insumoImagemInput = document.getElementById('insumo-imagem');
+const removeImageBtn = document.getElementById('remove-image-btn');
+const imagePreview = document.getElementById('image-preview');
+const imagePreviewImg = document.getElementById('image-preview-img');
+
+// Filtros atuais
+let currentFilters = {
+    quantidadeMin: '',
+    quantidadeMax: '',
+    precoMin: '',
+    precoMax: '',
+    renovavel: '',
+    unidade: '',
+    validade: ''
+};
+
+// Termo de pesquisa atual
+let currentSearchTerm = '';
+
+// Variáveis globais
+let currentEditingId = null;
+let insumoToDelete = null;
+let currentImageFile = null;
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    renderInsumos();
+    setupEventListeners();
+    updateActiveFiltersDisplay();
+});
+
+// Configurar event listeners
+function setupEventListeners() {
+    // Pesquisa
+    searchInput.addEventListener('input', handleSearch);
+    clearSearchBtn.addEventListener('click', clearSearch);
+    
+    // Modal de insumo
+    addInsumoBtn.addEventListener('click', openAddInsumoModal);
+    addFirstInsumoBtn.addEventListener('click', openAddInsumoModal);
+    closeInsumoModal.addEventListener('click', closeInsumoModalHandler);
+    cancelInsumo.addEventListener('click', closeInsumoModalHandler);
+    insumoForm.addEventListener('submit', saveInsumo);
+    
+    // Upload de imagem
+    uploadImageBtn.addEventListener('click', () => insumoImagemInput.click());
+    insumoImagemInput.addEventListener('change', handleImageUpload);
+    removeImageBtn.addEventListener('click', removeImage);
+    
+    // Modal de exclusão
+    closeDeleteModal.addEventListener('click', closeDeleteModalHandler);
+    cancelDelete.addEventListener('click', closeDeleteModalHandler);
+    confirmDelete.addEventListener('click', deleteInsumo);
+    
+    // Modal de filtros
+    filterModalBtn.addEventListener('click', openFilterModal);
+    closeFilterModal.addEventListener('click', closeFilterModalHandler);
+    cancelFilters.addEventListener('click', closeFilterModalHandler);
+    clearFiltersBtn.addEventListener('click', clearAllFilters);
+    applyFiltersBtn.addEventListener('click', applyFiltersFromModal);
+    clearAllFiltersBtn.addEventListener('click', clearAllFilters);
+}
+
+// Manipular pesquisa
+function handleSearch() {
+    currentSearchTerm = searchInput.value.toLowerCase();
+    applyFiltersAndSearch();
+}
+
+// Limpar pesquisa
+function clearSearch() {
+    searchInput.value = '';
+    currentSearchTerm = '';
+    applyFiltersAndSearch();
+}
+
+// Abrir modal de filtros
+function openFilterModal() {
+    // Preencher os campos do modal com os filtros atuais
+    document.getElementById('filter-quantidade-min').value = currentFilters.quantidadeMin;
+    document.getElementById('filter-quantidade-max').value = currentFilters.quantidadeMax;
+    document.getElementById('filter-preco-min').value = currentFilters.precoMin;
+    document.getElementById('filter-preco-max').value = currentFilters.precoMax;
+    document.getElementById('filter-renovavel').value = currentFilters.renovavel;
+    document.getElementById('filter-unidade').value = currentFilters.unidade;
+    document.getElementById('filter-validade').value = currentFilters.validade;
+    
+    filterModal.style.display = 'flex';
+}
+
+// Fechar modal de filtros
+function closeFilterModalHandler() {
+    filterModal.style.display = 'none';
+}
+
+// Aplicar filtros do modal
+function applyFiltersFromModal() {
+    currentFilters = {
+        quantidadeMin: document.getElementById('filter-quantidade-min').value,
+        quantidadeMax: document.getElementById('filter-quantidade-max').value,
+        precoMin: document.getElementById('filter-preco-min').value,
+        precoMax: document.getElementById('filter-preco-max').value,
+        renovavel: document.getElementById('filter-renovavel').value,
+        unidade: document.getElementById('filter-unidade').value,
+        validade: document.getElementById('filter-validade').value
+    };
+    
+    applyFiltersAndSearch();
+    updateActiveFiltersDisplay();
+    closeFilterModalHandler();
+}
+
+// Limpar todos os filtros
+function clearAllFilters() {
+    currentFilters = {
+        quantidadeMin: '',
+        quantidadeMax: '',
+        precoMin: '',
+        precoMax: '',
+        renovavel: '',
+        unidade: '',
+        validade: ''
+    };
+    
+    // Limpar campos do modal se estiver aberto
+    if (filterModal.style.display === 'flex') {
+        document.getElementById('filter-quantidade-min').value = '';
+        document.getElementById('filter-quantidade-max').value = '';
+        document.getElementById('filter-preco-min').value = '';
+        document.getElementById('filter-preco-max').value = '';
+        document.getElementById('filter-renovavel').value = '';
+        document.getElementById('filter-unidade').value = '';
+        document.getElementById('filter-validade').value = '';
+    }
+    
+    applyFiltersAndSearch();
+    updateActiveFiltersDisplay();
+}
+
+// Atualizar display dos filtros ativos
+function updateActiveFiltersDisplay() {
+    const activeFilters = Object.entries(currentFilters).filter(([key, value]) => value !== '');
+    const hasSearch = currentSearchTerm !== '';
+    
+    if (activeFilters.length === 0 && !hasSearch) {
+        activeFiltersContainer.style.display = 'none';
+        return;
+    }
+    
+    activeFiltersContainer.style.display = 'flex';
+    
+    // Limpar filtros ativos anteriores
+    const existingTags = activeFiltersContainer.querySelectorAll('.filter-tag');
+    existingTags.forEach(tag => tag.remove());
+    
+    // Adicionar novos filtros ativos
+    const filtersContainer = activeFiltersContainer;
+    const clearAllSpan = activeFiltersContainer.querySelector('.clear-all-filters');
+    
+    // Adicionar tag de pesquisa se houver
+    if (hasSearch) {
+        const searchTag = document.createElement('span');
+        searchTag.className = 'filter-tag';
+        searchTag.innerHTML = `
+            Pesquisa: "${currentSearchTerm}"
+            <span class="material-icons" data-filter="search">close</span>
+        `;
+        
+        filtersContainer.insertBefore(searchTag, clearAllSpan);
+        
+        // Adicionar evento para remover pesquisa
+        searchTag.querySelector('.material-icons').addEventListener('click', function() {
+            clearSearch();
+        });
+    }
+    
+    // Adicionar tags de filtros
+    activeFilters.forEach(([key, value]) => {
+        const filterTag = document.createElement('span');
+        filterTag.className = 'filter-tag';
+        
+        let displayText = '';
+        switch(key) {
+            case 'quantidadeMin':
+                displayText = `Quantidade mín: ${value}`;
+                break;
+            case 'quantidadeMax':
+                displayText = `Quantidade máx: ${value}`;
+                break;
+            case 'precoMin':
+                displayText = `Preço mín: R$ ${value}`;
+                break;
+            case 'precoMax':
+                displayText = `Preço máx: R$ ${value}`;
+                break;
+            case 'renovavel':
+                displayText = `Renovável: ${value === 'sim' ? 'Sim' : 'Não'}`;
+                break;
+            case 'unidade':
+                displayText = `Unidade: ${value}`;
+                break;
+            case 'validade':
+                let validadeText = '';
+                switch(value) {
+                    case 'expirado':
+                        validadeText = 'Expirados';
+                        break;
+                    case 'proximo':
+                        validadeText = 'Próximos do vencimento';
+                        break;
+                    case 'valido':
+                        validadeText = 'Válidos';
+                        break;
+                }
+                displayText = `Validade: ${validadeText}`;
+                break;
+        }
+        
+        filterTag.innerHTML = `
+            ${displayText}
+            <span class="material-icons" data-filter="${key}">close</span>
+        `;
+        
+        filtersContainer.insertBefore(filterTag, clearAllSpan);
+        
+        // Adicionar evento para remover filtro individual
+        filterTag.querySelector('.material-icons').addEventListener('click', function() {
+            const filterKey = this.getAttribute('data-filter');
+            currentFilters[filterKey] = '';
+            applyFiltersAndSearch();
+            updateActiveFiltersDisplay();
+        });
+    });
+}
+
+// Manipular upload de imagem
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreviewImg.src = e.target.result;
+                imagePreviewImg.style.display = 'block';
+                imagePreview.querySelector('.material-icons').style.display = 'none';
+                removeImageBtn.style.display = 'flex';
+                currentImageFile = file;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor, selecione um arquivo de imagem válido.');
+            insumoImagemInput.value = '';
+        }
+    }
+}
+
+// Remover imagem
+function removeImage() {
+    imagePreviewImg.src = '';
+    imagePreviewImg.style.display = 'none';
+    imagePreview.querySelector('.material-icons').style.display = 'flex';
+    removeImageBtn.style.display = 'none';
+    insumoImagemInput.value = '';
+    currentImageFile = null;
+}
+
+// Renderizar insumos
+function renderInsumos(filteredInsumos = insumos) {
+    insumosContainer.innerHTML = '';
+    
+    if (filteredInsumos.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    emptyState.style.display = 'none';
+    
+    filteredInsumos.forEach(insumo => {
+        const insumoCard = document.createElement('a');
+        insumoCard.className = 'insumo-card';
+        insumoCard.href = `{% url 'supplies_detail' %}?id=${insumo.id}`;
+        
+        // Verificar validade
+        const hoje = new Date();
+        const validade = new Date(insumo.validade);
+        const diasParaValidade = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+        
+        let validadeClass = '';
+        let validadeText = insumo.validade ? `Válido até ${formatarData(insumo.validade)}` : 'Sem validade';
+        
+        if (insumo.validade) {
+            if (diasParaValidade < 0) {
+                validadeClass = 'validade-expirada';
+                validadeText = `EXPIRADO em ${formatarData(insumo.validade)}`;
+            } else if (diasParaValidade <= 30) {
+                validadeClass = 'validade-proxima';
+                validadeText = `Vence em ${diasParaValidade} dias`;
+            }
+        }
+        
+        // Verificar quantidade
+        const quantidadeClass = insumo.quantidade <= 10 ? 'quantidade-baixa' : 'quantidade-normal';
+        
+        insumoCard.innerHTML = `
+            <div class="insumo-image">
+                ${insumo.imagem ? 
+                    `<img src="${insumo.imagem}" alt="${insumo.nome}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : 
+                    ''
+                }
+                <span class="material-icons" ${insumo.imagem ? 'style="display: none;"' : ''}>inventory_2</span>
+            </div>
+            <div class="insumo-content">
+                <div class="insumo-header">
+                    <h3 class="insumo-name">${insumo.nome}</h3>
+                    <div class="insumo-actions">
+                        <button class="btn small icon-only edit-insumo" data-id="${insumo.id}" type="button">
+                            <span class="material-icons">edit</span>
+                        </button>
+                        <button class="btn small icon-only delete-insumo" data-id="${insumo.id}" type="button">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="insumo-details">
+                    <div class="insumo-detail">
+                        <span class="material-icons">scale</span>
+                        <span class="${quantidadeClass}">${insumo.quantidade} ${insumo.unidade_de_medida}</span>
+                    </div>
+                    <div class="insumo-detail">
+                        <span class="material-icons">attach_money</span>
+                        <span>R$ ${insumo.preco.toFixed(2)}</span>
+                    </div>
+                    <div class="insumo-detail">
+                        <span class="material-icons">event</span>
+                        <span class="${validadeClass}">${validadeText}</span>
+                    </div>
+                </div>
+                <p class="insumo-description">${insumo.descricao || 'Sem descrição'}</p>
+                <div class="renovavel-badge ${insumo.renovavel ? 'renovavel-sim' : 'renovavel-nao'}">
+                    ${insumo.renovavel ? 'Renovável' : 'Não renovável'}
+                </div>
+            </div>
+        `;
+        
+        insumosContainer.appendChild(insumoCard);
+    });
+    
+    // Adicionar event listeners para os botões de editar e excluir
+    document.querySelectorAll('.edit-insumo').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.getAttribute('data-id'));
+            openEditInsumoModal(id);
+        });
+    });
+    
+    document.querySelectorAll('.delete-insumo').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = parseInt(this.getAttribute('data-id'));
+            openDeleteModal(id);
+        });
+    });
+}
+
+// Aplicar filtros e pesquisa
+function applyFiltersAndSearch() {
+    let filteredInsumos = insumos;
+    
+    // Aplicar pesquisa por texto
+    if (currentSearchTerm) {
+        filteredInsumos = filteredInsumos.filter(insumo => 
+            insumo.nome.toLowerCase().includes(currentSearchTerm) ||
+            (insumo.descricao && insumo.descricao.toLowerCase().includes(currentSearchTerm))
+        );
+    }
+    
+    // Aplicar filtros
+    filteredInsumos = applyFiltersToInsumos(filteredInsumos);
+    
+    renderInsumos(filteredInsumos);
+}
+
+// Aplicar filtros a uma lista de insumos
+function applyFiltersToInsumos(insumosList) {
+    let filtered = insumosList;
+    
+    // Filtrar por quantidade mínima
+    if (currentFilters.quantidadeMin) {
+        filtered = filtered.filter(insumo => 
+            insumo.quantidade >= parseInt(currentFilters.quantidadeMin)
+        );
+    }
+    
+    // Filtrar por quantidade máxima
+    if (currentFilters.quantidadeMax) {
+        filtered = filtered.filter(insumo => 
+            insumo.quantidade <= parseInt(currentFilters.quantidadeMax)
+        );
+    }
+    
+    // Filtrar por preço mínimo
+    if (currentFilters.precoMin) {
+        filtered = filtered.filter(insumo => 
+            insumo.preco >= parseFloat(currentFilters.precoMin)
+        );
+    }
+    
+    // Filtrar por preço máximo
+    if (currentFilters.precoMax) {
+        filtered = filtered.filter(insumo => 
+            insumo.preco <= parseFloat(currentFilters.precoMax)
+        );
+    }
+    
+    // Filtrar por renovável
+    if (currentFilters.renovavel) {
+        filtered = filtered.filter(insumo => 
+            (currentFilters.renovavel === 'sim' && insumo.renovavel) ||
+            (currentFilters.renovavel === 'nao' && !insumo.renovavel)
+        );
+    }
+    
+    // Filtrar por unidade
+    if (currentFilters.unidade) {
+        filtered = filtered.filter(insumo => 
+            insumo.unidade_de_medida === currentFilters.unidade
+        );
+    }
+    
+    // Filtrar por validade
+    if (currentFilters.validade) {
+        const hoje = new Date();
+        
+        filtered = filtered.filter(insumo => {
+            if (!insumo.validade) return currentFilters.validade === 'valido';
+            
+            const validade = new Date(insumo.validade);
+            const diasParaValidade = Math.ceil((validade - hoje) / (1000 * 60 * 60 * 24));
+            
+            switch(currentFilters.validade) {
+                case 'expirado':
+                    return diasParaValidade < 0;
+                case 'proximo':
+                    return diasParaValidade >= 0 && diasParaValidade <= 30;
+                case 'valido':
+                    return diasParaValidade > 30;
+                default:
+                    return true;
+            }
+        });
+    }
+    
+    return filtered;
+}
+
+// Abrir modal para adicionar insumo
+function openAddInsumoModal() {
+    currentEditingId = null;
+    insumoModalTitle.textContent = 'Novo Insumo';
+    insumoForm.reset();
+    removeImage();
+    insumoModal.style.display = 'flex';
+}
+
+// Abrir modal para editar insumo
+function openEditInsumoModal(id) {
+    const insumo = insumos.find(i => i.id === id);
+    if (!insumo) return;
+    
+    currentEditingId = id;
+    insumoModalTitle.textContent = 'Editar Insumo';
+    
+    // Preencher formulário com dados do insumo
+    document.getElementById('insumo-id').value = insumo.id;
+    document.getElementById('insumo-nome').value = insumo.nome;
+    document.getElementById('insumo-quantidade').value = insumo.quantidade;
+    document.getElementById('insumo-descricao').value = insumo.descricao || '';
+    document.getElementById('insumo-preco').value = insumo.preco;
+    document.getElementById('insumo-renovavel').checked = insumo.renovavel;
+    document.getElementById('insumo-unidade').value = insumo.unidade_de_medida;
+    document.getElementById('insumo-validade').value = insumo.validade || '';
+    
+    // Configurar imagem se existir
+    if (insumo.imagem) {
+        imagePreviewImg.src = insumo.imagem;
+        imagePreviewImg.style.display = 'block';
+        imagePreview.querySelector('.material-icons').style.display = 'none';
+        removeImageBtn.style.display = 'flex';
+        currentImageFile = null; // Não temos o arquivo original, apenas a URL
+    } else {
+        removeImage();
+    }
+    
+    insumoModal.style.display = 'flex';
+}
+
+// Fechar modal de insumo
+function closeInsumoModalHandler() {
+    insumoModal.style.display = 'none';
+}
+
+// Salvar insumo
+function saveInsumo(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(insumoForm);
+    const insumoData = {
+        nome: document.getElementById('insumo-nome').value,
+        quantidade: parseInt(document.getElementById('insumo-quantidade').value),
+        descricao: document.getElementById('insumo-descricao').value,
+        preco: parseFloat(document.getElementById('insumo-preco').value),
+        renovavel: document.getElementById('insumo-renovavel').checked,
+        unidade_de_medida: document.getElementById('insumo-unidade').value,
+        validade: document.getElementById('insumo-validade').value || null
+    };
+    
+    // Em uma aplicação real, aqui você faria o upload da imagem
+    // Por enquanto, vamos simular mantendo a imagem existente ou usando uma placeholder
+    if (currentEditingId) {
+        // Editar insumo existente
+        const index = insumos.findIndex(i => i.id === currentEditingId);
+        if (index !== -1) {
+            // Manter a imagem existente se não foi alterada
+            if (!currentImageFile) {
+                insumoData.imagem = insumos[index].imagem;
+            } else {
+                // Em uma aplicação real, aqui faríamos o upload e obteríamos a nova URL
+                insumoData.imagem = "{% static 'example_img/updated.jpg' %}";
+            }
+            insumos[index] = { ...insumos[index], ...insumoData };
+        }
+    } else {
+        // Adicionar novo insumo
+        const newId = insumos.length > 0 ? Math.max(...insumos.map(i => i.id)) + 1 : 1;
+        insumoData.id = newId;
+        // Em uma aplicação real, aqui faríamos o upload e obteríamos a URL
+        insumoData.imagem = currentImageFile ? "{% static 'example_img/new.jpg' %}" : null;
+        insumos.push(insumoData);
+    }
+    
+    renderInsumos();
+    applyFiltersAndSearch(); // Reaplicar filtros após salvar
+    closeInsumoModalHandler();
+}
+
+// Abrir modal de exclusão
+function openDeleteModal(id) {
+    const insumo = insumos.find(i => i.id === id);
+    if (!insumo) return;
+    
+    insumoToDelete = id;
+    deleteInsumoNome.textContent = insumo.nome;
+    deleteModal.style.display = 'flex';
+}
+
+// Fechar modal de exclusão
+function closeDeleteModalHandler() {
+    deleteModal.style.display = 'none';
+    insumoToDelete = null;
+}
+
+// Excluir insumo
+function deleteInsumo() {
+    if (!insumoToDelete) return;
+    
+    insumos = insumos.filter(i => i.id !== insumoToDelete);
+    renderInsumos();
+    applyFiltersAndSearch(); // Reaplicar filtros após excluir
+    closeDeleteModalHandler();
+}
+
+// Função auxiliar para formatar data
+function formatarData(dataString) {
+    if (!dataString) return '';
+    const data = new Date(dataString);
+    return data.toLocaleDateString('pt-BR');
+}
+</script>
+{% endblock %}

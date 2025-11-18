@@ -14,7 +14,7 @@
 * { box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
 html { font-size: var(--base-font); color: #071029; }
 
-/* Page wrapper: center + max width 1000px */
+ 
 .page {
   width: 100%;
   max-width: var(--max-width);
@@ -22,7 +22,7 @@ html { font-size: var(--base-font); color: #071029; }
   padding: 0 16px;
 }
 
-/* ---------- TOP PANEL (task info + stats) ---------- */
+ 
 .top-panel{
   background: var(--bg);
   border: 1px solid var(--border);
@@ -35,7 +35,7 @@ html { font-size: var(--base-font); color: #071029; }
   margin-bottom: 24px;
 }
 
-/* task title */
+ 
 .task-title h1{
   margin: 0 0 6px 0;
   color: var(--accent);
@@ -48,7 +48,7 @@ html { font-size: var(--base-font); color: #071029; }
   font-size: 0.95rem;
 }
 
-/* stat mini-cards */
+ 
 .stats{
   display: flex;
   gap: 10px;
@@ -74,7 +74,7 @@ html { font-size: var(--base-font); color: #071029; }
 .stat-card .label{ font-size:0.9rem; color:var(--muted); }
 .stat-card .value{ font-weight:700; color:var(--accent); font-size:1.05rem; text-align:right; }
 
-/* ---------- ACTION BAR (search/add participant) ---------- */
+ 
 .action-bar{
   margin-bottom: 24px;
   display:flex;
@@ -129,7 +129,7 @@ html { font-size: var(--base-font); color: #071029; }
 }
 .btn.icon{ padding:8px; min-width:44px; justify-content:center; }
 
-/* ---------- PARTICIPANTS LIST ---------- */
+ 
 .section-title{ 
   margin-bottom: 16px; 
   color: var(--accent); 
@@ -141,7 +141,7 @@ html { font-size: var(--base-font); color: #071029; }
 }
 .results{ display:flex; flex-direction:column; gap:12px; }
 
-/* participant card */
+ 
 .participant-card{
   display:grid;
   grid-template-columns: 60px 1fr auto auto;
@@ -160,7 +160,7 @@ html { font-size: var(--base-font); color: #071029; }
   transform: translateY(-1px);
 }
 
-/* participant avatar */
+ 
 .participant-avatar{
   width:60px;
   height:60px;
@@ -182,7 +182,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--muted);
 }
 
-/* participant info */
+ 
 .participant-info{ display:flex; flex-direction:column; gap:4px; }
 .participant-name{ 
   margin:0; 
@@ -196,7 +196,7 @@ html { font-size: var(--base-font); color: #071029; }
   color:var(--muted);
 }
 
-/* participant status */
+ 
 .participant-status{
   display: flex;
   align-items: center;
@@ -210,7 +210,7 @@ html { font-size: var(--base-font); color: #071029; }
 .status-pending{ background: #fff3e0; color: #f57c00; }
 .status-inactive{ background: #f5f5f5; color: #757575; }
 
-/* participant actions */
+ 
 .participant-actions{
   display: flex;
   gap: 8px;
@@ -230,7 +230,7 @@ html { font-size: var(--base-font); color: #071029; }
   color: var(--accent);
 }
 
-/* mobile adjustments */
+ 
 @media (max-width:640px){
   .participant-card{ 
     grid-template-columns: 50px 1fr; 
@@ -247,7 +247,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
 }
 
-/* ---------- MODALS ---------- */
+ 
 .modal-backdrop{
   position:fixed;
   inset:0;
@@ -306,7 +306,7 @@ html { font-size: var(--base-font); color: #071029; }
   min-height: 80px;
 }
 
-/* modal actions */
+ 
 .modal-actions{ 
   display:flex; 
   justify-content:flex-end; 
@@ -315,11 +315,11 @@ html { font-size: var(--base-font); color: #071029; }
 }
 .small{ font-size:0.9rem; color:var(--muted); }
 
-/* utility */
+ 
 .hidden{ display:none !important; }
 .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-/* empty state */
+ 
 .empty-state{
   text-align: center;
   padding: 40px 20px;

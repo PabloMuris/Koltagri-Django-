@@ -5,10 +5,10 @@
 {% block header_text %}EnrichTheSoil{% endblock %}
 
 {% block rels %}
-<!-- Fonte Outfit e icons -->
+ 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<!-- flatpickr -->
+ 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="{% static 'css/tasks.css'%}">
 {% endblock %}
@@ -20,7 +20,7 @@
 {% block content %}
 <div class="page">
 
-  <!-- TOP PANEL -->
+   
   <section class="top-panel" aria-labelledby="panel-title">
     <div class="property-title">
       <h1 id="panel-title">Propriedade EnrichTheSoil</h1>
@@ -69,12 +69,12 @@
     </div>
   </div>
 
-  <!-- TASKS -->
+   
   <section class="tasks">
     <div class="section-title">Hoje</div>
 
     <div class="results" id="results-list" aria-live="polite">
-      <!-- Exemplo de item — substitua pelo loop Django -->
+       
       <a class="task-card" href="{% url 'task_detail' %}">
         <div class="card-icon" aria-hidden="true">
 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm200-190q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z"/></svg>        </div>
@@ -95,7 +95,7 @@
         <div class="task-time"><time datetime="2025-11-11T09:00">09:00</time></div>
       </a>
 
-      <!-- Mensagem quando não há resultados -->
+       
       <div id="no-results" class="stat-card hidden" role="status">
         <div class="label">Nenhuma tarefa encontrada</div>
         <div class="small">Tente outro termo de busca ou remova filtros.</div>
@@ -104,7 +104,7 @@
   </section>
 </div>
 
-<!-- FILTER MODAL -->
+ 
 <div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
   <div class="modal-panel" role="document">
     <h3 id="filter-title">Opções de filtragem</h3>
@@ -191,11 +191,11 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-/* Safe DOM helpers */
+ 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-/* Initialize flatpickr when elements exist */
+ 
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof flatpickr === 'function') {
     const d1 = $('#data_inicio');
@@ -204,11 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (d2) flatpickr(d2, { disableMobile: true, dateFormat: "d/m/Y" });
   }
 
-  /* Modal open/close helpers */
+   
   function openModal(el){ if(!el) return; el.style.display = 'flex'; el.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; const focusable = el.querySelector('select, input, button'); if(focusable) focusable.focus(); }
   function closeModal(el){ if(!el) return; el.style.display = 'none'; el.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
 
-  /* Filter modal */
+   
   const filterModal = $('#filter-modal');
   const filterOpenBtn = $('#filter-open');
   const filterCancel = $('#filter-cancel');
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeModal(filterModal); });
   }
 
-  /* Add modal */
+   
   const addModal = $('#add-modal');
   const addOpenBtn = $('#add-open');
   const addCancel = $('#add-cancel');
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addModal.addEventListener('click', (e) => { if (e.target === addModal) closeModal(addModal); });
   }
 
-  /* Close modals on Escape */
+   
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape'){
       closeModal(filterModal);
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* Client-side search (simple) */
+   
   const searchInput = $('#search-input');
   const resultsList = $('#results-list');
   const items = resultsList ? $$('.task-card', resultsList) : [];
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (searchInput) searchInput.addEventListener('input', applySearch);
 
-  /* Filter form (client demo): prevent submit, filter simple fields */
+   
   const filterForm = $('#filter-form');
   if (filterForm){
     filterForm.addEventListener('submit', function(e){
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* Add form: example preventing default and closing modal (replace with real POST) */
+   
   const addForm = $('#add-form');
   if (addForm){
     addForm.addEventListener('submit', function(e){
