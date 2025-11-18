@@ -99,8 +99,9 @@ footer .nav-link svg {
     aside{
         display: none;
     }
-    
-    
+    .nav-link p{
+        display: none;
+    }
     
 }
 @media (min-width: 769px){
@@ -119,9 +120,7 @@ footer .nav-link svg {
     aside{
         display: flex;
     }
-    .nav-link p{
-        display: none;
-    }
+    
     
 }
 /* @media(min-width:1300px){

@@ -1,258 +1,456 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koltagri</title>
-    <link rel="stylesheet" href="{%static 'css/base/base.css'%}">
-    {% block rels %}{% endblock %}
-    {% block styles %}{% endblock %}
-    <style>
-        #adjust-sidebar{
-  height: 44px;
-  width: 44px;
-  position: absolute;
-  bottom: 24px;
-  left: 15px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#adjust-sidebar svg{
-  fill: var(--primary-color);
-  height: 30px;
-  width: 30px;
-}
-
-aside {
-    position: relative;
-}
-
-
-
-@keyframes  MenuRetract{
-    0%   { width: 240px; display: flex;}
-    100% { width: 74px; display: flex;}
-}
-
-@keyframes  MenuExpand{
-    0%   { width: 74px; display: flex;}
-    100% { width: 240px; display: flex;}
-    
-}
-
-
-
-.expand-animation{
-    animation: MenuExpand 0.25s linear;
-}
-
-
-
-.retract-animation{
-     animation: MenuRetract 0.25s linear;
-}
-
-.delay {
-    animation-delay: .2s;    
-}
-
-header{
-    z-index: 1;
-}
-aside{
-    z-index: 998;
-}
-    </style>
-    
-<link rel="stylesheet" href="{% static 'core/css/base.css'%}">
-</head>
-<body id="body">
-    <header class="padding--standard">
-        <div class="presentation">
-            <h1 class="title">{%block header_title%}{%endblock%}</h1>
-            <p class="text">{%block header_text%}
-
-                {%endblock%}</p>
-        </div>
-
-        <div class="user-area">
-            <button class="user__notifications" onclick="window.location.href='{% url 'notifications' %}'">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg>
-            </button>
-            <button class="account-button" onclick="window.location.href='{% url 'profile' %}'">
-                <img class="user__avatar" src="{% static 'users_img/avatar/pa_avatar.jpeg' %}" alt="">
-            </button>
-        </div>
-    </header>
-    <aside id="aside">
-        <nav id= "aside-nav" class="nav-bar   padding--standard" style=" flex-flow: column; align-items: start; gap: 18px; background-color: var(--primary-color); max-width: 240px;">
-        
-            <a href="{% url 'index'%}" class="nav-link nav-link--std flex-rw" id="home">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-                <p>Início</p>
-            </a>
-
-            <a href="{% url 'cultivated_plants'%}" class="nav-link nav-link--std flex-rw" id="plants">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M342-160h276l40-160H302l40 160Zm0 80q-28 0-49-17t-28-44l-45-179h520l-45 179q-7 27-28 44t-49 17H342ZM200-400h560v-80H200v80Zm280-240q0-100 70-170t170-70q0 90-57 156t-143 80v84h320v160q0 33-23.5 56.5T760-320H200q-33 0-56.5-23.5T120-400v-160h320v-84q-86-14-143-80t-57-156q100 0 170 70t70 170Z"/></svg>
-                <p>Cultivos</p>
-            
-            </a>
-            <a href="{% url 'tasks'%}" class="nav-link nav-link--std flex-rw" id="tasks">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm80 240v-80h400v80H280Zm0 160v-80h280v80H280Z"/></svg>
-                <p>Tarefas</p>
-            </a>
-            <a href="{% url 'business_board'%}" class="nav-link nav-link--std flex-rw" id="business">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"/></svg>
-                <p>Gerenciamento</p>
-            </a>
-
-
-            <button type="button" id="adjust-sidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M507-480 384-357l56 57 180-180-180-180-56 57 123 123ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
-            </button>
-
-        </nav>
-        
-    </aside>
-    <main class="padding--standard" >
-        {%  block content %}
-        {% endblock %}
-    </main>
-    <footer class="align-spca navbar">
-        <nav class="nav-bar flex-rw align-spca padding--standard" style="width: 100%;">
-            <a href="{% url 'index'%}" class="nav-link nav-link--std" id="home">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-            </a>
-            <a href="{% url 'cultivated_plants'%}" class="nav-link nav-link--std" id="plants">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M342-160h276l40-160H302l40 160Zm0 80q-28 0-49-17t-28-44l-45-179h520l-45 179q-7 27-28 44t-49 17H342ZM200-400h560v-80H200v80Zm280-240q0-100 70-170t170-70q0 90-57 156t-143 80v84h320v160q0 33-23.5 56.5T760-320H200q-33 0-56.5-23.5T120-400v-160h320v-84q-86-14-143-80t-57-156q100 0 170 70t70 170Z"/></svg>
-            </a>
-            <a href="{% url 'tasks'%}" class="nav-link nav-link--std" id="tasks">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm80 240v-80h400v80H280Zm0 160v-80h280v80H280Z"/></svg>
-            </a>
-            <a href="{% url 'business_board'%}" class="nav-link nav-link--std" id="business">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"/></svg>
-            </a>
-        </nav>
-
-    </footer>
-    {% block scripts%}{% endblock %}
-    <script src="{% static 'js/base.js'%}"></script>
-    <script>
-    const adjustSidebar = document.getElementById("adjust-sidebar");
-    const body = document.getElementById("body");
-    const aside = document.getElementById("aside");
-    const navbar = document.getElementById("aside-nav");
-    const footer = document.getElementById("footer")
-
-    const navLink = navbar.querySelectorAll(".navlink");
-    let opening = false;
-    let overlay_aside = false;
-
-    
-    window.addEventListener("resize",function(e) {
-        if (window.innerWidth<=768){
-            if (opening || !opening){
-                opening = false;
-                mobile_side_menu()
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Koltagri</title>
+        <link rel="stylesheet" href="{%static 'css/base/base.css'%}" />
+        {% block rels %}{% endblock %} {% block styles %}{% endblock %}
+        <style>
+            #search-input {
+                height: 100%;
+                text-decoration: none;
+                border: none;
+            }
+            #adjust-sidebar {
+                height: 44px;
+                width: 44px;
+                position: absolute;
+                bottom: 24px;
+                left: 15px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-        };
+            #adjust-sidebar svg {
+                fill: var(--primary-color);
+                height: 30px;
+                width: 30px;
+            }
 
-        if(window.innerWidth>768 && !opening){
-            reduced_side_menu()
-        }
+            aside {
+                position: relative;
+            }
 
-    
-    });
+            @keyframes MenuRetract {
+                0% {
+                    width: 240px;
+                    display: flex;
+                }
+                100% {
+                    width: 74px;
+                    display: flex;
+                }
+            }
 
+            @keyframes MenuExpand {
+                0% {
+                    width: 74px;
+                    display: flex;
+                }
+                100% {
+                    width: 240px;
+                    display: flex;
+                }
+            }
 
-    adjustSidebar.addEventListener("click",function(e) {
-        opening = !opening;
+            .expand-animation {
+                animation: MenuExpand 0.25s linear;
+            }
 
-        if(window.innerWidth>=768 && !opening){
-            reduced_side_menu()
-        }
+            .retract-animation {
+                animation: MenuRetract 0.25s linear;
+            }
 
-        if(window.innerWidth>=768 &&  opening){
-            expanded__side_menu()
-        }
+            .delay {
+                animation-delay: 0.2s;
+            }
 
-    });
+            header {
+                z-index: 1;
+            }
+            aside {
+                z-index: 998;
+            }
 
-    function mobile_side_menu(){
-        body.style.gridTemplateColumns = "1fr";
-        body.style.gridTemplateRows = "84px 1fr 56px";
+            .js-aside-nav-label {
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                transition: max-width 240ms ease, opacity 160ms ease,
+                    transform 180ms ease;
+                display: inline-block;
+                vertical-align: middle;
+            }
 
-        aside.style.display = 'none';
-        navbar.classList.remove("retract-animation");
-        aside.classList.remove("retract-animation");
-        aside.classList.remove("expand-animation");
-        navbar.classList.remove("expand-animation");
-        
+            aside:not(.expanded) .js-aside-nav-label {
+                max-width: 0;
+                opacity: 0;
+                transform: translateX(-6px);
+                visibility: hidden;
+                pointer-events: none;
+            }
 
-    }
+            aside.expanded .js-aside-nav-label {
+                max-width: 300px;
+                opacity: 1;
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
+            }
 
-  function reduced_side_menu() {
-    // remover animações anteriores
-    aside.classList.remove("expand-animation");
-    navbar.classList.remove("expand-animation");
+            @media (max-width: 768px) {
+                body {
+                    grid-template-areas:
+                        "header"
+                        "main"
+                        "footer";
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 84px 1fr 56px;
+                }
+                aside {
+                    display: none;
+                }
+                .js-aside-nav-label {
+                    display: none !important;
+                }
+            }
+        </style>
 
-    // 1️⃣ NAVBAR retrai primeiro
-    navbar.classList.add("retract-animation");
-    navbar.style.width = "74px";
+        <link rel="stylesheet" href="{% static 'core/css/base.css'%}" />
+    </head>
+    <body id="body">
+        <header class="padding--standard">
+            <div class="presentation">
+                <h1 class="title">{%block header_title%}{%endblock%}</h1>
+                <p class="text">{%block header_text%}{%endblock%}</p>
+            </div>
 
-    setTimeout(() => {
-        aside.classList.add("retract-animation");
-        aside.style.width = "74px";
-    }, 120);
+            <div class="user-area">
+                <button
+                    class="user__notifications"
+                    onclick="window.location.href='{% url 'notifications' %}'"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="black"
+                    >
+                        <path
+                            d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"
+                        />
+                    </svg>
+                </button>
+                <button
+                    class="account-button"
+                    onclick="window.location.href='{% url 'profile' %}'"
+                >
+                    <img
+                        class="user__avatar"
+                        src="{% static 'users_img/avatar/pa_avatar.jpeg' %}"
+                        alt=""
+                    />
+                </button>
+            </div>
+        </header>
 
-    setTimeout(() => {
-        body.style.gridTemplateColumns = "74px 1fr";
-        body.style.gridTemplateRows = "84px 1fr auto";
-    }, 300);
-    aside.style.display = 'flex';
+        <aside id="aside">
+            <nav
+                id="aside-nav"
+                class="nav-bar padding--standard"
+                style="
+                    flex-flow: column;
+                    align-items: start;
+                    gap: 18px;
+                    background-color: var(--primary-color);
+                    max-width: 240px;
+                "
+            >
+                <a
+                    href="{% url 'index'%}"
+                    class="nav-link nav-link--std flex-rw"
+                    id="home"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="30px"
+                        viewBox="0 -960 960 960"
+                        width="30px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"
+                        />
+                    </svg>
+                    <p class="js-aside-nav-label">Início</p>
+                </a>
 
-    navbar.style.display = "flex;"
-        
+                <a
+                    href="{% url 'cultivated_plants'%}"
+                    class="nav-link nav-link--std flex-rw"
+                    id="plants"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="30px"
+                        viewBox="0 -960 960 960"
+                        width="30px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M342-160h276l40-160H302l40 160Zm0 80q-28 0-49-17t-28-44l-45-179h520l-45 179q-7 27-28 44t-49 17H342ZM200-400h560v-80H200v80Zm280-240q0-100 70-170t170-70q0 90-57 156t-143 80v84h320v160q0 33-23.5 56.5T760-320H200q-33 0-56.5-23.5T120-400v-160h320v-84q-86-14-143-80t-57-156q100 0 170 70t70 170Z"
+                        />
+                    </svg>
+                    <p class="js-aside-nav-label">Cultivos</p>
+                </a>
 
-   
-}
+                <a
+                    href="{% url 'tasks'%}"
+                    class="nav-link nav-link--std flex-rw"
+                    id="tasks"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="30px"
+                        viewBox="0 -960 960 960"
+                        width="30px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm80 240v-80h400v80H280Zm0 160v-80h280v80H280Z"
+                        />
+                    </svg>
+                    <p class="js-aside-nav-label">Tarefas</p>
+                </a>
 
-    function expanded__side_menu(){
+                <a
+                    href="{% url 'business_board'%}"
+                    class="nav-link nav-link--std flex-rw"
+                    id="business"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="30px"
+                        viewBox="0 -960 960 960"
+                        width="30px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"
+                        />
+                    </svg>
+                    <p class="js-aside-nav-label">Gerenciamento</p>
+                </a>
 
-        aside.classList.add("expand-animation");
-        aside.classList.remove("retract-animation");
-        
+                <button type="button" id="adjust-sidebar" aria-label="Ajustar menu">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M507-480 384-357l56 57 180-180-180-180-56 57 123 123ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
+                        />
+                    </svg>
+                </button>
+            </nav>
+        </aside>
 
-        body.style.gridTemplateColumns = " 240px 1fr";
-        body.style.gridTemplateRows = '84px 1fr auto';
+        <main class="padding--standard">{% block content %} {% endblock %}</main>
 
-        navbar.classList.add("expand-animation");
-        navbar.classList.remove("retract-animation");
+        <footer id="footer" class="align-spca navbar">
+            <nav
+                class="nav-bar flex-rw align-spca padding--standard"
+                style="width: 100%"
+            >
+                <a href="{% url 'index'%}" class="nav-link nav-link--std" id="home">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"
+                        />
+                    </svg>
+                </a>
+                <a
+                    href="{% url 'cultivated_plants'%}"
+                    class="nav-link nav-link--std"
+                    id="plants"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M342-160h276l40-160H302l40 160Zm0 80q-28 0-49-17t-28-44l-45-179h520l-45 179q-7 27-28 44t-49 17H342ZM200-400h560v-80H200v80Zm280-240q0-100 70-170t170-70q0 90-57 156t-143 80v84h320v160q0 33-23.5 56.5T760-320H200q-33 0-56.5-23.5T120-400v-160h320v-84q-86-14-143-80t-57-156q100 0 170 70t70 170Z"
+                        />
+                    </svg>
+                </a>
+                <a href="{% url 'tasks'%}" class="nav-link nav-link--std" id="tasks">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm80 240v-80h400v80H280Zm0 160v-80h280v80H280Z"
+                        />
+                    </svg>
+                </a>
+                <a
+                    href="{% url 'business_board'%}"
+                    class="nav-link nav-link--std"
+                    id="business"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm400 360H600v80H360v-80H160v160h640v-160Zm-360 0h80v-80h-80v80Zm-280-80h200v-80h240v80h200v-200H160v200Zm320 40Z"
+                        />
+                    </svg>
+                </a>
+            </nav>
+        </footer>
 
-        aside.style.display = 'flex';
-        aside.style.width = '240px';
+        {% block scripts%}{% endblock %}
+        <script src="{% static 'js/base.js'%}"></script>
 
-        navbar.style.width = "240px";
+        <script>
+            const adjustSidebar = document.getElementById("adjust-sidebar");
+            const body = document.getElementById("body");
+            const aside = document.getElementById("aside");
+            const navbar = document.getElementById("aside-nav");
+            const footer = document.getElementById("footer");
 
-        navLink.forEach( p => {
-            p.style.display = "flex";
-        })
+            const navLabels = navbar
+                ? navbar.querySelectorAll(".js-aside-nav-label")
+                : [];
 
-        navbar.style.display = "flex;"
-        
-    }
+            let opening = false;
 
-    
+            function initSidebarState() {
+                if (window.innerWidth <= 768) {
+                    opening = false;
+                    mobile_side_menu();
+                } else {
+                    opening = false;
+                    aside.classList.remove("expanded");
+                    aside.classList.remove("expand-animation", "retract-animation");
+                    body.style.gridTemplateColumns = "74px 1fr";
+                    body.style.gridTemplateRows = "84px 1fr auto";
+                    aside.style.width = "74px";
+                    if (navbar) navbar.style.width = "74px";
+                }
+            }
 
+            window.addEventListener("resize", function () {
+                if (window.innerWidth <= 768) {
+                    opening = false;
+                    mobile_side_menu();
+                } else {
+                    if (!opening) reduced_side_menu();
+                }
+            });
 
+            if (adjustSidebar) {
+                adjustSidebar.addEventListener("click", function () {
+                    opening = !opening;
 
+                    if (window.innerWidth >= 768 && !opening) {
+                        reduced_side_menu();
+                    }
 
-</script>
-</body>
+                    if (window.innerWidth >= 768 && opening) {
+                        expanded__side_menu();
+                    }
 
+                    if (window.innerWidth < 768) {
+                        if (!opening) {
+                            mobile_side_menu();
+                        } else {
+                            aside.style.display = "flex";
+                            body.style.gridTemplateColumns = "1fr";
+                            body.style.gridTemplateRows = "84px 1fr 56px";
+                        }
+                    }
+                });
+            }
+
+            function mobile_side_menu() {
+                body.style.gridTemplateColumns = "1fr";
+                body.style.gridTemplateRows = "84px 1fr 56px";
+
+                aside.style.display = "none";
+                if (navbar) {
+                    navbar.classList.remove("retract-animation", "expand-animation");
+                }
+                aside.classList.remove("retract-animation", "expand-animation");
+                aside.classList.remove("expanded");
+            }
+
+            function reduced_side_menu() {
+                aside.classList.remove("expand-animation");
+                navbar.classList.remove("expand-animation");
+
+                navbar.classList.add("retract-animation");
+                if (navbar) navbar.style.width = "74px";
+
+                setTimeout(() => {
+                    aside.classList.add("retract-animation");
+                    aside.style.width = "74px";
+                }, 120);
+
+                setTimeout(() => {
+                    body.style.gridTemplateColumns = "74px 1fr";
+                    body.style.gridTemplateRows = "84px 1fr auto";
+                }, 300);
+
+                aside.classList.remove("expanded");
+
+                aside.style.display = "flex";
+                if (navbar) navbar.style.display = "flex";
+            }
+
+            function expanded__side_menu() {
+                aside.classList.add("expand-animation");
+                aside.classList.remove("retract-animation");
+                aside.classList.add("expanded");
+
+                body.style.gridTemplateColumns = "240px 1fr";
+                body.style.gridTemplateRows = "84px 1fr auto";
+
+                navbar.classList.add("expand-animation");
+                navbar.classList.remove("retract-animation");
+
+                aside.style.display = "flex";
+                aside.style.width = "240px";
+                if (navbar) navbar.style.width = "240px";
+                if (navbar) navbar.style.display = "flex";
+            }
+
+            document.addEventListener("DOMContentLoaded", initSidebarState);
+            initSidebarState();
+        </script>
+    </body>
 </html>
