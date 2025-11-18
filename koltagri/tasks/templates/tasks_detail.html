@@ -1,235 +1,639 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block header_title %}Tarefa{% endblock %}
-{% block header_text %}22/11/2025{% endblock %}
-{% block title %}Home{% endblock %}
+{% block title %}Detalhes da Tarefa{% endblock %}
+{% block header_title %}Detalhes da {% endblock %}
+{% block header_text %}Tarefa{% endblock %}
 
 {% block rels %}
-<link rel="stylesheet" href="{% static 'css/partials/_filter-create.css'%}">
-<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+
 <style>
-:root {
-  --primary-color: #003845;
-  --bg-color: #f8fafb;
-  --border-color: #f2f2f2;
-  --text-color: #102734;
+:root{
+  --max-width: 1000px;
+  --bg: #f7f9fb;
+  --panel-bg: #ffffff;
+  --muted: #6b7688;
+  --primary: #4aa582da;
+  --accent: #00204b;
+  --border: #e9eef6;
   --radius: 12px;
+  --gap: 16px;
+  --base-font: 16px;
+}
+* { box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+html { font-size: var(--base-font); color: #071029; }
+
+.page {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
 }
 
-/* Container geral da tarefa */
-.task-description {
-  background: #fff;
-  border: 1px solid var(--border-color);
+/* Task Header */
+.task-header {
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
   display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: start;
+  flex-flow: column;
 }
 
-/* Título principal */
-.task-description h1 {
-  font-weight: 600;
-  color: var(--primary-color);
-  font-size: 1.6rem;
-  margin: 0;
-}
-
-/* Subinformações */
-.task__metadata {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 32px;
-  font-size: 15px;
-  color: #4a4a4a;
-}
-
-.task__metadata p strong {
-  color: var(--primary-color);
-}
-
-/* Linha divisória */
-.task-description hr {
-  border: none;
-  border-top: 1px solid var(--border-color);
-  margin: 4px 0;
-}
-
-/* Texto */
-.task__text p {
-  text-align: justify;
-  line-height: 1.6;
-  font-size: 16px;
-  color: var(--text-color);
-  margin: 0;
-}
-
-/* Seção de anexos */
-.attachments {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.attachments h2 {
-  font-size: 1.2rem;
-  color: var(--primary-color);
-  margin: 0 0 4px 0;
-}
-
-.attachment__card {
+.task-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: var(--panel-bg);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: 10px 16px;
-  background: #fafafa;
-  transition: 0.2s ease;
-  cursor: pointer;
-}
-
-.attachment__card:hover {
-  background: #f0f7f8;
-  transform: translateY(-2px);
-}
-
-.card__text p {
-  margin: 0;
-  line-height: 1.3;
-}
-
-.card__text p:first-child {
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-.card__text p:last-child {
-  font-size: 14px;
-  color: #6b777a;
-}
-
-.card__image {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.card__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Botões inferiores */
-.task-options {
-  display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
-  margin: 28px auto 0;
-  width: 100%;
-  max-width: 900px;
+  border: 1px solid var(--border);
 }
 
-.task__option {
+.task-icon .material-icons {
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.task-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Task Details */
+.task-details {
+  display: flex;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--gap);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .task-details {
+    flex-flow: column;
+  }
+
+  .info-card{
+    width: 100%;
+  }
+
+  .task-sidebar{
+    width: 100%;
+  }
+
+  .task-actions{ flex-flow: row;
+  }
+  
+  .task-actions button{ 
+  min-width: 122px;}
+}
+
+@media (min-width: 769px) {
+  .task-details {
+    flex-flow: row;
+  }
+}
+
+/* Task Description */
+.task-description {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.section-title {
+  margin: 0 0 16px 0;
+  color: var(--accent);
+  font-size: 1.15rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: var(--primary-color);
-  border: none;
+  gap: 8px;
+}
+
+.description-content {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Task Sidebar */
+.task-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.info-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px 20px;
-  color: #fff;
-  font-size: 16px;
+  padding: 20px;
+  min-width: 300px;
+}
+
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.info-value {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Attachments Section */
+.attachments-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: var(--gap);
+}
+
+.attachments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.attachments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.attachment-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  transition: all 0.2s ease;
+}
+
+.attachment-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.attachment-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+}
+
+.attachment-icon .material-icons {
+  font-size: 28px;
+  color: var(--muted);
+}
+
+.attachment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attachment-name {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.attachment-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.attachment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Participants Section */
+.participants-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: var(--gap);
+}
+
+.participants-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.participant-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  transition: all 0.2s ease;
+}
+
+.participant-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.participant-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border);
+}
+
+.participant-avatar .material-icons {
+  font-size: 28px;
+  color: var(--muted);
+}
+
+.participant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.participant-name {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.participant-role {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.participant-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-active { background: #e8f5e8; color: #2e7d32; }
+.status-pending { background: #fff3e0; color: #f57c00; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
 }
 
-.task__option:hover {
-  background-color: #005363;
-  transform: translateY(-2px);
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .task-description {
-    padding: 18px;
-  }
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
-  .task__metadata {
-    flex-direction: column;
-    gap: 6px;
-  }
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
 
-  .task-options {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.empty-state .material-icons {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
 
-  .task__option {
-    justify-content: center;
-  }
+#edit-button{
+  visibility: hidden;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-
-<section class="task-description">
-  <h1>Atividade – Replantio das Oliveiras</h1>
-
-  <div class="task__metadata">
-    <p><strong>Data de Criação:</strong> 15/11/2025</p>
-    <p><strong>Data de Vencimento:</strong> 30/11/2025</p>
-    <p><strong>Status:</strong> Pendente</p>
+<div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="edit-button" class="hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+      </svg>
+    </button>
   </div>
+<div class="page">
 
-  <hr>
+  <!-- Task Header -->
+  <section class="task-header">
+    <div class="task-icon">
+      <span class="material-icons">assignment</span>
+    </div>
+    <div class="task-info">
+      <h1 class="task-title">Poda de adenium obesum</h1>
+      <p class="task-meta">Criada em 15/11/2023 · Prazo: 20/11/2023 · Responsável: Pablo Murilo</p>
+      <p class="task-meta">Espécie: Adenium · Local: Estufa Principal</p>
+    </div>
+    <div class="task-actions">
+      <button class="btn" onclick="location.href='{% url 'task_form'%}'">
+        <span class="material-icons">edit</span>
+        Editar
+      </button>
+      <button class="btn">
+        <span class="material-icons">attach_file</span>
+        Anexar
+      </button>
+      <button class="btn primary">
+        <span class="material-icons">check_circle</span>
+        Concluir
+      </button>
+    </div>
+  </section>
 
-  <div class="task__text">
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In massa turpis, faucibus sit amet sem id, ultricies gravida risus. 
-      Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum ante elit, porttitor ac est a, gravida egestas nisi. 
-      Phasellus tincidunt elit vitae urna fringilla, non auctor orci blandit. Vivamus viverra augue sem, eu lacinia eros semper id. 
-      Aenean pellentesque suscipit fringilla. Integer quis ullamcorper risus, vitae dignissim elit.
-    </p>
-  </div>
-
-  <div class="attachments">
-    <h2>Anexos</h2>
-    <div class="attachment__card">
-      <div class="card__text">
-        <p>Manual de trato de lesmas</p>
-        <p>PDF</p>
+  <!-- Task Details -->
+  <div class="task-details">
+    
+    <!-- Left Column: Description and Details -->
+    <div class="task-description">
+      <h3 class="section-title">
+        <span class="material-icons">description</span>
+        Descrição da Tarefa
+      </h3>
+      <div class="description-content">
+        <p>Realizar a poda de manutenção nas plantas de Adenium obesum localizadas na estufa principal. A poda deve ser feita seguindo os protocolos estabelecidos para a espécie, removendo galhos secos e realizando o corte formativo para estimular o crescimento.</p>
+        
+        <h4>Instruções específicas:</h4>
+        <ul>
+          <li>Utilizar tesouras de poda esterilizadas</li>
+          <li>Realizar cortes em ângulo de 45 graus</li>
+          <li>Aplicar pasta seladora nos cortes maiores que 1cm</li>
+          <li>Registrar fotos antes e após a poda</li>
+        </ul>
       </div>
-      <div class="card__image">
-        <img src="{% static 'tasks/imgs/lesma.jpeg' %}" alt="Anexo">
+    </div>
+
+    <!-- Right Column: Sidebar Info -->
+    <div class="task-sidebar">
+      <div class="info-card">
+        <h3 class="section-title">
+          <span class="material-icons">info</span>
+          Informações
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Status</span>
+            <span class="info-value" style="color: #f57c00;">Em andamento</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Prioridade</span>
+            <span class="info-value" style="color: #d32f2f;">Alta</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Tempo Restante</span>
+            <span class="info-value">4 horas</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Criada por</span>
+            <span class="info-value">Ana Silva</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</section>
 
-<section class="task-options">
-  <button class="task__option">
-    <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
-    <span>Adicionar Anexos</span>
-  </button>
+  <!-- Attachments Section -->
+  <section class="attachments-section">
+    <div class="attachments-header">
+      <h3 class="section-title">
+        <span class="material-icons">attach_file</span>
+        Seus anexos
+      </h3>
+      <button class="btn primary">
+        <span class="material-icons">add</span>
+        Adicionar Anexo
+      </button>
+    </div>
 
-  <button class="task__option">
-    <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#e3e3e3"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520Z"/></svg>
-    <span>Concluir Tarefa</span>
-  </button>
-</section>
+    <div class="attachments-list">
+      <!-- Anexo 1 -->
+      <div class="attachment-card">
+        <div class="attachment-icon">
+          <span class="material-icons">image</span>
+        </div>
+        <div class="attachment-info">
+          <p class="attachment-name">foto_antes_poda.jpg</p>
+          <p class="attachment-meta">Adicionado em 18/11/2023 · 2.4 MB</p>
+        </div>
+        <div class="attachment-actions">
+          <button class="btn">
+            <span class="material-icons">download</span>
+          </button>
+          <button class="btn">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
 
+      <!-- Anexo 2 -->
+      <div class="attachment-card">
+        <div class="attachment-icon">
+          <span class="material-icons">description</span>
+        </div>
+        <div class="attachment-info">
+          <p class="attachment-name">protocolo_poda.pdf</p>
+          <p class="attachment-meta">Adicionado em 15/11/2023 · 1.8 MB</p>
+        </div>
+        <div class="attachment-actions">
+          <button class="btn">
+            <span class="material-icons">download</span>
+          </button>
+          <button class="btn">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Anexo 3 -->
+      <div class="attachment-card">
+        <div class="attachment-icon">
+          <span class="material-icons">note</span>
+        </div>
+        <div class="attachment-info">
+          <p class="attachment-name">observacoes.txt</p>
+          <p class="attachment-meta">Adicionado em 19/11/2023 · 156 KB</p>
+        </div>
+        <div class="attachment-actions">
+          <button class="btn">
+            <span class="material-icons">download</span>
+          </button>
+          <button class="btn">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- Participants Section -->
+  <section class="participants-section">
+    <div class="participants-header">
+      <h3 class="section-title">
+        <span class="material-icons">groups</span>
+        Participantes da Tarefa
+      </h3>
+      <button class="btn primary">
+        <span class="material-icons">person_add</span>
+        Adicionar Participante
+      </button>
+    </div>
+
+    <div class="participants-list">
+      <!-- Participante 1 -->
+      <div class="participant-card" onclick="location.href='{% url 'docs' %}'">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user1.jpg' %}" alt="Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Pablo Murilo</p>
+          <p class="participant-role">Responsável principal · Especialista em poda</p>
+        </div>
+        <div class="participant-status status-active">
+          <span class="material-icons" style="font-size: 16px;">check_circle</span>
+          Ativo
+        </div>
+      </div>
+
+      <!-- Participante 2 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Joana Silva</p>
+          <p class="participant-role">Auxiliar · Cuidados pós-poda</p>
+        </div>
+        <div class="participant-status status-active">
+          <span class="material-icons" style="font-size: 16px;">check_circle</span>
+          Ativo
+        </div>
+      </div>
+
+      <!-- Participante 3 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user2.jpg' %}" alt="Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Carlos Eduardo</p>
+          <p class="participant-role">Supervisor · Controle de qualidade</p>
+        </div>
+        <div class="participant-status status-pending">
+          <span class="material-icons" style="font-size: 16px;">schedule</span>
+          Pendente
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
 {% endblock %}

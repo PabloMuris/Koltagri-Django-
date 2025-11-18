@@ -30,6 +30,42 @@
 aside {
     position: relative;
 }
+
+
+
+@keyframes  MenuRetract{
+    0%   { width: 240px; display: flex;}
+    100% { width: 74px; display: flex;}
+}
+
+@keyframes  MenuExpand{
+    0%   { width: 74px; display: flex;}
+    100% { width: 240px; display: flex;}
+    
+}
+
+
+
+.expand-animation{
+    animation: MenuExpand 0.25s linear;
+}
+
+
+
+.retract-animation{
+     animation: MenuRetract 0.25s linear;
+}
+
+.delay {
+    animation-delay: .2s;    
+}
+
+header{
+    z-index: 1;
+}
+aside{
+    z-index: 998;
+}
     </style>
     
 <link rel="stylesheet" href="{% static 'core/css/base.css'%}">
@@ -44,10 +80,10 @@ aside {
         </div>
 
         <div class="user-area">
-            <button class="user__notifications">
+            <button class="user__notifications" onclick="window.location.href='{% url 'notifications' %}'">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/></svg>
             </button>
-            <button class="account-button">
+            <button class="account-button" onclick="window.location.href='{% url 'profile' %}'">
                 <img class="user__avatar" src="{% static 'users_img/avatar/pa_avatar.jpeg' %}" alt="">
             </button>
         </div>
@@ -110,8 +146,9 @@ aside {
     const body = document.getElementById("body");
     const aside = document.getElementById("aside");
     const navbar = document.getElementById("aside-nav");
+    const footer = document.getElementById("footer")
 
-    const navLink = navbar.querySelectorAll(".navlink p");
+    const navLink = navbar.querySelectorAll(".navlink");
     let opening = false;
     let overlay_aside = false;
 
@@ -129,9 +166,6 @@ aside {
             reduced_side_menu()
         }
 
-        if(window.innerWidth>=768 &&  opening){
-            expanded__side_menu()
-        }
     
     });
 
@@ -150,35 +184,55 @@ aside {
     });
 
     function mobile_side_menu(){
-        // body.style.gridTemplateAreas = `"header" "main" "footer"`;
         body.style.gridTemplateColumns = "1fr";
-        body.style.gridTemplateRows = ' 84px 1fr 56px';
+        body.style.gridTemplateRows = "84px 1fr 56px";
 
         aside.style.display = 'none';
+        navbar.classList.remove("retract-animation");
+        aside.classList.remove("retract-animation");
+        aside.classList.remove("expand-animation");
+        navbar.classList.remove("expand-animation");
+        
 
     }
 
-    function reduced_side_menu(){
-        // body.style.gridTemplateAreas = `""aside header" "aside main"`;
-        body.style.gridTemplateColumns = " 80px 1fr";
-        body.style.gridTemplateRows = '84px 1fr auto';
+  function reduced_side_menu() {
+    // remover animações anteriores
+    aside.classList.remove("expand-animation");
+    navbar.classList.remove("expand-animation");
 
+    // 1️⃣ NAVBAR retrai primeiro
+    navbar.classList.add("retract-animation");
+    navbar.style.width = "74px";
 
-        aside.style.display = 'flex';
-        aside.style.width= '80px';
+    setTimeout(() => {
+        aside.classList.add("retract-animation");
+        aside.style.width = "74px";
+    }, 120);
 
-        navbar.style.width = "80px"
+    setTimeout(() => {
+        body.style.gridTemplateColumns = "74px 1fr";
+        body.style.gridTemplateRows = "84px 1fr auto";
+    }, 300);
+    aside.style.display = 'flex';
 
-        navLink.forEach( p => {
-            p.style.display = none;
-        })
-    }
+    navbar.style.display = "flex;"
+        
+
+   
+}
 
     function expanded__side_menu(){
-        // body.style.gridTemplateAreas = `""aside header" "aside main"`;
+
+        aside.classList.add("expand-animation");
+        aside.classList.remove("retract-animation");
+        
+
         body.style.gridTemplateColumns = " 240px 1fr";
         body.style.gridTemplateRows = '84px 1fr auto';
 
+        navbar.classList.add("expand-animation");
+        navbar.classList.remove("retract-animation");
 
         aside.style.display = 'flex';
         aside.style.width = '240px';
@@ -186,10 +240,14 @@ aside {
         navbar.style.width = "240px";
 
         navLink.forEach( p => {
-            p.style.display = flex;
+            p.style.display = "flex";
         })
+
+        navbar.style.display = "flex;"
         
     }
+
+    
 
 
 

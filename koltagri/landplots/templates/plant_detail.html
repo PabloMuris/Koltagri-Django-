@@ -4,106 +4,84 @@
 {% block title %}Planta{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{% static 'css/plant_detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+
 <style>
-
-main{
-    background: #f2f2f2;
+    .content-layer{
+  display: flex;
 }
 
-/* ======= SEÇÃO 1 – FOTO + NOMES ======= */
-
-.plant-header{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
+.plant-detail-form{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  margin-top: 60px;
+  gap: 20px;
+  
 }
 
-.plant-header img{
-    width: 260px;
-    height: auto;
+.plant-detail-form button{
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  padding: 16px;
+  color: white;
+  font-weight: 400;
 }
 
-.plant-names{
-    text-align: center;
+.plant-detail-form input{
+  height: 44px;
+  border-radius: 10px;
+  padding: 10px
+}
+.plant-detail-form select{
+  height: 44px;
+  border-radius: 10px;
+  padding: 10px
 }
 
-.plant-names .popular{
-    font-size: 20px;
-    font-weight: 500;
+.buttons-area{
+  display: flex;
+  align-items: center;
+  justify-content: space-between
 }
-
-.plant-names .scientific{
-    font-size: 14px;
-    font-style: italic;
-    opacity: 0.7;
-}
-
-/* ======= SEÇÃO 2 – CARDS DE STATUS ======= */
-
-.status-section{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.status-card{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    background: white;
-    padding: 14px 18px;
-    border-radius: 12px;
-    width: 220px;
-    border: 2px solid #ececec;
-}
-
-.status-card svg{
-    width: 28px;
-    height: 28px;
-}
-
-.status-card p:first-child{
-    font-size: 14px;
-    opacity: .6;
-}
-
-.status-card p:last-child{
-    font-size: 16px;
-    font-weight: 500;
-}
-
-/* ======= SEÇÃO 3 – DESCRIÇÃO + OBSERVAÇÕES ======= */
-
-.info-section{
-    background: white;
-    padding: 20px;
-    border-radius: 14px;
-    border: 2px solid #e8e8e8;
-}
-
-.info-block{
-    margin-bottom: 24px;
-}
-
-.info-block h3{
-    font-size: 18px;
-    margin-bottom: 6px;
-}
-
-.info-block p{
-    text-align: justify;
-    line-height: 1.5;
-}
-
 </style>
 {% endblock %}
 
 {% block content %}
 
+<div class="modal-overlay climate-modal" id="modal-overlay">
+    <div class="content-layer">
+        <button type="button" class="close-btn" id="close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+
+        <form action="" class="plant-detail-form">
+
+            <label for="period">Safra</label>
+            <select name="period" id="period">
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+
+            <label for="transplant_date">Data de Transplante</label>
+            <input type="date" name="transplant_date" id="transplant_date">
+
+            <label for="harvest_date">Data de Colheita</label>
+            <input type="date" name="harvest_date" id="harvest_date">
+
+            <div class="buttons-area">
+                <button type="submit" class="confirm-btn">Confirmar edição</button>
+                <button type="button" class="delete-btn">Apagar planta</button>
+            </div>
+
+        </form>
+    </div>
+</div>
 
 
     <!-- ✅ SEÇÃO 1 -->
@@ -113,6 +91,15 @@ main{
         <div class="plant-names">
             <p class="popular">Banana da terra</p>
             <p class="scientific">Musa x paradisica</p>
+        </div>
+
+        <div class="actions">
+            <button type="button" id="back-button" onclick="location.href='{% url 'cultivated_plants'%}'" >
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+            </button>
+            <button type="button" id="edit-button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+            </button>
         </div>
     </section>
 
@@ -176,12 +163,37 @@ main{
         <div class="info-block">
             <h3>Observações</h3>
             <p>
-                Nulla nec justo id lectus sollicitudin rutrum. 
-                Donec convallis nisl id quam blandit mollis.
+                <a href="">
+
+                </a>
             </p>
         </div>
+        
+        
 
     </section>
 
 
 {% endblock %}
+
+
+{% block scripts %}
+<script>
+    const modalOverlay = document.getElementById("modal-overlay");
+    const editbutton = document.getElementById("edit-button");
+    const closebtn =  document.getElementById("close-btn");
+
+    editbutton.addEventListener("click", (e) => {
+        modalOverlay.style.display = "flex";
+    })
+
+    closebtn.addEventListener("click", (e) =>{
+        modalOverlay.style.display = "none";
+    })
+
+
+
+    
+</script>
+
+{% endblock%}

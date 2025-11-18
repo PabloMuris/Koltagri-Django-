@@ -1,13 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}Plantas{% endblock %}
 {% load static %}
+{% block header_title %}Sua coleção{% endblock %}
+{% block header_text %}de plantas{% endblock %}
 
 {% block rels %}
-<link rel="stylesheet" href="{% static 'partials/css/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
 {% endblock %}
 
 {% block styles %}
 <style>
+
+#filter-open svg{
+  fill: black ;
+}
+main.standard--padding{
+  margin-inline: 22px !important;
+}
+
 :root {
   --primary-color: #2b8aef;
   --bg-color: #f7f9fb;
@@ -18,7 +28,6 @@
 }
 
 /* página */
-
 
 /* cabeçalho (busca + ações) */
 .header-bar{
@@ -75,7 +84,6 @@
 }
 .action-button:hover{ transform:translateY(-2px); }
 
-
 .plant-grid{
   display:grid;
   gap:var(--gap);
@@ -84,7 +92,6 @@
   width: 100%;
 }
 
- 
 .plant-card{
   display:flex;
   flex-direction:column;
@@ -102,7 +109,7 @@
 /* imagem responsiva: mantém proporção e preenche a largura do card */
 .card__image{
   width:100%;
-  aspect-ratio: 4 / 3; /* mantém proporção em todos os navegadores modernos */
+  aspect-ratio: 4 / 3;
   overflow:hidden;
   background:#f3f3f3;
   display:block;
@@ -137,7 +144,6 @@
   opacity:0.9;
 }
 
-
 @media (max-width:880px){
   .search-form{ max-width:100%; }
   .action-buttons{ width:100%; justify-content:flex-start; }
@@ -147,29 +153,67 @@
   .card__description .title{ font-size:14px; }
 }
 
-
 .plant-grid.grid-large{
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
+
+/* MODAL STYLES - Adicionados à página */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.32);
+  z-index:1200;
+  padding:20px;
+}
+.modal-panel{
+  width:100%; max-width:520px; background:#fff; border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.modal-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.form-control{ flex:1; min-width:160px; }
+.form-control label{ display:block; margin-bottom:6px; font-weight:600; color:#6b777a; font-size:14px; }
+.form-control input, .form-control select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e9eef6; font-size:15px; background:#fff; }
+
+/* modal actions */
+.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:8px;
+  border:1px solid #e9eef6;
+  background:#fff;
+  cursor:pointer;
+  font-size:14px;
+  transition: all 0.2s ease;
+  
+}
+.btn p {
+  font-weight: 500;
+}
+.btn.primary{
+  background:var(--primary-color);
+  color:#fff;
+  border-color:transparent;
+}
+.btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.hidden{ display:none !important; }
 </style>
 {% endblock %}
 
 {% block content %}
 
-  {% include "partials/_search.html" %}
+  {% include "partials/_search.html" with label="Nova planta" %}
 
   <section class="plant-grid">
-    <article class="plant-card" onclick="location.href='#'">
-      <div class="card__image">
-        <img src="{% static 'example_img/ananas.jpeg' %}" alt="Banana Nanica">
-      </div>
-      <div class="card__description">
-        <p class="title">Banana Nanica</p>
-        <span class="meta">Musa spp.</span>
-      </div>
-    </article>
-
-    <article class="plant-card" onclick="location.href='#'">
+    <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail'%}'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_citrica" data-estacao="primavera" data-dificuldade="intermediario" data-manutencao="media">
       <div class="card__image">
         <img src="{% static 'example_img/laranjeira.png' %}" alt="Laranjeira">
       </div>
@@ -179,7 +223,7 @@
       </div>
     </article>
 
-    <article class="plant-card" onclick="location.href='#'">
+    <article class="plant-card" onclick="location.href='#'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_tropical" data-estacao="verao" data-dificuldade="facil" data-manutencao="baixa">
       <div class="card__image">
         <img src="{% static 'example_img/maracuja.png' %}" alt="Maracujá">
       </div>
@@ -189,8 +233,7 @@
       </div>
     </article>
 
-    <!-- mais cards de exemplo -->
-    <article class="plant-card" onclick="location.href='#'">
+    <article class="plant-card" onclick="location.href='#'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_tropical" data-estacao="verao" data-dificuldade="facil" data-manutencao="media">
       <div class="card__image">
         <img src="{% static 'example_img/banana.png' %}" alt="Banana da Terra">
       </div>
@@ -199,7 +242,235 @@
         <span class="meta">Musa × paradisiaca</span>
       </div>
     </article>
-
   </section>
 
+  <!-- MODAL DE FILTRO PARA PLANTAS -->
+  <div id="filter-modal-plants" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
+    <div class="modal-panel" role="document">
+      <h3 id="filter-title" style="margin:0 0 20px 0; color:#102734;">Filtrar Plantas</h3>
+      <form id="filter-form-plants">
+        <div class="modal-row">
+          <div class="form-control">
+            <label for="filtro_cultivo">Tipo de Cultivo</label>
+            <select id="filtro_cultivo" name="filtro_cultivo">
+              <option value="">Todos os Cultivos</option>
+              <option value="hortalica">Hortaliças</option>
+              <option value="frutifera">Frutíferas</option>
+              <option value="ornamental">Ornamentais</option>
+              <option value="graos">Grãos</option>
+              <option value="raizes">Raízes e Tubérculos</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="filtro_decorativa">Finalidade</label>
+            <select id="filtro_decorativa" name="filtro_decorativa">
+              <option value="">Todas as Finalidades</option>
+              <option value="sim">Apenas Decorativas</option>
+              <option value="nao">Não Decorativas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div class="form-control">
+            <label for="filtro_categoria">Categoria Específica</label>
+            <select id="filtro_categoria" name="filtro_categoria">
+              <option value="">Todas as Categorias</option>
+              <optgroup label="Frutas">
+                <option value="fruta_citrica">Frutas Cítricas</option>
+                <option value="fruta_tropical">Frutas Tropicais</option>
+                <option value="fruta_temperada">Frutas Temperadas</option>
+              </optgroup>
+              <optgroup label="Verduras e Legumes">
+                <option value="verdura">Verduras</option>
+                <option value="legume">Legumes</option>
+                <option value="folhosa">Folhosas</option>
+              </optgroup>
+              <optgroup label="Outros">
+                <option value="flores">Flores</option>
+                <option value="raizes_tuberculos">Raízes e Tubérculos</option>
+                <option value="graos_cereais">Grãos e Cereais</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="filtro_estacao">Estação do Ano</label>
+            <select id="filtro_estacao" name="filtro_estacao">
+              <option value="">Todas as Estações</option>
+              <option value="primavera">Primavera</option>
+              <option value="verao">Verão</option>
+              <option value="outono">Outono</option>
+              <option value="inverno">Inverno</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div class="form-control">
+            <label for="filtro_dificuldade">Nível de Dificuldade</label>
+            <select id="filtro_dificuldade" name="filtro_dificuldade">
+              <option value="">Todos os Níveis</option>
+              <option value="facil">Fácil</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="dificil">Difícil</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="filtro_manutencao">Necessidade de Manutenção</label>
+            <select id="filtro_manutencao" name="filtro_manutencao">
+              <option value="">Todas</option>
+              <option value="baixa">Baixa Manutenção</option>
+              <option value="media">Média Manutenção</option>
+              <option value="alta">Alta Manutenção</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="filter-cancel-plants" type="button" class="btn">Cancelar</button>
+          <button id="filter-reset-plants" type="button" class="btn">Limpar Filtros</button>
+          <button id="filter-apply-plants" type="submit" class="btn primary">Aplicar Filtros</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos do modal de plantas
+  const filterModal = document.getElementById('filter-modal-plants');
+  const filterOpenBtn = document.querySelector('#filter-open');
+  const filterCancel = document.getElementById('filter-cancel-plants');
+  const filterReset = document.getElementById('filter-reset-plants');
+  const filterForm = document.getElementById('filter-form-plants');
+  
+  // Elementos para filtragem
+  const plantCards = document.querySelectorAll('.plant-card');
+  const searchInput = document.querySelector('#search-input');
+
+  // Funções para abrir/fechar modal
+  function openModal(el) {
+    if (!el) return;
+    el.style.display = 'flex';
+    el.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(el) {
+    if (!el) return;
+    el.style.display = 'none';
+    el.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Abrir modal de filtro
+  if (filterOpenBtn) {
+    filterOpenBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal(filterModal);
+    });
+  }
+
+  // Fechar modal
+  if (filterCancel) {
+    filterCancel.addEventListener('click', function() {
+      closeModal(filterModal);
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  if (filterModal) {
+    filterModal.addEventListener('click', function(e) {
+      if (e.target === filterModal) {
+        closeModal(filterModal);
+      }
+    });
+  }
+
+  // Aplicar filtros
+  if (filterForm) {
+    filterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const cultivo = this.filtro_cultivo.value;
+      const decorativa = this.filtro_decorativa.value;
+      const categoria = this.filtro_categoria.value;
+      const estacao = this.filtro_estacao.value;
+      const dificuldade = this.filtro_dificuldade.value;
+      const manutencao = this.filtro_manutencao.value;
+
+      let visibleCount = 0;
+
+      plantCards.forEach(card => {
+        const cardCultivo = card.getAttribute('data-cultivo');
+        const cardDecorativa = card.getAttribute('data-decorativa');
+        const cardCategoria = card.getAttribute('data-categoria');
+        const cardEstacao = card.getAttribute('data-estacao');
+        const cardDificuldade = card.getAttribute('data-dificuldade');
+        const cardManutencao = card.getAttribute('data-manutencao');
+
+        let showCard = true;
+
+        // Aplicar filtros (apenas se o filtro foi selecionado)
+        if (cultivo && cardCultivo !== cultivo) showCard = false;
+        if (decorativa && cardDecorativa !== decorativa) showCard = false;
+        if (categoria && cardCategoria !== categoria) showCard = false;
+        if (estacao && cardEstacao !== estacao) showCard = false;
+        if (dificuldade && cardDificuldade !== dificuldade) showCard = false;
+        if (manutencao && cardManutencao !== manutencao) showCard = false;
+
+        card.style.display = showCard ? '' : 'none';
+        if (showCard) visibleCount++;
+      });
+
+      closeModal(filterModal);
+    });
+  }
+
+  // Limpar filtros
+  if (filterReset) {
+    filterReset.addEventListener('click', function() {
+      filterForm.reset();
+      plantCards.forEach(card => {
+        card.style.display = '';
+      });
+      closeModal(filterModal);
+    });
+  }
+
+  // Busca em tempo real
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      
+      plantCards.forEach(card => {
+        const title = card.querySelector('.title').textContent.toLowerCase();
+        const meta = card.querySelector('.meta').textContent.toLowerCase();
+        
+        const matches = title.includes(searchTerm) || meta.includes(searchTerm);
+        card.style.display = matches ? '' : 'none';
+      });
+    });
+  }
+
+  // Fechar modal com Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal(filterModal);
+    }
+  });
+
+  // Redirecionar botão "Nova planta" para cultivation-form
+  const addButton = document.querySelector('#add-open');
+  if (addButton) {
+    addButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = "{% url 'cultivation_form' %}";
+    });
+  }
+});
+</script>
 {% endblock %}

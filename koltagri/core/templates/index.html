@@ -1,10 +1,208 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
-{% block header_title %}Previsão do Tempo{% endblock %}
-{% block header_text %}para hoje{% endblock %}
+{% block header_title %}Olá,seja bem vindo{% endblock %}
+{% block header_text %}Koltagri{% endblock %}
 {% load static %}
 {% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
 <style>
+
+  
+/* Forecast content — Koltagri style (assume Outfit já carregada globalmente) */
+.forecast {
+  --primary: #276b4f;
+  --accent: #2f8a64;
+  --muted: #6b777a;
+  --card-bg: #ffffff;
+  --border: #f2f2f2;
+  --radius: 10px;
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #102734;
+  box-sizing: border-box;
+}
+
+/* Wrapper */
+.forecast__wrap {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+}
+
+/* Header */
+.forecast__header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.forecast__location {
+  display:flex;
+  flex-direction:column;
+}
+.forecast__location .place {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.forecast__location .subtitle {
+  font-size: 0.90rem;
+  color: var(--muted);
+}
+
+/* Today summary (compact) */
+.forecast__today {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.forecast__today .big-temp {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text, #102734);
+}
+.forecast__today .desc {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Days grid */
+.forecast__days {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+/* Single day card */
+.forecast__day {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  box-sizing: border-box;
+}
+
+/* day top row */
+.day__top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 8px;
+}
+.day__label { font-weight:600; color:var(--primary); font-size:0.95rem; }
+.day__date { font-size:0.85rem; color:var(--muted); }
+
+/* icon + temps */
+.day__middle {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.day__icon {
+  width:44px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background: linear-gradient(180deg, rgba(47,138,100,0.08), rgba(39,107,79,0.03));
+  color:var(--accent);
+  flex-shrink:0;
+}
+.day__temps {
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.temp-high { font-weight:700; font-size:1rem; color:var(--text); }
+.temp-low { font-size:0.85rem; color:var(--muted); }
+
+/* bottom row: precip + wind */
+.day__bottom {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:0.85rem;
+  color:var(--muted);
+}
+
+/* small badges */
+.badge {
+  background: rgba(39,107,79,0.08);
+  color: var(--primary);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-weight:600;
+  font-size:0.82rem;
+}
+
+/* responsive tweaks */
+@media (max-width:420px){
+  .forecast__wrap { padding: 12px; gap:10px; }
+  .forecast__today .big-temp { font-size:1.8rem; }
+  .day__icon { width:40px; height:40px; }
+  .forecast__days { gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+}
+
+
+    .alert{
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 5px;
+    color: #1b232f; /* verde escuro suave */
+}
+
+.notif-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #163b16;
+}
+
+.notif-title span {
+    font-weight: 700;
+}
+
+.notif-section p {
+    margin: 3px 0;
+    font-size: 1rem;
+}
+
+.notif-card {
+    border: 1px solid #f2f2f2;
+    padding: 15px;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.notif-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #184d18;
+}
+
+.notif-card ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.notif-card ul li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+
+
+
+    
     .climatological-info {
         height: 330px;
         width: 100%;
@@ -29,15 +227,7 @@
         overflow: hidden;
     }
 
-    .climate-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-    }
+    
 
     .city-data {
         align-items: center;
@@ -69,15 +259,7 @@
         overflow: hidden;
     }
 
-    .climate-alert::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
-    }
+    
 
     .climate-alert .text-title {
         display: flex;
@@ -271,10 +453,14 @@
             height: 44px;
             flex-flow: row;
             width: 100%;
+            padding: 0px !important;
+            background-color: transparent;
+            
         }
         
-        .alert-header, .alert-type, .alert-description {
+        .alert-header,  .alert-description {
             display: none;
+            
         }
         
         .text-title svg {
@@ -282,6 +468,7 @@
             height: 24px;
         }
         
+        .alert-type{ min-height: 44px;}
         .weather-main {
             flex-direction: column;
             align-items: flex-start;
@@ -343,12 +530,16 @@
     .card {
         display: flex;
     }
+
+    
+    
 </style>
 {% endblock %}
 
 {% block content %}
+
 <section class="climatological-info climatological-info--style">
-    <div class="climate-card climate-card--style card">
+    <div class="climate-card climate-card--style card" id="climate-card">
         <div class="card-header city-data">
             <p class="city-name">Riacho de Santana - RN</p>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
@@ -383,7 +574,7 @@
         </div>
     </div>
     
-    <div class="climate-alert climate-alert--style card">
+    <div class="climate-alert climate-alert--style card" id="climate-alert">
         <div class="alert-header">
             <p class="alert-title">Condições meteorológicas</p>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#c53030">
@@ -413,12 +604,222 @@
     </div>
 </section>
 
+<div class="modal-overlay climate-modal" id="modal-overlay">
+    <div class="content-layer">
+        <button type="button" class="close-btn" id="close-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+        </button>
+    
+        <div class="alert" id="weather-alert">
+
+    <h2 class="notif-title">Aviso de: <span>Chuvas Intensas</span></h2>
+
+    <div class="notif-section">
+        <p><strong>Grau de severidade:</strong> Perigo Potencial</p>
+        <p><strong>Início:</strong> 16/11/2025 09h24min</p>
+        <p><strong>Fim:</strong> 17/11/2025 09h00min</p>
+    </div>
+
+    <div class="notif-card">
+        <h3>Riscos Potenciais</h3>
+        <p>
+            INMET publica aviso iniciando em: 16/11/2025 09:24.  
+            Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40–60 km/h).  
+            Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e descargas elétricas.
+        </p>
+    </div>
+
+    <div class="notif-card">
+        <h3>Instruções</h3>
+        <ul>
+            <li>Em caso de rajadas de vento: não se abrigue sob árvores.</li>
+            <li>Não estacione veículos próximos a torres ou placas de propaganda.</li>
+            <li>Evite usar aparelhos eletrônicos ligados à tomada.</li>
+            <li>Mais informações: Defesa Civil (199) e Corpo de Bombeiros (193).</li>
+        </ul>
+    </div>
+
+    <div class="notif-card">
+        <h3>Municípios</h3>
+        <p>
+            Abadia de Goiás - GO (5200050), Abadia dos Dourados - MG (3100104), Abaeté - MG (3100203),  
+            Abre Campo - MG (3100302), Acaiaca - MG (3100401), Acorizal - MT (5100102), Acrelândia - AC (1200013), Acreún...
+        </p>
+    </div>
+
+    
+</div>
+
+        <div class="forecast" id="forecast" role="region" aria-label="Previsão dos próximos 5 dias">
+  <div class="forecast__wrap">
+
+    <!-- header -->
+    <div class="forecast__header">
+      <div class="forecast__location" aria-hidden="false">
+        <span class="place">Riacho de Santana - RN</span>
+        <span class="subtitle">Previsão 5 dias · atualizado em 16/11/2025 09:24</span>
+      </div>
+
+      <div class="forecast__today" aria-hidden="true">
+        <div class="big-temp">22°</div>
+        <div class="desc">
+          <div>Parcialmente nublado</div>
+          <div style="font-size:0.85rem; color:var(--muted)">Chuva: 80% · Vento: 18 km/h</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- grid com os 5 dias -->
+    <div class="forecast__days" role="list" aria-label="Previsão por dia">
+      <!-- Dia 1 -->
+      <article class="forecast__day" role="listitem" aria-label="Domingo 16 de novembro - hoje">
+        <div class="day__top">
+          <div class="day__label">Dom • 16/11</div>
+          <div class="day__date">Hoje</div>
+        </div>
+
+        <div class="day__middle">
+          <div class="day__icon" aria-hidden="true">
+            <!-- nuvens + chuva icon (inline svg) -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 16a4 4 0 0 1 4-4h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 12a5 5 0 0 1 10 0h1a3 3 0 1 1 0 6H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 20l2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="day__temps">
+            <div class="temp-high">22° / 28°</div>
+            <div class="temp-low">Min 20° · Máx 28°</div>
+          </div>
+        </div>
+
+        <div class="day__bottom">
+          <div class="precip">🌧 80%</div>
+          <div class="wind">💨 18 km/h</div>
+        </div>
+      </article>
+
+      <!-- Dia 2 -->
+      <article class="forecast__day" role="listitem" aria-label="Segunda 17 de novembro">
+        <div class="day__top">
+          <div class="day__label">Seg • 17/11</div>
+          <div class="day__date">Amanhã</div>
+        </div>
+
+        <div class="day__middle">
+          <div class="day__icon" aria-hidden="true">
+            <!-- sol com nuvens -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6.76 4.84l-1.8-1.79" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M1 13h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.06"/><path d="M20.24 19.16l1.8 1.79" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+
+          <div class="day__temps">
+            <div class="temp-high">24° / 30°</div>
+            <div class="temp-low">Min 22° · Máx 30°</div>
+          </div>
+        </div>
+
+        <div class="day__bottom">
+          <div class="precip">🌦 45%</div>
+          <div class="wind">💨 15 km/h</div>
+        </div>
+      </article>
+
+      <!-- Dia 3 -->
+      <article class="forecast__day" role="listitem" aria-label="Terça 18 de novembro">
+        <div class="day__top">
+          <div class="day__label">Ter • 18/11</div>
+          <div class="day__date">18/11</div>
+        </div>
+
+        <div class="day__middle">
+          <div class="day__icon" aria-hidden="true">
+            <!-- chuva -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 10a5 5 0 0 1 10 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 16l1.5-2M12 16l1.5-2M16 16l1.5-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+
+          <div class="day__temps">
+            <div class="temp-high">21° / 26°</div>
+            <div class="temp-low">Min 19° · Máx 26°</div>
+          </div>
+        </div>
+
+        <div class="day__bottom">
+          <div class="precip">🌧 70%</div>
+          <div class="wind">💨 22 km/h</div>
+        </div>
+      </article>
+
+      <!-- Dia 4 -->
+      <article class="forecast__day" role="listitem" aria-label="Quarta 19 de novembro">
+        <div class="day__top">
+          <div class="day__label">Qua • 19/11</div>
+          <div class="day__date">19/11</div>
+        </div>
+
+        <div class="day__middle">
+          <div class="day__icon" aria-hidden="true">
+            <!-- nublado -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 13a4 4 0 0 1 4-4h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 9a5 5 0 0 1 10 0h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+
+          <div class="day__temps">
+            <div class="temp-high">23° / 27°</div>
+            <div class="temp-low">Min 21° · Máx 27°</div>
+          </div>
+        </div>
+
+        <div class="day__bottom">
+          <div class="precip">☁ 20%</div>
+          <div class="wind">💨 10 km/h</div>
+        </div>
+      </article>
+
+      <!-- Dia 5 -->
+      <article class="forecast__day" role="listitem" aria-label="Quinta 20 de novembro">
+        <div class="day__top">
+          <div class="day__label">Qui • 20/11</div>
+          <div class="day__date">20/11</div>
+        </div>
+
+        <div class="day__middle">
+          <div class="day__icon" aria-hidden="true">
+            <!-- sol -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5 5l-1.5-1.5M19.5 19.5 18 18M19.5 4.5 18 6M5 19l-1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+
+          <div class="day__temps">
+            <div class="temp-high">25° / 31°</div>
+            <div class="temp-low">Min 23° · Máx 31°</div>
+          </div>
+        </div>
+
+        <div class="day__bottom">
+          <div class="precip">☀ 5%</div>
+          <div class="wind">💨 8 km/h</div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</div>
+
+    </div>
+</div>
+
 <section class="property-info">
-    <div class="tasks"></div>
+    <div class="tasks">
+        
+    </div>
     <div class="supplies"></div>
     <div class="plants"></div>
 </section>
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'js/index.js'%}"></script>
 {% endblock %}

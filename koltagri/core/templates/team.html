@@ -1,0 +1,995 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Participantes {% endblock %}
+{% block header_title %} Participantes da {% endblock %}
+{% block header_text %}Propriedade{% endblock %}
+
+{% block rels %}
+<!-- Fonte Outfit e icons -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+<style>
+:root{
+  --max-width: 1000px;
+  --bg: #f7f9fb;
+  --panel-bg: #ffffff;
+  --muted: #6b7688;
+  --primary: #4a6fa5;
+  --accent: #00204b;
+  --border: #e9eef6;
+  --radius: 12px;
+  --gap: 16px;
+  --base-font: 16px;
+}
+* { box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+html { font-size: var(--base-font); color: #071029; }
+
+/* Page wrapper */
+.page {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ---------- TOP PANEL (property info + stats) ---------- */
+.top-panel{
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gap);
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+/* property title */
+.property-title h1{
+  margin: 0 0 6px 0;
+  color: var(--accent);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+.property-title p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* stat mini-cards */
+.stats{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+@media (max-width:720px){
+  .top-panel{ grid-template-columns: 1fr; }
+  .stats{ justify-content: flex-start; }
+}
+
+.stat-card{
+  min-width: 140px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:8px;
+}
+.stat-card .label{ font-size:0.9rem; color:var(--muted); }
+.stat-card .value{ font-weight:700; color:var(--accent); font-size:1.05rem; text-align:right; }
+
+/* ---------- ACTION BAR (search/invite) ---------- */
+.action-bar{
+  margin-bottom: 24px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.search{
+  flex:1;
+  min-width:220px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  position: relative;
+}
+
+.search .material-icons { 
+  position: absolute;
+  right: 16px;
+  color: var(--muted);
+}
+.search input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:1rem;
+}
+.actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+  font-size:0.98rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+.btn.primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:transparent;
+}
+.btn.icon{ padding:8px; min-width:44px; justify-content:center; }
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ---------- PARTICIPANTS LIST ---------- */
+.section-title{ 
+  margin-bottom: 16px; 
+  color: var(--accent); 
+  font-weight: 600; 
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.results{ display:flex; flex-direction:column; gap:12px; }
+
+/* participant card */
+.participant-card{
+  display:grid;
+  grid-template-columns: 60px 1fr auto auto;
+  gap:16px;
+  align-items:center;
+  padding:16px;
+  border-radius:10px;
+  background:var(--panel-bg);
+  border:1px solid var(--border);
+  text-decoration:none;
+  color:inherit;
+  transition: all 0.2s ease;
+}
+.participant-card:hover, .participant-card:focus{ 
+  outline: 2px solid rgba(74,111,165,0.12); 
+  transform: translateY(-1px);
+}
+
+/* participant avatar */
+.participant-avatar{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow: hidden;
+  border: 2px solid var(--border);
+}
+.participant-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.participant-avatar .material-icons{
+  font-size: 28px;
+  color: var(--muted);
+}
+
+/* participant info */
+.participant-info{ display:flex; flex-direction:column; gap:4px; }
+.participant-name{ 
+  margin:0; 
+  font-weight:600; 
+  font-size:1.05rem; 
+  color:var(--accent); 
+}
+.participant-email{ 
+  margin:0; 
+  font-size:0.9rem; 
+  color:var(--muted);
+}
+
+/* participant role */
+.role-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.role-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.role-display:hover {
+  background: var(--bg);
+}
+
+.role-gerente { background: #e8f5e8; color: #2e7d32; }
+.role-tecnico { background: #e3f2fd; color: #1565c0; }
+.role-colaborador { background: #f3e5f5; color: #7b1fa2; }
+
+.role-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 10;
+  min-width: 160px;
+  display: none;
+}
+
+.role-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.role-option:hover {
+  background: var(--bg);
+}
+
+.role-option:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.role-option:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+/* participant actions */
+.participant-actions{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.action-btn{
+  padding: 8px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+.action-btn:hover{
+  background: var(--bg);
+  color: var(--accent);
+}
+
+/* mobile adjustments */
+@media (max-width:640px){
+  .participant-card{ 
+    grid-template-columns: 50px 1fr; 
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+  }
+  .participant-avatar{ width:50px; height:50px; }
+  .role-selector{ grid-column: 2; grid-row: 2; justify-self: start; }
+  .participant-actions{ 
+    grid-column: 1 / -1; 
+    grid-row: 3; 
+    justify-self: end;
+    margin-top: 8px;
+  }
+}
+
+/* ---------- MODALS ---------- */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.32);
+  z-index:1200;
+  padding:20px;
+}
+.modal-panel{
+  width:100%; 
+  max-width:520px; 
+  background:#fff; 
+  border-radius:12px; 
+  padding:24px; 
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.modal-header{
+  margin-bottom: 20px;
+}
+.modal-header h3{
+  margin: 0;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+.modal-row{ 
+  display:flex; 
+  gap:12px; 
+  flex-wrap:wrap; 
+  margin-bottom:16px; 
+}
+.form-control{ 
+  flex:1; 
+  min-width:160px; 
+}
+.form-control label{ 
+  display:block; 
+  margin-bottom:6px; 
+  font-weight:600; 
+  color:var(--muted);
+  font-size: 0.9rem;
+}
+.form-control input, 
+.form-control select, 
+.form-control textarea{ 
+  width:100%; 
+  padding:10px 12px; 
+  border-radius:8px; 
+  border:1px solid var(--border); 
+  font-size:1rem; 
+  font-family: inherit;
+}
+.form-control textarea{
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Link de convite */
+.invite-link-container {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.invite-link {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  font-family: monospace;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copy-btn {
+  padding: 10px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #3a5f8a;
+}
+
+/* modal actions */
+.modal-actions{ 
+  display:flex; 
+  justify-content:flex-end; 
+  gap:10px; 
+  margin-top:24px; 
+}
+.small{ font-size:0.9rem; color:var(--muted); }
+
+/* utility */
+.hidden{ display:none !important; }
+.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* empty state */
+.empty-state{
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.empty-state .material-icons{
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1300;
+  transform: translateX(150%);
+  transition: transform 0.3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <!-- TOP PANEL -->
+  <section class="top-panel" aria-labelledby="panel-title">
+    <div class="property-title">
+      <h1 id="panel-title">Propriedade EnrichTheSoil</h1>
+      <p>Gerencie todos os participantes da sua propriedade</p>
+    </div>
+
+    <div class="stats" role="group" aria-label="estatísticas dos participantes">
+      <div class="stat-card">
+        <div class="label">Total de participantes</div>
+        <div class="value">{{ total_participants|default:"12" }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Gerentes</div>
+        <div class="value">{{ managers|default:"2" }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Técnicos</div>
+        <div class="value">{{ technicians|default:"4" }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Colaboradores</div>
+        <div class="value">{{ collaborators|default:"6" }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <div class="search" role="search">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input id="search-input" type="search" placeholder="Buscar participante..." aria-label="Buscar participantes">
+    </div>
+
+    <div class="actions" role="toolbar" aria-label="ações">
+      <button id="invite-open" class="btn primary" type="button">
+        <span class="material-icons" aria-hidden="true">person_add</span>
+        Convidar Participante
+      </button>
+    </div>
+  </div>
+
+  <!-- PARTICIPANTS LIST -->
+  <section class="participants-section">
+    <div class="section-title">
+      <span class="material-icons">groups</span>
+      Todos os Participantes
+    </div>
+
+    <div class="results" id="results-list" aria-live="polite">
+      <!-- Participante 1 - Gerente -->
+      <div class="participant-card" data-role="gerente">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Ana Silva" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Ana Silva</p>
+          <p class="participant-email">ana.silva@enrichthesoil.com</p>
+        </div>
+        <div class="role-selector">
+          <div class="role-display role-gerente">
+            <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
+            Gerente
+            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
+          </div>
+          <div class="role-options">
+            <div class="role-option" data-value="gerente">
+              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
+              Gerente
+            </div>
+            <div class="role-option" data-value="tecnico">
+              <span class="material-icons" style="color: #1565c0;">engineering</span>
+              Técnico
+            </div>
+            <div class="role-option" data-value="colaborador">
+              <span class="material-icons" style="color: #7b1fa2;">group</span>
+              Colaborador
+            </div>
+          </div>
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 2 - Técnico -->
+      <div class="participant-card" data-role="tecnico">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Carlos Mendes</p>
+          <p class="participant-email">carlos.mendes@enrichthesoil.com</p>
+        </div>
+        <div class="role-selector">
+          <div class="role-display role-tecnico">
+            <span class="material-icons" style="font-size: 16px;">engineering</span>
+            Técnico
+            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
+          </div>
+          <div class="role-options">
+            <div class="role-option" data-value="gerente">
+              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
+              Gerente
+            </div>
+            <div class="role-option" data-value="tecnico">
+              <span class="material-icons" style="color: #1565c0;">engineering</span>
+              Técnico
+            </div>
+            <div class="role-option" data-value="colaborador">
+              <span class="material-icons" style="color: #7b1fa2;">group</span>
+              Colaborador
+            </div>
+          </div>
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 3 - Colaborador -->
+      <div class="participant-card" data-role="colaborador">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Mariana Costa" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Mariana Costa</p>
+          <p class="participant-email">mariana.costa@enrichthesoil.com</p>
+        </div>
+        <div class="role-selector">
+          <div class="role-display role-colaborador">
+            <span class="material-icons" style="font-size: 16px;">group</span>
+            Colaborador
+            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
+          </div>
+          <div class="role-options">
+            <div class="role-option" data-value="gerente">
+              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
+              Gerente
+            </div>
+            <div class="role-option" data-value="tecnico">
+              <span class="material-icons" style="color: #1565c0;">engineering</span>
+              Técnico
+            </div>
+            <div class="role-option" data-value="colaborador">
+              <span class="material-icons" style="color: #7b1fa2;">group</span>
+              Colaborador
+            </div>
+          </div>
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 4 - Técnico -->
+      <div class="participant-card" data-role="tecnico">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Roberto Alves</p>
+          <p class="participant-email">roberto.alves@enrichthesoil.com</p>
+        </div>
+        <div class="role-selector">
+          <div class="role-display role-tecnico">
+            <span class="material-icons" style="font-size: 16px;">engineering</span>
+            Técnico
+            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
+          </div>
+          <div class="role-options">
+            <div class="role-option" data-value="gerente">
+              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
+              Gerente
+            </div>
+            <div class="role-option" data-value="tecnico">
+              <span class="material-icons" style="color: #1565c0;">engineering</span>
+              Técnico
+            </div>
+            <div class="role-option" data-value="colaborador">
+              <span class="material-icons" style="color: #7b1fa2;">group</span>
+              Colaborador
+            </div>
+          </div>
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mensagem quando não há resultados -->
+      <div id="no-results" class="empty-state hidden" role="status">
+        <span class="material-icons">search_off</span>
+        <h3>Nenhum participante encontrado</h3>
+        <p>Tente outro termo de busca.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL CONVIDAR PARTICIPANTE -->
+<div id="invite-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="invite-title">
+  <div class="modal-panel" role="document">
+    <div class="modal-header">
+      <h3 id="invite-title">Convidar Participante</h3>
+    </div>
+    <form id="invite-form" method="post" action="#">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="invite-role">Papel do participante</label>
+          <select id="invite-role" name="role" required>
+            <option value="colaborador">Colaborador</option>
+            <option value="tecnico">Técnico</option>
+            <option value="gerente">Gerente</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="invite-expires">Expira em</label>
+          <select id="invite-expires" name="expires">
+            <option value="1">1 dia</option>
+            <option value="3" selected>3 dias</option>
+            <option value="7">7 dias</option>
+            <option value="30">30 dias</option>
+            <option value="0">Nunca expira</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="form-control" style="flex: 1 1 100%;">
+          <label>Link de convite</label>
+          <div class="invite-link-container">
+            <input type="text" id="invite-link" class="invite-link" value="https://enrichthesoil.com/convite/abc123def456" readonly>
+            <button type="button" id="copy-link" class="copy-btn">
+              <span class="material-icons" style="font-size: 18px;">content_copy</span>
+              Copiar
+            </button>
+          </div>
+          <p class="small">Compartilhe este link para convidar alguém a participar da propriedade.</p>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="invite-cancel" type="button" class="btn">Fechar</button>
+        <button id="generate-new" type="button" class="btn primary">Gerar Novo Link</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Notificação -->
+<div id="notification" class="notification">
+  <span class="material-icons">check_circle</span>
+  <span id="notification-text">Link copiado para a área de transferência!</span>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos do DOM
+  const searchInput = document.getElementById('search-input');
+  const resultsList = document.getElementById('results-list');
+  const participantCards = Array.from(resultsList.querySelectorAll('.participant-card'));
+  const noResults = document.getElementById('no-results');
+  
+  // Modais
+  const inviteModal = document.getElementById('invite-modal');
+  const inviteOpenBtn = document.getElementById('invite-open');
+  const inviteCancel = document.getElementById('invite-cancel');
+  const inviteForm = document.getElementById('invite-form');
+  
+  // Elementos do modal de convite
+  const inviteLink = document.getElementById('invite-link');
+  const copyLinkBtn = document.getElementById('copy-link');
+  const generateNewBtn = document.getElementById('generate-new');
+  const inviteRole = document.getElementById('invite-role');
+  const inviteExpires = document.getElementById('invite-expires');
+  
+  // Notificação
+  const notification = document.getElementById('notification');
+  const notificationText = document.getElementById('notification-text');
+
+  // Funções para abrir/fechar modal
+  function openModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    // Focar no primeiro elemento interativo
+    const focusable = modal.querySelector('input, select, button');
+    if (focusable) focusable.focus();
+  }
+
+  function closeModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Mostrar notificação
+  function showNotification(message) {
+    notificationText.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 3000);
+  }
+
+  // Abrir modal de convite
+  if (inviteOpenBtn) {
+    inviteOpenBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal(inviteModal);
+    });
+  }
+
+  // Fechar modal de convite
+  if (inviteCancel) {
+    inviteCancel.addEventListener('click', function() {
+      closeModal(inviteModal);
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  if (inviteModal) {
+    inviteModal.addEventListener('click', function(e) {
+      if (e.target === inviteModal) {
+        closeModal(inviteModal);
+      }
+    });
+  }
+
+  // Copiar link de convite
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', function() {
+      inviteLink.select();
+      document.execCommand('copy');
+      
+      // Mostrar notificação
+      showNotification('Link copiado para a área de transferência!');
+    });
+  }
+
+  // Gerar novo link
+  if (generateNewBtn) {
+    generateNewBtn.addEventListener('click', function() {
+      // Em uma implementação real, isso faria uma requisição ao servidor
+      // Para gerar um novo token de convite
+      const role = inviteRole.value;
+      const expires = inviteExpires.value;
+      
+      // Simular geração de novo link
+      const newToken = Math.random().toString(36).substring(2, 15);
+      inviteLink.value = `https://enrichthesoil.com/convite/${newToken}`;
+      
+      // Mostrar notificação
+      showNotification('Novo link de convite gerado!');
+    });
+  }
+
+  // Busca em tempo real
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      participantCards.forEach(card => {
+        const name = card.querySelector('.participant-name').textContent.toLowerCase();
+        const email = card.querySelector('.participant-email').textContent.toLowerCase();
+        
+        const matches = name.includes(searchTerm) || email.includes(searchTerm);
+        card.style.display = matches ? '' : 'none';
+        
+        if (matches) visibleCount++;
+      });
+      
+      // Mostrar/ocultar mensagem de nenhum resultado
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+    });
+  }
+
+  // Gerenciar seleção de papéis
+  document.querySelectorAll('.role-selector').forEach(selector => {
+    const display = selector.querySelector('.role-display');
+    const options = selector.querySelector('.role-options');
+    
+    // Abrir/fechar opções
+    display.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = options.style.display === 'block';
+      
+      // Fechar todos os outros menus abertos
+      document.querySelectorAll('.role-options').forEach(menu => {
+        menu.style.display = 'none';
+      });
+      
+      // Abrir/fechar este menu
+      options.style.display = isOpen ? 'none' : 'block';
+    });
+    
+    // Selecionar opção
+    options.querySelectorAll('.role-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const newRole = this.getAttribute('data-value');
+        const card = selector.closest('.participant-card');
+        
+        // Atualizar visualização
+        display.innerHTML = '';
+        
+        // Ícone baseado no papel
+        let icon = 'group';
+        let colorClass = 'role-colaborador';
+        let label = 'Colaborador';
+        
+        if (newRole === 'gerente') {
+          icon = 'admin_panel_settings';
+          colorClass = 'role-gerente';
+          label = 'Gerente';
+        } else if (newRole === 'tecnico') {
+          icon = 'engineering';
+          colorClass = 'role-tecnico';
+          label = 'Técnico';
+        }
+        
+        display.className = `role-display ${colorClass}`;
+        display.innerHTML = `
+          <span class="material-icons" style="font-size: 16px;">${icon}</span>
+          ${label}
+          <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
+        `;
+        
+        // Atualizar data-attribute do card
+        card.setAttribute('data-role', newRole);
+        
+        // Fechar menu
+        options.style.display = 'none';
+        
+        // Em uma implementação real, enviar para o servidor
+        const participantName = card.querySelector('.participant-name').textContent;
+        console.log(`Alterando papel de ${participantName} para ${newRole}`);
+        
+        // Mostrar notificação
+        showNotification(`Papel de ${participantName} alterado para ${label}`);
+        
+        // Reconfigurar eventos
+        setupRoleSelector(selector);
+      });
+    });
+    
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', function() {
+      options.style.display = 'none';
+    });
+  });
+
+  // Reconfigurar eventos do seletor de papel
+  function setupRoleSelector(selector) {
+    const display = selector.querySelector('.role-display');
+    const options = selector.querySelector('.role-options');
+    
+    display.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = options.style.display === 'block';
+      
+      document.querySelectorAll('.role-options').forEach(menu => {
+        menu.style.display = 'none';
+      });
+      
+      options.style.display = isOpen ? 'none' : 'block';
+    });
+  }
+
+  // Ações dos botões nos cards de participantes
+  participantCards.forEach(card => {
+    const actionBtns = card.querySelectorAll('.action-btn');
+    
+    actionBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const action = this.querySelector('.material-icons').textContent;
+        const participantName = card.querySelector('.participant-name').textContent;
+        
+        switch(action) {
+          case 'mail':
+            alert(`Enviar mensagem para ${participantName}`);
+            break;
+          case 'delete':
+            if (confirm(`Tem certeza que deseja remover ${participantName} da propriedade?`)) {
+              card.style.display = 'none';
+              showNotification(`${participantName} removido da propriedade`);
+            }
+            break;
+        }
+      });
+    });
+  });
+
+  // Fechar modais com Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal(inviteModal);
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,453 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Áreas do Local{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+/* Header Styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    visibility: hidden;
+    gap: 12px;
+}
+
+/* Filter and Search */
+.filter-section {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-color);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Areas Grid */
+.areas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.area-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.area-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.area-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.area-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+    flex: 1;
+}
+
+.area-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.area-coordinates {
+    color: var(--muted-color);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.area-description {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.btn.icon-only {
+    padding: 8px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0 0 20px 0;
+}
+
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.delete-modal .modal-content {
+    max-width: 400px;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.warning-text {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-color);
+}
+
+.empty-state .material-icons {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        min-width: 100%;
+    }
+    
+    .areas-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Áreas do Local</h1>
+        <div class="page-actions">
+            <button class="btn" id="filter-toggle">
+                <span class="material-icons">filter_list</span>
+                Filtrar
+            </button>
+            <button class="btn primary" id="add-area-btn">
+                <span class="material-icons">add</span>
+                Nova Área
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section" id="filter-section">
+        <div class="filter-row">
+            <div class="search-box">
+                <span class="material-icons search-icon">search</span>
+                <input type="text" id="search-input" placeholder="Buscar por nome...">
+            </div>
+            <div class="filter-actions">
+                <button class="btn" id="clear-filters">
+                    <span class="material-icons">clear</span>
+                    Limpar
+                </button>
+                <button class="btn primary" id="apply-filters">
+                    <span class="material-icons">check</span>
+                    Aplicar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Areas Grid -->
+    <div class="areas-grid" id="areas-container">
+        <!-- Áreas serão carregadas aqui via JavaScript -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <span class="material-icons">explore</span>
+        <p>Nenhuma área encontrada</p>
+        <button class="btn primary" id="add-first-area">
+            <span class="material-icons">add</span>
+            Criar Primeira Área
+        </button>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Área -->
+<div class="modal-overlay" id="area-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-area-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title" id="area-modal-title">Nova Área</h2>
+        <form id="area-form">
+            <input type="hidden" id="area-id">
+            <div class="form-group">
+                <label for="area-name">Nome da Área *</label>
+                <input type="text" id="area-name" required>
+            </div>
+            <div class="form-group">
+                <label for="area-coordinates">Coordenadas</label>
+                <input type="text" id="area-coordinates" placeholder="Ex: -23.5505, -46.6333">
+            </div>
+            <div class="form-group">
+                <label for="area-description">Descrição</label>
+                <textarea id="area-description" placeholder="Descreva esta área..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" id="cancel-area">Cancelar</button>
+                <button type="submit" class="btn primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Confirmar Exclusão -->
+<div class="modal-overlay delete-modal" id="delete-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-delete-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title">Excluir Área</h2>
+        <div class="delete-message">
+            <p>Tem certeza que deseja excluir a área <span class="warning-text" id="delete-area-name"></span>?</p>
+            <p>Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn" id="cancel-delete">Cancelar</button>
+            <button type="button" class="btn primary" id="confirm-delete" style="background: #d32f2f;">Excluir</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/lands.js'%}"></script>
+{% endblock %}

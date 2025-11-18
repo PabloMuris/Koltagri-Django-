@@ -1,0 +1,56 @@
+    @media(min-width: 768px) and (max-width: 1299px){
+        .business-card{
+            width: 100%;
+        }
+        
+    }
+    .business-card{
+            border: 2px solid #f2f2f2;
+            border-radius: 10px;
+            
+        }
+    .indicator-header .image svg{
+        height: 50px;
+        width: 50px;
+        fill: rgb(0, 0, 0);
+    }
+    .indicator__title{
+        font-size: 16px;
+    }
+    .indicator__value{
+        font-size: 22px;
+        color: red;
+        
+    }
+    .indicator-description .text{
+        text-align: justify;
+        font-size: 14px;
+    }
+    .upper-side{
+        padding: 16px 16px 0px 16px;
+        flex: 1;
+    }
+
+    .bottom-side.shortcut{
+        width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  background-color: var(--primary-color);
+  border-radius: 0px 0px 10px 10px;
+  padding-inline: 10px;
+  
+    }
+
+    .bottom-side.shortcut p{
+        color: white;
+    }
+
+.indicator-header{
+    padding-bottom: 6px;
+}
+
+
+
+

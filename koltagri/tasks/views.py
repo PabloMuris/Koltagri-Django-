@@ -23,3 +23,9 @@ class TaskboardTemplateView(ListView):
 
 class TaskFormTemplateView(TemplateView):
     template_name = "task_form.html"
+
+class TaskParticipantTemplateView(TemplateView):
+    template_name = "task_team.html"
+
+class TaskDocsTemplateView(TemplateView):
+    template_name = "task_detail_docs.html"

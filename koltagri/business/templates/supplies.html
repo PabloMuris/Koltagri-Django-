@@ -6,12 +6,17 @@
 
 {% block rels %}
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'partials/css/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
 {% endblock %}
 
 
 {% block styles %}
 <style>
+
+  #edit-button{
+    visibility: hidden;
+  }
 /* VARIABLES */
 :root{
   --bg: #f2f2f2;
@@ -67,7 +72,7 @@
 
 /* Add button */
 .add-supply{
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 10px;
   background-color: var(--primary);
@@ -195,6 +200,14 @@
 {% endblock %}
 
 {% block content %}
+ <div class="user-actions">
+            <button type="button" id="back-button" onclick="location.href='{% url 'business_board'%}'" >
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+            </button>
+            <button type="button" id="edit-button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+            </button>
+</div>
 <div class="container-wide">
   <!-- SUPPLIES INDICATORS -->
   <section class="supplies-indicators" aria-labelledby="supplies-title">
@@ -259,7 +272,7 @@
         </div>
       </div>
 
-      <div class="result_card task_card" role="article" aria-label="Fertilizante Químico NPK">
+      <div class="result_card task_card" role="article" aria-label="Fertilizante Químico NPK" onclick="location.href='{% url 'supplies_detail' %}'">
         <div class="card__image">
           <span class="material-icons" aria-hidden="true">science</span>
         </div>

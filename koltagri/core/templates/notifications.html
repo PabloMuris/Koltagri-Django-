@@ -1,0 +1,511 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Notificações{% endblock %}
+{% block header_title %}Notificações{% endblock %}
+{% block header_text %}da propriedade{% endblock %}
+
+{% block styles %}
+<style>
+:root{
+  --primary-color:#2b8aef; 
+  --accent-color:#3da67a;
+  --card-border:#f2f2f2;
+  --bg:#f7f9fb;
+  --muted:#6b777a;
+  --text:#102734;
+  --radius:12px;
+}
+
+/* page base */
+main { background: var(--bg); padding: 18px; }
+
+/* overall grid: on wide screens 2 columns (list | detail) */
+.notif-page {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* >=1301 -> split view */
+@media (min-width:1301px){
+  .notif-page { grid-template-columns: 1fr 420px; align-items: start; }
+}
+
+/* left column: search + filters + list */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* search bar */
+.search-bar {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  background:#fff;
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  padding:8px;
+}
+.search-bar input[type="search"]{
+  border:0;
+  outline:0;
+  padding: 8px 10px;
+  font-size:15px;
+  background:transparent;
+  flex:1;
+}
+
+/* control row (filter + actions) */
+.controls {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.select, .btn {
+  background:#fff;
+  border:1px solid var(--card-border);
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:14px;
+  cursor:pointer;
+}
+.btn.primary {
+  background:var(--primary-color);
+  color:#fff;
+  border-color:var(--primary-color);
+}
+.btn.ghost {
+  background:transparent;
+}
+
+/* list of notifications */
+.notif-list {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:4px;
+}
+
+/* single item */
+.notif-item {
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  background:#fff;
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  padding:12px;
+  cursor:pointer;
+  transition: background .12s ease, transform .08s ease;
+}
+.notif-item:hover { transform: translateY(-3px); border-color: rgba(43,138,239,0.08); }
+
+/* unread accent */
+.notif-item.unread {
+  background: linear-gradient(180deg, rgba(43,138,239,0.03), transparent);
+  border-color: rgba(43,138,239,0.12);
+}
+
+/* item icon */
+.notif-icon {
+  width:46px; height:46px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--card-border); flex-shrink:0;
+  background:#fff; color:var(--primary-color);
+}
+
+/* item body */
+.notif-body {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.notif-title {
+  font-weight:600;
+  color:var(--text);
+  font-size:15px;
+}
+.notif-excerpt {
+  color:var(--muted);
+  font-size:14px;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+
+/* item meta/actions */
+.notif-meta {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  align-items:flex-end;
+  min-width:90px;
+}
+.notif-time { font-size:13px; color:var(--muted); }
+.item-actions { display:flex; gap:6px; }
+
+/* small icon button */
+.icon-btn {
+  width:34px; height:34px; border-radius:8px;
+  background:#fff; border:1px solid var(--card-border);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+
+/* right panel (detail) */
+.detail-panel {
+  display:none; /* hidden on small screens */
+  background:#fff;
+  border:1px solid var(--card-border);
+  border-radius:12px;
+  padding:16px;
+  min-height:200px;
+  box-sizing:border-box;
+}
+@media (min-width:1301px){
+  .detail-panel { display:block; }
+}
+
+/* detail content */
+.detail-title { font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.detail-time { color:var(--muted); font-size:13px; margin-bottom:12px; }
+.detail-body { color:var(--text); line-height:1.5; }
+
+/* modal overlay for small screens */
+.modal-overlay{
+  position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.45); z-index:1400; padding:16px;
+}
+.modal {
+  width:100%; max-width:720px; background:#fff; border-radius:12px; padding:18px; border:1px solid var(--card-border);
+  box-sizing:border-box; max-height:88vh; overflow:auto;
+}
+
+/* empty state */
+.empty {
+  text-align:center; color:var(--muted); padding:24px; border:1px dashed var(--card-border); border-radius:10px;
+}
+
+/* accessibility focus outlines */
+.notif-item:focus, .btn:focus, .icon-btn:focus { outline: 3px solid rgba(43,138,239,0.12); outline-offset:3px; }
+
+/* small screens adjustments */
+@media (max-width:420px){
+  body { padding:12px; }
+  .notif-meta { min-width:72px; font-size:13px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+  <section class="notif-page" aria-label="Notificações">
+
+    <!-- LEFT PANEL: search + filters + list -->
+    <div class="left-panel" role="region" aria-label="Lista de notificações">
+
+      <div class="search-bar" role="search">
+        <input id="notif-search" type="search" placeholder="Pesquisar notificações..." aria-label="Pesquisar notificações">
+        <button id="search-clear" class="select" title="Limpar busca" aria-label="Limpar busca">✕</button>
+      </div>
+
+      <div class="controls" role="toolbar" aria-label="Filtros e ações">
+        <select id="notif-filter" class="select" aria-label="Filtrar por tipo">
+          <option value="all">Todos os tipos</option>
+          <option value="info">Informativos</option>
+          <option value="alert">Avisos</option>
+        </select>
+
+        <button id="mark-all" class="btn" title="Marcar todas como lidas">Marcar todas</button>
+        <button id="clear-all" class="btn" title="Limpar notificações">Limpar</button>
+      </div>
+
+      <div id="notif-list" class="notif-list" aria-live="polite" tabindex="0">
+
+        <!-- sample notification items (static). Each has data-* with full content -->
+        <article class="notif-item unread" tabindex="0" role="button"
+                 data-type="alert"
+                 data-title="Ciclone Extratropical"
+                 data-body="Previsão de chuva intensa, ventos fortes e risco de inundações. Evite deslocamentos. Acompanhe as atualizações das autoridades."
+                 data-time="23 Nov • 06:00"
+                 aria-label="Alerta: Ciclone Extratropical">
+          <div class="notif-icon" aria-hidden="true">
+            <!-- alert icon -->
+            <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-80q-137 0-228.5-94T160-408q0-137 94-228.5T480-730q137 0 228.5 93.5T802-408q0 137-94 228.5T480-80Zm0-80q96 0 164-68t68-164q0-96-68-164t-164-68q-96 0-164 68t-68 164q0 96 68 164t164 68Z"/></svg>
+          </div>
+
+          <div class="notif-body">
+            <div class="notif-title">Ciclone Extratropical</div>
+            <div class="notif-excerpt">Previsão de chuva intensa e ventos fortes com possibilidade de inundações locais.</div>
+          </div>
+
+          <div class="notif-meta">
+            <div class="notif-time">23 Nov • 03:12</div>
+            <div class="item-actions">
+              <button class="icon-btn mark-read" title="Marcar como lida" aria-label="Marcar como lida">✓</button>
+              <button class="icon-btn del" title="Remover" aria-label="Remover">🗑</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="notif-item" tabindex="0" role="button"
+                 data-type="info"
+                 data-title="Nova recomendação de adubação"
+                 data-body="Recomenda-se aplicar NPK 4-14-8 em suculentas a cada 45 dias para melhor desenvolvimento."
+                 data-time="22 Nov • 09:12"
+                 aria-label="Informativo: Recomendações">
+          <div class="notif-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-160q-137 0-228.5-94T160-408q0-137 94-228.5T480-730q137 0 228.5 93.5T802-408q0 137-94 228.5T480-160Zm0-80q96 0 164-68t68-164q0-96-68-164t-164-68q-96 0-164 68t-68 164q0 96 68 164t164 68Z"/></svg>
+          </div>
+
+          <div class="notif-body">
+            <div class="notif-title">Nova recomendação de adubação</div>
+            <div class="notif-excerpt">Aplicar NPK 4-14-8 em suculentas a cada 45 dias.</div>
+          </div>
+
+          <div class="notif-meta">
+            <div class="notif-time">22 Nov • 09:12</div>
+            <div class="item-actions">
+              <button class="icon-btn mark-read" title="Marcar como lida" aria-label="Marcar como lida">✓</button>
+              <button class="icon-btn del" title="Remover" aria-label="Remover">🗑</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="notif-item unread" tabindex="0" role="button"
+                 data-type="alert"
+                 data-title="Alerta - Geada fraca"
+                 data-body="Possibilidade de geada fraca nas próximas madrugadas. Proteja plantas sensíveis."
+                 data-time="21 Nov • 21:00"
+                 aria-label="Alerta: Geada">
+          <div class="notif-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor"><path d="M480-160q-137 0-228.5-94T160-408q0-137 94-228.5T480-730q137 0 228.5 93.5T802-408q0 137-94 228.5T480-160Z"/></svg>
+          </div>
+
+          <div class="notif-body">
+            <div class="notif-title">Alerta - Geada fraca</div>
+            <div class="notif-excerpt">Possibilidade de geada fraca nas próximas madrugadas. Proteja plantas sensíveis.</div>
+          </div>
+
+          <div class="notif-meta">
+            <div class="notif-time">21 Nov • 21:00</div>
+            <div class="item-actions">
+              <button class="icon-btn mark-read" title="Marcar como lida" aria-label="Marcar como lida">✓</button>
+              <button class="icon-btn del" title="Remover" aria-label="Remover">🗑</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- empty placeholder -->
+        <div id="empty" class="empty" style="display:none">Nenhuma notificação encontrada.</div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: detail (visible on wide screens) -->
+    <div class="detail-panel" role="region" aria-label="Detalhes da notificação" id="detail-panel" hidden>
+      <div id="detail-content">
+        <div class="detail-title" id="detail-title">Selecione uma notificação</div>
+        <div class="detail-time" id="detail-time"></div>
+        <div class="detail-body" id="detail-body">Ao selecionar uma notificação você verá o conteúdo completo aqui.</div>
+      </div>
+    </div>
+
+    <!-- MODAL: shown on small screens -->
+    <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal" role="document" aria-labelledby="modal-title">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px;">
+          <div>
+            <div id="modal-title" style="font-weight:700; font-size:18px; color:var(--text);">Título</div>
+            <div id="modal-time" style="color:var(--muted); font-size:13px;">Hora</div>
+          </div>
+          <button id="modal-close" class="icon-btn" aria-label="Fechar">&times;</button>
+        </div>
+        <div id="modal-body" style="color:var(--text); line-height:1.5;">Corpo da notificação...</div>
+      </div>
+    </div>
+
+  </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  const list = document.getElementById('notif-list');
+  const items = Array.from(list.querySelectorAll('.notif-item'));
+  const empty = document.getElementById('empty');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalTime = document.getElementById('modal-time');
+  const modalBody = document.getElementById('modal-body');
+  const modalClose = document.getElementById('modal-close');
+  const detailPanel = document.getElementById('detail-panel');
+  const detailTitle = document.getElementById('detail-title');
+  const detailTime = document.getElementById('detail-time');
+  const detailBody = document.getElementById('detail-body');
+
+  const filterEl = document.getElementById('notif-filter');
+  const searchEl = document.getElementById('notif-search');
+  const clearSearch = document.getElementById('search-clear');
+  const markAllBtn = document.getElementById('mark-all');
+  const clearAllBtn = document.getElementById('clear-all');
+
+  function showEmptyIfNeeded(){
+    const visible = list.querySelectorAll('.notif-item:not([style*="display: none"])').length;
+    empty.style.display = visible === 0 ? '' : 'none';
+  }
+
+  function openDetailFromItem(item){
+    const title = item.dataset.title;
+    const body = item.dataset.body;
+    const time = item.dataset.time;
+
+    // mark read visually
+    item.classList.remove('unread');
+
+    if(window.innerWidth > 1300){
+      // show detail in right panel
+      detailPanel.hidden = false;
+      detailTitle.textContent = title;
+      detailTime.textContent = time;
+      detailBody.textContent = body;
+      // highlight selected item
+      list.querySelectorAll('.notif-item').forEach(i=> i.classList.remove('selected'));
+      item.classList.add('selected');
+      // focus detail for keyboard users
+      detailPanel.scrollIntoView({behavior:'smooth', block:'center'});
+    } else {
+      // show modal
+      modalTitle.textContent = title;
+      modalTime.textContent = time;
+      modalBody.textContent = body;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      modalClose.focus();
+    }
+  }
+
+  // attach click/keyboard handler to each item
+  items.forEach(item=>{
+    item.addEventListener('click', ()=> openDetailFromItem(item));
+    item.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openDetailFromItem(item);
+      }
+    });
+
+    // per-item actions
+    const markBtn = item.querySelector('.mark-read');
+    if(markBtn){
+      markBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        item.classList.remove('unread');
+      });
+    }
+    const delBtn = item.querySelector('.del');
+    if(delBtn){
+      delBtn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        item.remove();
+        showEmptyIfNeeded();
+      });
+    }
+  });
+
+  // modal close handlers
+  modalClose.addEventListener('click', ()=> {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+  });
+  modal.addEventListener('click', (e)=> {
+    if(e.target === modal) {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
+    }
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      if(modal.style.display === 'flex'){
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden','true');
+      } else if(window.innerWidth > 1300 && !detailPanel.hidden){
+        // in wide screen, hide detail with ESC
+        detailPanel.hidden = true;
+      }
+    }
+  });
+
+  // search
+  function applyFilters(){
+    const q = searchEl.value.trim().toLowerCase();
+    const type = filterEl.value;
+    let visible = 0;
+    items.forEach(it=>{
+      const t = it.dataset.title.toLowerCase();
+      const b = it.dataset.body.toLowerCase();
+      const matchesQ = (t + ' ' + b).includes(q);
+      const matchesType = (type === 'all') ? true : it.dataset.type === type;
+      const ok = matchesQ && matchesType;
+      it.style.display = ok ? '' : 'none';
+      if(ok) visible++;
+    });
+    showEmptyIfNeeded();
+  }
+  searchEl.addEventListener('input', applyFilters);
+  filterEl.addEventListener('change', applyFilters);
+  clearSearch.addEventListener('click', ()=>{
+    searchEl.value = '';
+    applyFilters();
+    searchEl.focus();
+  });
+
+  // mark all read
+  markAllBtn.addEventListener('click', ()=>{
+    list.querySelectorAll('.notif-item.unread').forEach(i=> i.classList.remove('unread'));
+  });
+
+  // clear all (confirm)
+  clearAllBtn.addEventListener('click', ()=>{
+    if(!confirm('Remover todas as notificações?')) return;
+    list.querySelectorAll('.notif-item').forEach(i=> i.remove());
+    showEmptyIfNeeded();
+  });
+
+  // on resize: if wide and detail content exists, ensure right panel visible
+  window.addEventListener('resize', ()=>{
+    if(window.innerWidth > 1300){
+      // if there is a .selected, show detail
+      const sel = list.querySelector('.notif-item.selected') || list.querySelector('.notif-item.unread');
+      if(sel){
+        detailPanel.hidden = false;
+        detailTitle.textContent = sel.dataset.title;
+        detailTime.textContent = sel.dataset.time;
+        detailBody.textContent = sel.dataset.body;
+      }
+    } else {
+      // hide detail panel on small screens
+      detailPanel.hidden = true;
+    }
+  });
+
+  // initial state
+  showEmptyIfNeeded();
+  if(window.innerWidth > 1300){
+    // try to open first item by default
+    const first = list.querySelector('.notif-item');
+    if(first){
+      openDetailFromItem(first);
+    }
+  }
+
+})();
+</script>
+{% endblock %}

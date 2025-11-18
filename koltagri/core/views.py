@@ -11,3 +11,18 @@ class LoginView(TemplateView):
 
 class RegisterView(TemplateView):
     template_name = 'register.html'
+
+class NotificationsView(TemplateView):
+    template_name = 'notifications.html'
+
+class ProfileView(TemplateView):
+    template_name = 'profile.html'
+
+class TeamView(TemplateView):
+    template_name = 'team.html'
+
+class LandsView(TemplateView):
+    template_name = 'lands.html'
+
+class PropertyView(TemplateView):
+    template_name = 'property.html'

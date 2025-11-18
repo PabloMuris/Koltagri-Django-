@@ -2,173 +2,276 @@
 {% block title %}Enviar Atividade{% endblock %}
 {% load static %}
 
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/task_form.css' %}">
+{% endblock %}
+
 {% block styles %}
-<style>
 
-.form-box{
-    background: #fff;
-    padding: 28px;
-    border-radius: 12px;
-    width: min(720px, 100%);
-    border: 1px solid #f2f2f2;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-/* título */
-.form-box h1{
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #253447;
-    text-align: center;
-    margin-bottom: 8px;
-}
-
-/* blocos */
-.field-block{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* labels */
-.field-block label{
-    font-size: .95rem;
-    color: #253447;
-    font-weight: 500;
-}
-
-/* inputs padrão Koltagri */
-.field-block input,
-.field-block select,
-.field-block textarea{
-    background: #fafafa;
-    border: 1px solid #f2f2f2;
-    border-radius: 6px;
-    height: 44px;
-    padding: 0 12px;
-    font-size: .95rem;
-}
-
-textarea{
-    height: auto;
-    padding: 12px;
-    min-height: 160px;
-    resize: vertical;
-}
-
-.note{
-    font-size: .8rem;
-    color: #6b6b6b;
-}
-
-/* ações */
-.actions{
-    display: flex;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-.btn{
-    height: 46px;
-    width: 100%;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-/* ghost */
-.btn-ghost{
-    background: transparent;
-    border: 1px solid #e6e6e6;
-    color: var(--primary-color);
-}
-
-.btn-ghost:hover{
-    background: #f6fafb;
-}
-
-/* primary */
-.btn-primary{
-    background: var(--primary-color);
-    color: #fff;
-    border: none;
-}
-
-.btn-primary:hover{
-    background: var(--primary-dark);
-}
-
-/* responsivo */
-@media (max-width: 600px){
-    .form-box{
-        padding: 18px;
-        border-radius: 10px;
-    }
-}
-
-</style>
 {% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data" class="form-box">
-    {% csrf_token %}
+<div class="page-container">
 
-    <h1>Enviar conteúdo</h1>
+  <!-- User Actions -->
+  <div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="edit-button" class="hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+      </svg>
+    </button>
+  </div>
 
-    <!-- TÍTULO -->
-    <div class="field-block">
-        <label for="title">Título</label>
-        <input id="title" name="title" type="text" placeholder="Digite o título do conteúdo" required>
-    </div>
+  <!-- Form Container -->
+  <div class="form-container">
+    
+    <!-- Main Form -->
+    <form method="post" enctype="multipart/form-data" class="form-box">
+      {% csrf_token %}
 
-    <!-- TEXTO -->
-    <div class="field-block">
-        <label for="content">Conteúdo</label>
-        <textarea id="content" name="content" placeholder="Escreva aqui o conteúdo" required></textarea>
-    </div>
+      <div class="form-header">
+        <h1 class="form-title">Enviar Conteúdo</h1>
+        <p class="form-subtitle">Preencha os detalhes da atividade realizada</p>
+      </div>
 
-    <!-- INSUMOS -->
-    <div class="field-block">
-        <label for="ins">Insumos utilizados</label>
-        <select id="ins" name="insumos" multiple size="5">
-            <option value="fertilizante">Fertilizante</option>
-            <option value="pesticida">Pesticida</option>
-            <option value="sementes">Sementes</option>
-            <option value="herbicida">Herbicida</option>
-            <option value="adubo_organico">Adubo orgânico</option>
-            <option value="calcario">Calcário</option>
-            <option value="outros">Outros</option>
-        </select>
-        <span class="note">Use Ctrl (ou ⌘ no Mac) para selecionar vários.</span>
-    </div>
+      <div class="form-grid">
+        <!-- TÍTULO -->
+        <div class="field-block">
+          <label for="title" class="field-label">
+            <span class="material-icons">title</span>
+            Título da Atividade
+          </label>
+          <input type="text" id="title" name="title" class="form-input" placeholder="Digite o título do conteúdo" required>
+        </div>
 
-    <!-- ARQUIVOS -->
-    <div class="field-block">
-        <label for="attachments">Anexos</label>
-        <input type="file" id="attachments" name="attachments" multiple>
-        <span class="note">O servidor deve tratar request.FILES para múltiplos anexos.</span>
-    </div>
+        <!-- CONTEÚDO -->
+        <div class="field-block">
+          <label for="content" class="field-label">
+            <span class="material-icons">description</span>
+            Descrição Detalhada
+          </label>
+          <textarea id="content" name="content" class="form-textarea" placeholder="Descreva em detalhes a atividade realizada, procedimentos, observações e resultados..." required></textarea>
+        </div>
 
-    <!-- AÇÕES -->
-    <div class="actions">
+        <!-- INSUMOS -->
+        <div class="field-block">
+          <label for="ins" class="field-label">
+            <span class="material-icons">inventory_2</span>
+            Insumos Utilizados
+          </label>
+          <select id="ins" name="insumos" class="form-select" multiple size="5">
+            <option value="fertilizante">Fertilizante NPK</option>
+            <option value="pesticida">Pesticida Orgânico</option>
+            <option value="sementes">Sementes Selecionadas</option>
+            <option value="herbicida">Herbicida Seletivo</option>
+            <option value="adubo_organico">Adubo Orgânico</option>
+            <option value="calcario">Calcário Agrícola</option>
+            <option value="biofertilizante">Biofertilizante</option>
+            <option value="outros">Outros Insumos</option>
+          </select>
+          <div class="form-note">
+            <span class="material-icons">info</span>
+            Mantenha Ctrl (ou ⌘ no Mac) pressionado para selecionar múltiplos itens
+          </div>
+        </div>
 
-        <button type="button" class="btn btn-ghost"
-            onclick="
-                document.getElementById('title').value='';
-                document.getElementById('content').value='';
-                document.getElementById('attachments').value='';
-                document.getElementById('ins').selectedIndex=-1;
-            ">
-            Limpar
+        <!-- ARQUIVOS -->
+        <div class="field-block">
+          <label for="attachments" class="field-label">
+            <span class="material-icons">attach_file</span>
+            Anexos e Documentos
+          </label>
+          <input type="file" id="attachments" name="attachments" class="file-input" multiple>
+          <div class="form-note">
+            <span class="material-icons">info</span>
+            Adicione fotos, documentos ou relatórios relacionados à atividade
+          </div>
+        </div>
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="clear-button">
+          <span class="material-icons">delete</span>
+          Apagar
         </button>
 
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary">
+          <span class="material-icons">send</span>
+          Enviar Atividade
+        </button>
+      </div>
+    </form>
 
+    <!-- Activity Details Sidebar -->
+    <div class="activity-details">
+      <h3 class="details-title">
+        <span class="material-icons">tune</span>
+        Configurações da Atividade
+      </h3>
+      
+      <div class="details-content">
+        <!-- DATA DE ENTREGA -->
+        <div class="field-block">
+          <label for="due_date" class="field-label">
+            <span class="material-icons">event</span>
+            Data de Entrega
+          </label>
+          <input type="date" id="due_date" name="due_date" class="form-input" required>
+        </div>
+
+        <!-- NÍVEL DE PRIORIDADE -->
+        <div class="field-block">
+          <label class="field-label">
+            <span class="material-icons">flag</span>
+            Nível de Prioridade
+          </label>
+          <div class="priority-options">
+            <div class="priority-option priority-low" data-priority="low">
+              <span class="material-icons priority-icon" style="color: #4caf50;">flag</span>
+              <span>Baixa Prioridade</span>
+            </div>
+            <div class="priority-option priority-medium" data-priority="medium">
+              <span class="material-icons priority-icon" style="color: #ff9800;">flag</span>
+              <span>Prioridade Média</span>
+            </div>
+            <div class="priority-option priority-high" data-priority="high">
+              <span class="material-icons priority-icon" style="color: #f44336;">flag</span>
+              <span>Alta Prioridade</span>
+            </div>
+            <div class="priority-option priority-critical" data-priority="critical">
+              <span class="material-icons priority-icon" style="color: #d32f2f;">outlined_flag</span>
+              <span>Prioridade Crítica</span>
+            </div>
+          </div>
+          <input type="hidden" id="priority" name="priority" value="medium">
+        </div>
+
+        <!-- ESPÉCIE DA PLANTA -->
+        <div class="field-block">
+          <label class="field-label">
+            <span class="material-icons">grass</span>
+            Espécie Focada
+          </label>
+          <div class="species-grid">
+            <div class="species-option" data-species="laranjeira">
+              <span class="material-icons">park</span>
+              Laranjeira
+            </div>
+            <div class="species-option" data-species="maracuja">
+              <span class="material-icons">park</span>
+              Maracujá
+            </div>
+            <div class="species-option" data-species="banana">
+              <span class="material-icons">park</span>
+              Banana
+            </div>
+            <div class="species-option" data-species="milho">
+              <span class="material-icons">grass</span>
+              Milho
+            </div>
+            <div class="species-option" data-species="adenium">
+              <span class="material-icons">local_florist</span>
+              Adenium
+            </div>
+            <div class="species-option" data-species="orquidea">
+              <span class="material-icons">local_florist</span>
+              Orquídea
+            </div>
+            <div class="species-option" data-species="rosa">
+              <span class="material-icons">local_florist</span>
+              Rosa
+            </div>
+            <div class="species-option" data-species="outras">
+              <span class="material-icons">eco</span>
+              Outras
+            </div>
+          </div>
+          <input type="hidden" id="species" name="species" value="">
+        </div>
+      </div>
+
+      <div class="quick-tips">
+        <h4 class="tips-title">
+          <span class="material-icons">lightbulb</span>
+          Dicas Rápidas
+        </h4>
+        <ul class="tips-list">
+          <li>Defina prazos realistas para conclusão</li>
+          <li>Priorize atividades críticas para o cultivo</li>
+          <li>Especifique a espécie para melhor rastreamento</li>
+          <li>Atividades urgentes devem ter prioridade alta</li>
+        </ul>
+      </div>
     </div>
+  </div>
+</div>
 
-</form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set default due date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('due_date').valueAsDate = tomorrow;
+
+  // Priority selection
+  const priorityOptions = document.querySelectorAll('.priority-option');
+  const priorityInput = document.getElementById('priority');
+  
+  // Set default priority to medium
+  priorityOptions[1].classList.add('selected');
+  priorityInput.value = 'medium';
+
+  priorityOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      priorityOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      priorityInput.value = this.getAttribute('data-priority');
+    });
+  });
+
+  // Species selection
+  const speciesOptions = document.querySelectorAll('.species-option');
+  const speciesInput = document.getElementById('species');
+  
+  speciesOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      speciesOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      speciesInput.value = this.getAttribute('data-species');
+    });
+  });
+
+  // Clear form function
+  document.getElementById('clear-button').addEventListener('click', function() {
+    // Clear main form
+    document.getElementById('title').value = '';
+    document.getElementById('content').value = '';
+    document.getElementById('attachments').value = '';
+    document.getElementById('ins').selectedIndex = -1;
+    
+    // Clear activity details
+    document.getElementById('due_date').valueAsDate = tomorrow;
+    
+    // Reset priority to medium
+    priorityOptions.forEach(opt => opt.classList.remove('selected'));
+    priorityOptions[1].classList.add('selected');
+    priorityInput.value = 'medium';
+    
+    // Reset species
+    speciesOptions.forEach(opt => opt.classList.remove('selected'));
+    speciesInput.value = '';
+    
+    // Show confirmation
+    alert('Formulário limpo com sucesso!');
+  });
+});
+</script>
 {% endblock %}

@@ -1,0 +1,491 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Participantes {% endblock %}
+{% block header_title %} Participantes da {% endblock %}
+{% block header_text %}Propriedade{% endblock %}
+
+{% block rels %}
+<!-- Fonte Outfit e icons -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/task_team.css' %}">
+
+{% endblock %}
+
+{% block styles %}
+
+{% endblock %}
+
+{% block content %}
+<div class="page">
+
+  <!-- TOP PANEL -->
+  <section class="top-panel" aria-labelledby="panel-title">
+
+  </section>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <div class="search" role="search">
+      <span class="material-icons" aria-hidden="true">search</span>
+      <input id="search-input" type="search" placeholder="Buscar participante..." aria-label="Buscar participantes">
+    </div>
+
+    <div class="actions" role="toolbar" aria-label="ações">
+      <button id="filter-open" class="btn" type="button" aria-haspopup="dialog" aria-controls="filter-modal">
+        <span class="material-icons" aria-hidden="true">filter_list</span>
+        Filtrar
+      </button>
+
+      <button id="add-open" class="btn primary" type="button">
+        <span class="material-icons" aria-hidden="true">person_add</span>
+        Adicionar Participante
+      </button>
+    </div>
+  </div>
+
+  <!-- PARTICIPANTS LIST -->
+  <section class="participants-section">
+    <div class="section-title">
+      <span class="material-icons">groups</span>
+      Lista de Participantes
+    </div>
+
+    <div class="results" id="results-list" aria-live="polite">
+      <!-- Participante 1 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Pablo Murilo</p>
+          <p class="participant-role">Responsável principal · Especialista em poda</p>
+        </div>
+        <div class="participant-status status-active">
+          <span class="material-icons" style="font-size: 16px;">check_circle</span>
+          Ativo
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 2 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Joana Silva</p>
+          <p class="participant-role">Auxiliar · Cuidados pós-poda</p>
+        </div>
+        <div class="participant-status status-active">
+          <span class="material-icons" style="font-size: 16px;">check_circle</span>
+          Ativo
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 3 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Carlos Eduardo</p>
+          <p class="participant-role">Supervisor · Controle de qualidade</p>
+        </div>
+        <div class="participant-status status-pending">
+          <span class="material-icons" style="font-size: 16px;">schedule</span>
+          Pendente
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Participante 4 -->
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Mariana Costa</p>
+          <p class="participant-role">Consultora · Especialista em adenium</p>
+        </div>
+        <div class="participant-status status-inactive">
+          <span class="material-icons" style="font-size: 16px;">cancel</span>
+          Inativo
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mensagem quando não há resultados -->
+      <div id="no-results" class="empty-state hidden" role="status">
+        <span class="material-icons">search_off</span>
+        <h3>Nenhum participante encontrado</h3>
+        <p>Tente outro termo de busca ou remova os filtros aplicados.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL ADICIONAR PARTICIPANTE -->
+<div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title">
+  <div class="modal-panel" role="document">
+    <div class="modal-header">
+      <h3 id="add-title">Adicionar Participante</h3>
+    </div>
+    <form id="add-form" method="post" action="#">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="participant-name">Nome completo</label>
+          <input id="participant-name" name="name" type="text" required placeholder="Digite o nome completo">
+        </div>
+        <div class="form-control">
+          <label for="participant-email">E-mail</label>
+          <input id="participant-email" name="email" type="email" required placeholder="exemplo@email.com">
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="participant-role">Função na tarefa</label>
+          <select id="participant-role" name="role" required>
+            <option value="">Selecione uma função</option>
+            <option value="responsavel">Responsável principal</option>
+            <option value="auxiliar">Auxiliar</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="consultor">Consultor</option>
+            <option value="observador">Observador</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="participant-status">Status</label>
+          <select id="participant-status" name="status" required>
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="form-control" style="flex: 1 1 100%;">
+          <label for="participant-notes">Observações</label>
+          <textarea id="participant-notes" name="notes" placeholder="Alguma observação sobre este participante..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="add-cancel" type="button" class="btn">Cancelar</button>
+        <button id="add-save" type="submit" class="btn primary">Adicionar Participante</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL FILTRAR PARTICIPANTES -->
+<div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
+  <div class="modal-panel" role="document">
+    <div class="modal-header">
+      <h3 id="filter-title">Filtrar Participantes</h3>
+    </div>
+    <form id="filter-form">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="filtro_status">Status</label>
+          <select id="filtro_status" name="filtro_status">
+            <option value="">Todos os status</option>
+            <option value="ativo">Apenas ativos</option>
+            <option value="pendente">Apenas pendentes</option>
+            <option value="inativo">Apenas inativos</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="filtro_funcao">Função</label>
+          <select id="filtro_funcao" name="filtro_funcao">
+            <option value="">Todas as funções</option>
+            <option value="responsavel">Responsável principal</option>
+            <option value="auxiliar">Auxiliar</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="consultor">Consultor</option>
+            <option value="observador">Observador</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="filter-cancel" type="button" class="btn">Cancelar</button>
+        <button id="filter-reset" type="button" class="btn">Limpar Filtros</button>
+        <button id="filter-apply" type="submit" class="btn primary">Aplicar Filtros</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos do DOM
+  const searchInput = document.getElementById('search-input');
+  const resultsList = document.getElementById('results-list');
+  const participantCards = Array.from(resultsList.querySelectorAll('.participant-card'));
+  const noResults = document.getElementById('no-results');
+  
+  // Modais
+  const filterModal = document.getElementById('filter-modal');
+  const addModal = document.getElementById('add-modal');
+  const filterOpenBtn = document.getElementById('filter-open');
+  const addOpenBtn = document.getElementById('add-open');
+  
+  // Botões de fechar modais
+  const filterCancel = document.getElementById('filter-cancel');
+  const filterReset = document.getElementById('filter-reset');
+  const addCancel = document.getElementById('add-cancel');
+  
+  // Formulários
+  const filterForm = document.getElementById('filter-form');
+  const addForm = document.getElementById('add-form');
+
+  // Funções para abrir/fechar modal
+  function openModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    // Focar no primeiro elemento interativo
+    const focusable = modal.querySelector('input, select, button');
+    if (focusable) focusable.focus();
+  }
+
+  function closeModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Abrir modais
+  if (filterOpenBtn) {
+    filterOpenBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal(filterModal);
+    });
+  }
+
+  if (addOpenBtn) {
+    addOpenBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openModal(addModal);
+    });
+  }
+
+  // Fechar modais
+  if (filterCancel) {
+    filterCancel.addEventListener('click', function() {
+      closeModal(filterModal);
+    });
+  }
+
+  if (addCancel) {
+    addCancel.addEventListener('click', function() {
+      closeModal(addModal);
+    });
+  }
+
+  // Fechar modais ao clicar fora
+  [filterModal, addModal].forEach(modal => {
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal(modal);
+        }
+      });
+    }
+  });
+
+  // Fechar modais com Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal(filterModal);
+      closeModal(addModal);
+    }
+  });
+
+  // Busca em tempo real
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      participantCards.forEach(card => {
+        const name = card.querySelector('.participant-name').textContent.toLowerCase();
+        const role = card.querySelector('.participant-role').textContent.toLowerCase();
+        
+        const matches = name.includes(searchTerm) || role.includes(searchTerm);
+        card.style.display = matches ? '' : 'none';
+        
+        if (matches) visibleCount++;
+      });
+      
+      // Mostrar/ocultar mensagem de nenhum resultado
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+    });
+  }
+
+  // Aplicar filtros
+  if (filterForm) {
+    filterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const statusFilter = this.filtro_status.value;
+      const roleFilter = this.filtro_funcao.value;
+      
+      let visibleCount = 0;
+      
+      participantCards.forEach(card => {
+        const statusElement = card.querySelector('.participant-status');
+        const roleText = card.querySelector('.participant-role').textContent.toLowerCase();
+        
+        // Determinar status baseado na classe
+        let cardStatus = '';
+        if (statusElement.classList.contains('status-active')) cardStatus = 'ativo';
+        else if (statusElement.classList.contains('status-pending')) cardStatus = 'pendente';
+        else if (statusElement.classList.contains('status-inactive')) cardStatus = 'inativo';
+        
+        // Determinar função baseado no texto
+        let cardRole = '';
+        if (roleText.includes('responsável')) cardRole = 'responsavel';
+        else if (roleText.includes('auxiliar')) cardRole = 'auxiliar';
+        else if (roleText.includes('supervisor')) cardRole = 'supervisor';
+        else if (roleText.includes('consultor')) cardRole = 'consultor';
+        else if (roleText.includes('observador')) cardRole = 'observador';
+        
+        let showCard = true;
+        
+        // Aplicar filtros
+        if (statusFilter && cardStatus !== statusFilter) showCard = false;
+        if (roleFilter && cardRole !== roleFilter) showCard = false;
+        
+        card.style.display = showCard ? '' : 'none';
+        if (showCard) visibleCount++;
+      });
+      
+      // Mostrar/ocultar mensagem de nenhum resultado
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+      
+      closeModal(filterModal);
+    });
+  }
+
+  // Limpar filtros
+  if (filterReset) {
+    filterReset.addEventListener('click', function() {
+      filterForm.reset();
+      participantCards.forEach(card => {
+        card.style.display = '';
+      });
+      if (noResults) noResults.classList.add('hidden');
+      closeModal(filterModal);
+    });
+  }
+
+  // Enviar formulário de adicionar participante
+  if (addForm) {
+    addForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Aqui você enviaria os dados para o servidor
+      const formData = new FormData(this);
+      const participantData = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        role: formData.get('role'),
+        status: formData.get('status'),
+        notes: formData.get('notes')
+      };
+      
+      console.log('Novo participante:', participantData);
+      
+      // Fechar modal e limpar formulário
+      closeModal(addModal);
+      this.reset();
+      
+      // Em uma implementação real, você adicionaria o novo participante à lista
+      // via AJAX ou recarregaria a página
+    });
+  }
+
+  // Ações dos botões nos cards de participantes
+  participantCards.forEach(card => {
+    const actionBtns = card.querySelectorAll('.action-btn');
+    
+    actionBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const action = this.querySelector('.material-icons').textContent;
+        const participantName = card.querySelector('.participant-name').textContent;
+        
+        switch(action) {
+          case 'mail':
+            alert(`Enviar mensagem para ${participantName}`);
+            break;
+          case 'edit':
+            alert(`Editar participante: ${participantName}`);
+            break;
+          case 'delete':
+            if (confirm(`Tem certeza que deseja remover ${participantName} da tarefa?`)) {
+              card.style.display = 'none';
+            }
+            break;
+        }
+      });
+    });
+  });
+});
+</script>
+{% endblock %}
