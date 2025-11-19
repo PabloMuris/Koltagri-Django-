@@ -32,7 +32,6 @@ html { font-size: var(--base-font); color: #071029; }
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 16px;
 }
 
  
@@ -454,10 +453,47 @@ html { font-size: var(--base-font); color: #071029; }
 .notification.show {
   transform: translateX(0);
 }
+
+
+.user-actions{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.user-actions button{
+  height: 44px;
+  width: 44px;
+  border-radius: 10px;
+  border: 1px solid #f2f2f2;
+  background-color: transparent;
+}
+
+.user-actions svg{
+  fill: black;
+}
+
+#edit-button{
+  visibility: hidden;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'profile' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="edit-button">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+      </svg>
+    </button>
+  </div>
 <div class="page">
 
    

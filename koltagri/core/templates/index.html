@@ -1,192 +1,492 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
-{% block header_title %}Olá,seja bem vindo{% endblock %}
+{% block header_title %}Olá, seja bem-vindo{% endblock %}
 {% block header_text %}Koltagri{% endblock %}
 {% load static %}
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <style>
-
-  
- 
-.forecast {
-  --primary: #276b4f;
-  --accent: #2f8a64;
-  --muted: #6b777a;
-  --card-bg: #ffffff;
-  --border: #f2f2f2;
-  --radius: 10px;
-  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color: #102734;
-  box-sizing: border-box;
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
 }
 
- 
-.forecast__wrap {
-  width: 100%;
-  max-width: 980px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px;
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
- 
-.forecast__header {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-.forecast__location {
-  display:flex;
-  flex-direction:column;
-}
-.forecast__location .place {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-.forecast__location .subtitle {
-  font-size: 0.90rem;
-  color: var(--muted);
-}
-
- 
-.forecast__today {
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-.forecast__today .big-temp {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--text, #102734);
-}
-.forecast__today .desc {
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-
- 
-.forecast__days {
-  display: flex;
-  gap: 12px;
-  flex-direction: column;
-}
-
- 
-.forecast__day {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 120px;
-  box-sizing: border-box;
-}
-
- 
-.day__top {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 8px;
-}
-.day__label { font-weight:600; color:var(--primary); font-size:0.95rem; }
-.day__date { font-size:0.85rem; color:var(--muted); }
-
- 
-.day__middle {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.day__icon {
-  width:44px;
-  height:44px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
-  background: linear-gradient(180deg, rgba(47,138,100,0.08), rgba(39,107,79,0.03));
-  color:var(--accent);
-  flex-shrink:0;
-}
-.day__temps {
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-.temp-high { font-weight:700; font-size:1rem; color:var(--text); }
-.temp-low { font-size:0.85rem; color:var(--muted); }
-
- 
-.day__bottom {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  font-size:0.85rem;
-  color:var(--muted);
-}
-
- 
-.badge {
-  background: rgba(39,107,79,0.08);
-  color: var(--primary);
-  border-radius: 8px;
-  padding: 6px 8px;
-  font-weight:600;
-  font-size:0.82rem;
-}
-
- 
-@media (max-width:420px){
-  .forecast__wrap { padding: 12px; gap:10px; }
-  .forecast__today .big-temp { font-size:1.8rem; }
-  .day__icon { width:40px; height:40px; }
-  .forecast__days { gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-}
-
-
-    .alert{
-    font-family: 'Outfit', sans-serif;
+/* Layout Principal */
+.page-container {
     display: flex;
     flex-direction: column;
+    gap: var(--gap);
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Seção Climatológica */
+.climatological-info {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--gap);
+    margin-bottom: var(--gap);
+}
+
+/* Card do Clima */
+.climate-card {
+    background: linear-gradient(135deg, var(--accent-color), #1a365d);
+    border-radius: var(--radius);
+    padding: 24px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+.climate-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.city-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
     gap: 20px;
-    padding: 10px 5px;
-    color: #1b232f;  
+    margin-bottom: 20px;
+}
+
+.temperature {
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.weather-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-icon .material-icons {
+    font-size: 40px;
+}
+
+.weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.weather-description {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.weather-metrics {
+    display: flex;
+    gap: 16px;
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.metric .material-icons {
+    font-size: 16px;
+}
+
+/* Card de Alerta */
+.climate-alert {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.alert-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #c53030;
+    margin: 0;
+}
+
+.alert-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.alert-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(254, 215, 215, 0.5);
+    border-radius: 8px;
+}
+
+.alert-type .material-icons {
+    color: #c53030;
+    font-size: 24px;
+}
+
+.alert-type p {
+    font-weight: 600;
+    color: #c53030;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.alert-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #742a2a;
+    margin: 0;
+}
+
+.alert-source {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    margin: 0;
+}
+
+.alert-source strong {
+    color: #4a5568;
+}
+
+/* Seção de Gastos */
+.finance-section {
+    margin: var(--gap) 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.finance-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap);
+}
+
+.finance-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.finance-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.finance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.finance-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.finance-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(74, 165, 130, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.finance-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 8px 0;
+}
+
+.finance-comparison {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.change-positive {
+    color: #38a169;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.change-negative {
+    color: #e53e3e;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.finance-details {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+
+.detail-label {
+    color: var(--muted-color);
+}
+
+.detail-value {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Previsão do Tempo */
+.forecast {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: var(--gap) 0;
+    display: none;
+}
+
+.forecast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.forecast-location {
+    display: flex;
+    flex-direction: column;
+}
+
+.place {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--muted-color);
+    margin: 4px 0 0 0;
+}
+
+.forecast-days {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.forecast-day {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+}
+
+.day-label {
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+}
+
+.day-date {
+    font-size: 0.8rem;
+    color: var(--muted-color);
+    margin-bottom: 12px;
+}
+
+.day-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    background: rgba(74, 165, 130, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.day-temp {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.day-details {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.8rem;
+    color: var(--muted-color);
+}
+
+/* Modal (mantido conforme solicitado) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.content-layer {
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Notificações no Modal */
+.alert {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-color);
 }
 
 .notif-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    color: #163b16;
+    color: var(--accent-color);
+    margin-bottom: 20px;
 }
 
 .notif-title span {
-    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.notif-section {
+    margin-bottom: 20px;
 }
 
 .notif-section p {
-    margin: 3px 0;
+    margin: 8px 0;
     font-size: 1rem;
 }
 
 .notif-card {
-    border: 1px solid #f2f2f2;
-    padding: 15px;
-    border-radius: 10px;
-    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    background: var(--panel-bg);
+    margin-bottom: 16px;
 }
 
 .notif-card h3 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    color: #184d18;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: var(--accent-color);
 }
 
 .notif-card ul {
@@ -199,627 +499,387 @@
     line-height: 1.4;
 }
 
-
-
-
+/* Responsividade */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 16px;
+    }
     
     .climatological-info {
-        height: 330px;
-        width: 100%;
-        display: flex;
-    }
-
-    .climate-card, .climate-alert {
-        padding: 16px; 
-    }
-
-    .climate-card {
-        height: 60px;
-        width: 100%;
-        flex-flow: column;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-image: url("{% static 'application_img/background/card_background.svg' %}");
-        color: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    
-
-    .city-data {
-        align-items: center;
-        justify-content: space-between;
-        padding-inline: 16px;
-        height: 44px;
-    }
-
-    .climate-card > * {
-        width: 100%;
-        display: flex;
-    }
-
-    .climate-card--style {
-        background-color: #1a2b47;
-        border-radius: 16px;
-    }
-
-    .climate-alert > * {
-        display: flex;
-    }
-
-    .climate-alert {
-        display: flex;
-        flex-flow: row;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-
-    
-
-    .climate-alert .text-title {
-        display: flex;
-        flex-flow: row;
-        align-items: center;
-    }
-
-    .text-title {
-        flex-flow: row;
-        align-items: center;
-    }
-
-    .climate-alert--style {
-        background-color: #fff5f5;
-        border-radius: 16px;
-        color: #742a2a;
-    }
-
-     
-    
-     
-    .climate-card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        grid-template-columns: 1fr;
     }
     
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
+    .finance-cards {
+        grid-template-columns: 1fr;
     }
     
-    .city-name {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-    }
-    
-    .card-header svg {
-        width: 20px;
-        height: 20px;
-        opacity: 0.8;
+    .forecast-days {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     }
     
     .weather-main {
-        display: flex;
-        align-items: center;
-        margin-bottom: 16px;
-        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
     }
     
     .temperature {
-        font-size: 42px;
-        font-weight: 300;
-        margin-right: 16px;
-        line-height: 1;
+        font-size: 2.5rem;
     }
     
-    .weather-icon {
-        width: 64px;
-        height: 64px;
-        margin-right: 16px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .climate-card {
+        min-height: auto;
     }
-    
-    .weather-icon svg {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .weather-details {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .weather-description {
-        font-size: 16px;
-        margin-bottom: 4px;
-        font-weight: 500;
-    }
-    
+}
+
+@media (max-width: 480px) {
     .weather-metrics {
-        display: flex;
-        gap: 16px;
-        margin-top: 8px;
+        flex-direction: column;
+        gap: 8px;
     }
     
     .metric {
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-        background: rgba(255, 255, 255, 0.15);
-        padding: 4px 10px;
-        border-radius: 20px;
+        width: fit-content;
     }
     
-    .metric svg {
-        width: 16px;
-        height: 16px;
-        margin-right: 6px;
-        opacity: 0.8;
+    .finance-amount {
+        font-size: 1.5rem;
     }
     
-     
-    .alert-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-    
-    .alert-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-        color: #c53030;
-    }
-    
-    .alert-content {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    
-    .alert-type {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
-        padding: 8px 12px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-    }
-    
-    .alert-type svg {
-        width: 24px;
-        height: 24px;
-        margin-right: 10px;
-        color: #c53030;
-    }
-    
-    .alert-type p {
-        font-weight: 600;
-        font-size: 16px;
-        margin: 0;
-        color: #c53030;
-    }
-    
-    .alert-description {
-        flex: 1;
-        overflow: hidden;
-    }
-    
-    .alert-text {
-        font-size: 14px;
-        line-height: 1.5;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 6;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 12px;
-    }
-    
-    .alert-source {
-        font-size: 12px;
-        color: #718096;
-        margin-top: auto;
-    }
-    
-    .alert-source strong {
-        color: #4a5568;
+    .forecast-days {
+        grid-template-columns: 1fr;
     }
 
-    @media (max-width: 768px) {
-        .climatological-info {
-            flex-flow: column;
-            gap: 20px;
-        }
 
-        .climate-card {
-            flex: 1;
-        }
+}
 
-        .climate-alert {
-            height: 44px;
-            flex-flow: row;
-            width: 100%;
-            padding: 0px !important;
-            background-color: transparent;
-            
-        }
-        
-        .alert-header,  .alert-description {
-            display: none;
-            
-        }
-        
-        .text-title svg {
-            width: 24px;
-            height: 24px;
-        }
-        
-        .alert-type{ min-height: 44px;}
-        .weather-main {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .temperature {
-            font-size: 32px;
-        }
-        
-        .weather-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 8px;
-        }
-        
-        .weather-icon svg {
-            width: 28px;
-            height: 28px;
-        }
-    }
 
-    @media (min-width: 769px) {
-        .climatological-info {
-            flex-flow: row;
-            gap: 2%;
-        }
-        
-        .climate-card {
-            flex: 0.6;
-            height: 100%;
-        }
-        
-        .climate-alert {
-            min-height: fit-content;
-            height: 100%;
-            flex: 0.4;
-            width: 50%;
-            flex-flow: column;
-            background-color: #fff5f5;
-            color: #742a2a;
-        }
-        
-        .alert-content {
-            flex-flow: column;
-        }
-        
-        .text-title svg {
-            height: 24px;
-            width: 24px;
-            margin-right: 10px;
-        }
-        
-        .text-title p {
-            font-weight: 600;
-            font-size: 18px;
-        }
-    }
-
-    .card {
-        display: flex;
-    }
-
-    
-    
 </style>
 {% endblock %}
 
 {% block content %}
-
-<section class="climatological-info climatological-info--style">
-    <div class="climate-card climate-card--style card" id="climate-card">
-        <div class="card-header city-data">
-            <p class="city-name">Riacho de Santana - RN</p>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                <path d="m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z"/>
-            </svg>
-        </div>
-
-        <div class="weather-main">
-            <div class="weather-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3">
-                    <path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z"/>
-                </svg>
+<div class="page-container">
+    <!-- Seção Climatológica -->
+    <section class="climatological-info">
+        <div class="climate-card" id="climate-card">
+            <div class="card-header">
+                <p class="city-name">Riacho de Santana - RN</p>
+                <span class="material-icons">location_on</span>
             </div>
-            <div class="temperature">22°C</div>
-            <div class="weather-details">
-                <div class="weather-description">Nublado</div>
-                <div class="weather-metrics">
-                    <div class="metric">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3">
-                            <path d="M260-160q-91 0-155.5-63T40-377q0-78 47-139t123-78q25-92 100-149t170-57q117 0 198.5 81.5T760-520q69 8 114.5 59.5T920-340q0 75-52.5 127.5T740-160H260Zm0-80h480q42 0 71-29t29-71q0-42-29-71t-71-29h-60v-80q0-83-58.5-141.5T480-720q-83 0-141.5 58.5T280-520h-20q-58 0-99 41t-41 99q0 58 41 99t99 41Zm220-240Z"/>
-                        </svg>
-                        <span>80%</span>
-                    </div>
-                    <div class="metric">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#e3e3e3">
-                            <path d="M480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400Z"/>
-                        </svg>
-                        <span>80%</span>
+
+            <div class="weather-main">
+                <div class="weather-icon">
+                    <span class="material-icons">cloud</span>
+                </div>
+                <div class="temperature">22°C</div>
+                <div class="weather-details">
+                    <p class="weather-description">Nublado</p>
+                    <div class="weather-metrics">
+                        <div class="metric">
+                            <span class="material-icons">water_drop</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="material-icons">air</span>
+                            <span>18 km/h</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="climate-alert climate-alert--style card" id="climate-alert">
-        <div class="alert-header">
-            <p class="alert-title">Condições meteorológicas</p>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#c53030">
-                <path d="m256-240-56-56 384-384H240v-80h480v480h-80v-344L256-240Z"/>
-            </svg>
-        </div>
-
-        <div class="alert-content">
-            <div class="alert-type">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#c53030">
-                    <path d="M480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-480q0-33-23.5-56.5T480-560q-33 0-56.5 23.5T400-480q0 33 23.5 56.5T480-400ZM661-80q18-56 27-100t14-70q-43 42-100 66t-122 24q-136 0-238.5-18.5T80-214v-85q56 18 100 27t70 14q-42-43-66-100t-24-122q0-137 18.5-239T214-880h85q-18 56-27.5 100T258-710q43-42 100-66t122-24q137 0 239 18.5T880-746v85q-56-18-100-27.5T710-702q42 43 66 100t24 122q0 137-18.5 239T746-80h-85ZM480-240q100 0 170-70t70-170q0-100-70-170t-170-70q-100 0-170 70t-70 170q0 100 70 170t170 70Z"/>
-                </svg>
-                <p>Ciclone Extratropical</p>
+        
+        <div class="climate-alert" id="climate-alert">
+            <div class="alert-header">
+                <p class="alert-title">Condições meteorológicas</p>
+                <span class="material-icons">warning</span>
             </div>
 
-            <div class="alert-description">
+            <div class="alert-content">
+                <div class="alert-type">
+                    <span class="material-icons">storm</span>
+                    <p>Ciclone Extratropical</p>
+                </div>
+
                 <p class="alert-text">
                     Um ciclone extratropical está se formando na região, podendo causar ventos fortes, 
-                    chuvas intensas e possibilidade de temporais. Recomenda-se evitar áreas abertas, 
-                    verificar a segurança de estruturas externas e acompanhar atualizações meteorológicas.
+                    chuvas intensas e possibilidade de temporais.
                 </p>
                 <p class="alert-source">
                     <strong>Fonte:</strong> INMET
                 </p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="modal-overlay climate-modal" id="modal-overlay">
+    <!-- Seção de Gastos -->
+    <section class="finance-section">
+        <h2 class="section-title">
+            <span class="material-icons">analytics</span>
+            Gestão Financeira
+        </h2>
+        
+        <div class="finance-cards">
+            <!-- Card 1: Gastos do Mês -->
+            <div class="finance-card">
+                <div class="finance-header">
+                    <h3 class="finance-title">Gastos do Mês</h3>
+                    <div class="finance-icon">
+                        <span class="material-icons">savings</span>
+                    </div>
+                </div>
+                <div class="finance-amount">R$ 8.420,00</div>
+                <div class="finance-comparison">
+                    <span class="change-positive">
+                        <span class="material-icons">arrow_upward</span>
+                        +12%
+                    </span>
+                    <span>vs mês anterior</span>
+                </div>
+                <div class="finance-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Mês atual</span>
+                        <span class="detail-value">R$ 8.420,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mês anterior</span>
+                        <span class="detail-value">R$ 7.520,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Variação</span>
+                        <span class="detail-value change-positive">+R$ 900,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Gastos por Categoria -->
+            <div class="finance-card">
+                <div class="finance-header">
+                    <h3 class="finance-title">Gastos por Categoria</h3>
+                    <div class="finance-icon">
+                        <span class="material-icons">category</span>
+                    </div>
+                </div>
+                <div class="finance-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Insumos</span>
+                        <span class="detail-value">R$ 4.210,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mão de Obra</span>
+                        <span class="detail-value">R$ 2.530,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Manutenção</span>
+                        <span class="detail-value">R$ 980,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Outros</span>
+                        <span class="detail-value">R$ 700,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Previsão de Gastos -->
+            <div class="finance-card">
+                <div class="finance-header">
+                    <h3 class="finance-title">Previsão Próximo Mês</h3>
+                    <div class="finance-icon">
+                        <span class="material-icons">trending_up</span>
+                    </div>
+                </div>
+                <div class="finance-amount">R$ 9.150,00</div>
+                <div class="finance-comparison">
+                    <span class="change-positive">
+                        <span class="material-icons">arrow_upward</span>
+                        +8.7%
+                    </span>
+                    <span>projeção</span>
+                </div>
+                <div class="finance-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Insumos previstos</span>
+                        <span class="detail-value">R$ 4.800,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mão de obra</span>
+                        <span class="detail-value">R$ 2.850,00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Manutenção</span>
+                        <span class="detail-value">R$ 1.100,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Previsão do Tempo -->
+    <section class="forecast">
+        <div class="forecast-header">
+            <div class="forecast-location">
+                <p class="place">Riacho de Santana - RN</p>
+                <p class="subtitle">Previsão 5 dias · atualizado em 16/11/2025 09:24</p>
+            </div>
+        </div>
+
+        <div class="forecast-days">
+            <!-- Dia 1 -->
+            <div class="forecast-day">
+                <div class="day-label">Dom • 16/11</div>
+                <div class="day-date">Hoje</div>
+                <div class="day-icon">
+                    <span class="material-icons">cloud</span>
+                </div>
+                <div class="day-temp">22° / 28°</div>
+                <div class="day-details">
+                    <span>🌧 80%</span>
+                    <span>💨 18 km/h</span>
+                </div>
+            </div>
+
+            <!-- Dia 2 -->
+            <div class="forecast-day">
+                <div class="day-label">Seg • 17/11</div>
+                <div class="day-date">Amanhã</div>
+                <div class="day-icon">
+                    <span class="material-icons">wb_sunny</span>
+                </div>
+                <div class="day-temp">24° / 30°</div>
+                <div class="day-details">
+                    <span>🌦 45%</span>
+                    <span>💨 15 km/h</span>
+                </div>
+            </div>
+
+            <!-- Dia 3 -->
+            <div class="forecast-day">
+                <div class="day-label">Ter • 18/11</div>
+                <div class="day-date">18/11</div>
+                <div class="day-icon">
+                    <span class="material-icons">umbrella</span>
+                </div>
+                <div class="day-temp">21° / 26°</div>
+                <div class="day-details">
+                    <span>🌧 70%</span>
+                    <span>💨 22 km/h</span>
+                </div>
+            </div>
+
+            <!-- Dia 4 -->
+            <div class="forecast-day">
+                <div class="day-label">Qua • 19/11</div>
+                <div class="day-date">19/11</div>
+                <div class="day-icon">
+                    <span class="material-icons">cloud_queue</span>
+                </div>
+                <div class="day-temp">23° / 27°</div>
+                <div class="day-details">
+                    <span>☁ 20%</span>
+                    <span>💨 10 km/h</span>
+                </div>
+            </div>
+
+            <!-- Dia 5 -->
+            <div class="forecast-day">
+                <div class="day-label">Qui • 20/11</div>
+                <div class="day-date">20/11</div>
+                <div class="day-icon">
+                    <span class="material-icons">wb_sunny</span>
+                </div>
+                <div class="day-temp">25° / 31°</div>
+                <div class="day-details">
+                    <span>☀ 5%</span>
+                    <span>💨 8 km/h</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal (mantido conforme solicitado) -->
+<div class="modal-overlay climate-modal" id="modal-overlay" style="translate: 0 0;">
     <div class="content-layer">
         <button type="button" class="close-btn" id="close-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
         </button>
     
         <div class="alert" id="weather-alert">
+            <h2 class="notif-title">Aviso de: <span>Chuvas Intensas</span></h2>
 
-    <h2 class="notif-title">Aviso de: <span>Chuvas Intensas</span></h2>
+            <div class="notif-section">
+                <p><strong>Grau de severidade:</strong> Perigo Potencial</p>
+                <p><strong>Início:</strong> 16/11/2025 09h24min</p>
+                <p><strong>Fim:</strong> 17/11/2025 09h00min</p>
+            </div>
 
-    <div class="notif-section">
-        <p><strong>Grau de severidade:</strong> Perigo Potencial</p>
-        <p><strong>Início:</strong> 16/11/2025 09h24min</p>
-        <p><strong>Fim:</strong> 17/11/2025 09h00min</p>
-    </div>
+            <div class="notif-card">
+                <h3>Riscos Potenciais</h3>
+                <p>
+                    INMET publica aviso iniciando em: 16/11/2025 09:24.  
+                    Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40–60 km/h).  
+                    Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e descargas elétricas.
+                </p>
+            </div>
 
-    <div class="notif-card">
-        <h3>Riscos Potenciais</h3>
-        <p>
-            INMET publica aviso iniciando em: 16/11/2025 09:24.  
-            Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40–60 km/h).  
-            Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e descargas elétricas.
-        </p>
-    </div>
+            <div class="notif-card">
+                <h3>Instruções</h3>
+                <ul>
+                    <li>Em caso de rajadas de vento: não se abrigue sob árvores.</li>
+                    <li>Não estacione veículos próximos a torres ou placas de propaganda.</li>
+                    <li>Evite usar aparelhos eletrônicos ligados à tomada.</li>
+                    <li>Mais informações: Defesa Civil (199) e Corpo de Bombeiros (193).</li>
+                </ul>
+            </div>
 
-    <div class="notif-card">
-        <h3>Instruções</h3>
-        <ul>
-            <li>Em caso de rajadas de vento: não se abrigue sob árvores.</li>
-            <li>Não estacione veículos próximos a torres ou placas de propaganda.</li>
-            <li>Evite usar aparelhos eletrônicos ligados à tomada.</li>
-            <li>Mais informações: Defesa Civil (199) e Corpo de Bombeiros (193).</li>
-        </ul>
-    </div>
-
-    <div class="notif-card">
-        <h3>Municípios</h3>
-        <p>
-            Abadia de Goiás - GO (5200050), Abadia dos Dourados - MG (3100104), Abaeté - MG (3100203),  
-            Abre Campo - MG (3100302), Acaiaca - MG (3100401), Acorizal - MT (5100102), Acrelândia - AC (1200013), Acreún...
-        </p>
-    </div>
-
-    
-</div>
-
-        <div class="forecast" id="forecast" role="region" aria-label="Previsão dos próximos 5 dias">
-  <div class="forecast__wrap">
-
-     
-    <div class="forecast__header">
-      <div class="forecast__location" aria-hidden="false">
-        <span class="place">Riacho de Santana - RN</span>
-        <span class="subtitle">Previsão 5 dias · atualizado em 16/11/2025 09:24</span>
-      </div>
-
-      <div class="forecast__today" aria-hidden="true">
-        <div class="big-temp">22°</div>
-        <div class="desc">
-          <div>Parcialmente nublado</div>
-          <div style="font-size:0.85rem; color:var(--muted)">Chuva: 80% · Vento: 18 km/h</div>
+            <div class="notif-card">
+                <h3>Municípios</h3>
+                <p>
+                    Abadia de Goiás - GO (5200050), Abadia dos Dourados - MG (3100104), Abaeté - MG (3100203),  
+                    Abre Campo - MG (3100302), Acaiaca - MG (3100401), Acorizal - MT (5100102), Acrelândia - AC (1200013), Acreún...
+                </p>
+            </div>
         </div>
-      </div>
-    </div>
-
-     
-    <div class="forecast__days" role="list" aria-label="Previsão por dia">
-       
-      <article class="forecast__day" role="listitem" aria-label="Domingo 16 de novembro - hoje">
-        <div class="day__top">
-          <div class="day__label">Dom • 16/11</div>
-          <div class="day__date">Hoje</div>
-        </div>
-
-        <div class="day__middle">
-          <div class="day__icon" aria-hidden="true">
-             
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 16a4 4 0 0 1 4-4h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 12a5 5 0 0 1 10 0h1a3 3 0 1 1 0 6H7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M8 20l2-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </div>
-
-          <div class="day__temps">
-            <div class="temp-high">22° / 28°</div>
-            <div class="temp-low">Min 20° · Máx 28°</div>
-          </div>
-        </div>
-
-        <div class="day__bottom">
-          <div class="precip">🌧 80%</div>
-          <div class="wind">💨 18 km/h</div>
-        </div>
-      </article>
-
-       
-      <article class="forecast__day" role="listitem" aria-label="Segunda 17 de novembro">
-        <div class="day__top">
-          <div class="day__label">Seg • 17/11</div>
-          <div class="day__date">Amanhã</div>
-        </div>
-
-        <div class="day__middle">
-          <div class="day__icon" aria-hidden="true">
-             
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6.76 4.84l-1.8-1.79" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M1 13h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" fill="currentColor" fill-opacity="0.06"/><path d="M20.24 19.16l1.8 1.79" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-
-          <div class="day__temps">
-            <div class="temp-high">24° / 30°</div>
-            <div class="temp-low">Min 22° · Máx 30°</div>
-          </div>
-        </div>
-
-        <div class="day__bottom">
-          <div class="precip">🌦 45%</div>
-          <div class="wind">💨 15 km/h</div>
-        </div>
-      </article>
-
-       
-      <article class="forecast__day" role="listitem" aria-label="Terça 18 de novembro">
-        <div class="day__top">
-          <div class="day__label">Ter • 18/11</div>
-          <div class="day__date">18/11</div>
-        </div>
-
-        <div class="day__middle">
-          <div class="day__icon" aria-hidden="true">
-             
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 10a5 5 0 0 1 10 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 16l1.5-2M12 16l1.5-2M16 16l1.5-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-
-          <div class="day__temps">
-            <div class="temp-high">21° / 26°</div>
-            <div class="temp-low">Min 19° · Máx 26°</div>
-          </div>
-        </div>
-
-        <div class="day__bottom">
-          <div class="precip">🌧 70%</div>
-          <div class="wind">💨 22 km/h</div>
-        </div>
-      </article>
-
-       
-      <article class="forecast__day" role="listitem" aria-label="Quarta 19 de novembro">
-        <div class="day__top">
-          <div class="day__label">Qua • 19/11</div>
-          <div class="day__date">19/11</div>
-        </div>
-
-        <div class="day__middle">
-          <div class="day__icon" aria-hidden="true">
-             
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 13a4 4 0 0 1 4-4h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 9a5 5 0 0 1 10 0h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-
-          <div class="day__temps">
-            <div class="temp-high">23° / 27°</div>
-            <div class="temp-low">Min 21° · Máx 27°</div>
-          </div>
-        </div>
-
-        <div class="day__bottom">
-          <div class="precip">☁ 20%</div>
-          <div class="wind">💨 10 km/h</div>
-        </div>
-      </article>
-
-       
-      <article class="forecast__day" role="listitem" aria-label="Quinta 20 de novembro">
-        <div class="day__top">
-          <div class="day__label">Qui • 20/11</div>
-          <div class="day__date">20/11</div>
-        </div>
-
-        <div class="day__middle">
-          <div class="day__icon" aria-hidden="true">
-             
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5 5l-1.5-1.5M19.5 19.5 18 18M19.5 4.5 18 6M5 19l-1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-
-          <div class="day__temps">
-            <div class="temp-high">25° / 31°</div>
-            <div class="temp-low">Min 23° · Máx 31°</div>
-          </div>
-        </div>
-
-        <div class="day__bottom">
-          <div class="precip">☀ 5%</div>
-          <div class="wind">💨 8 km/h</div>
-        </div>
-      </article>
-    </div>
-
-  </div>
-</div>
-
     </div>
 </div>
-
-<section class="property-info">
-    <div class="tasks">
-        
-    </div>
-    <div class="supplies"></div>
-    <div class="plants"></div>
-</section>
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/index.js'%}"></script>
+<script>
+// Script para abrir/fechar modal (mantido conforme solicitado)
+document.addEventListener('DOMContentLoaded', function() {
+    const modalOverlay = document.getElementById("modal-overlay");
+    const climateCard = document.getElementById("climate-card");
+    const climateAlert = document.getElementById("climate-alert");
+    const closeBtn = document.getElementById("close-btn");
+
+    // Abrir modal ao clicar nos cards
+    if (climateCard) {
+        climateCard.addEventListener('click', () => {
+            modalOverlay.style.display = 'flex';
+        });
+    }
+
+    if (climateAlert) {
+        climateAlert.addEventListener('click', () => {
+            modalOverlay.style.display = 'flex';
+        });
+    }
+
+    // Fechar modal
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modalOverlay.style.display = 'none';
+        });
+    }
+
+    // Fechar modal ao clicar fora
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
