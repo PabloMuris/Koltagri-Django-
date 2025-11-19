@@ -987,13 +987,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateActiveFiltersDisplay();
 });
 
-// Configurar event listeners
+
 function setupEventListeners() {
-    // Pesquisa
+    
     searchInput.addEventListener('input', handleSearch);
     clearSearchBtn.addEventListener('click', clearSearch);
     
-    // Modal de insumo
+    
     addInsumoBtn.addEventListener('click', openAddInsumoModal);
     addFirstInsumoBtn.addEventListener('click', openAddInsumoModal);
     closeInsumoModal.addEventListener('click', closeInsumoModalHandler);
@@ -1455,12 +1455,12 @@ function openEditInsumoModal(id) {
     insumoModal.style.display = 'flex';
 }
 
-// Fechar modal de insumo
+
 function closeInsumoModalHandler() {
     insumoModal.style.display = 'none';
 }
 
-// Salvar insumo
+
 function saveInsumo(e) {
     e.preventDefault();
     
@@ -1536,5 +1536,9 @@ function formatarData(dataString) {
     const data = new Date(dataString);
     return data.toLocaleDateString('pt-BR');
 }
+
+confirmDelete.addEventListener("click",()=> {
+    deleteModal.style.display = "none"
+})
 </script>
 {% endblock %}
