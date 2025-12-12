@@ -532,6 +532,7 @@ body {
 
     <div class="historic-items">
        
+      {% for expense in expenses%}
       <div class="historic-item">
         <div class="historic-item-icon">
           <span class="material-icons">shopping_cart</span>
@@ -545,10 +546,11 @@ body {
           </span>
         </div>
         <div class="historic-item-meta">
-          <div class="historic-item-amount">- R$ 450,00</div>
+          <div class="historic-item-amount">{{expense.amount}}</div>
           <div class="historic-item-time">14:35</div>
         </div>
       </div>
+      {% endfor %}
 
       <div class="historic-item">
         <div class="historic-item-icon">
@@ -681,49 +683,52 @@ body {
     <div class="modal-header">
       <h3 class="modal-title">Adicionar Gasto</h3>
     </div>
-    <form id="add-form">
-      <div class="modal-row">
+    <form id="add-form" action="{% url 'expense_create_update' %}" method="POST">
+    {% csrf_token %}
+    
+    <div class="modal-row">
         <div class="form-control">
-          <label for="add-description">Descrição</label>
-          <input type="text" id="add-description" name="description" placeholder="Ex: Compra de fertilizantes" required>
+            <label for="{{ form.description.id_for_label }}">Nome</label>
+            {{ form.description }}
+            {{ form.description.errors }}
         </div>
+        
         <div class="form-control">
-          <label for="add-amount">Valor (R$)</label>
-          <input type="number" id="add-amount" name="amount" step="0.01" placeholder="0,00" required>
+            <label for="{{ form.amount.id_for_label }}">Valor (R$)</label>
+            {{ form.amount }}
+            {{ form.amount.errors }}
         </div>
-      </div>
+    </div>
       
-      <div class="modal-row">
+    <div class="modal-row">
         <div class="form-control">
-          <label for="add-category">Categoria</label>
-          <select id="add-category" name="category" required>
-            <option value="">Selecione uma categoria</option>
-            <option value="insumos">Insumos</option>
-            <option value="manutencao">Manutenção</option>
-            <option value="energia">Energia</option>
-            <option value="agua">Água</option>
-            <option value="salarios">Salários</option>
-            <option value="outros">Outros</option>
-          </select>
+            <label for="{{ form.category.id_for_label }}">Categoria</label>
+            
+            {{ form.category }}
+            
+            {{ form.category.errors }}
         </div>
+        
         <div class="form-control">
-          <label for="add-date">Data</label>
-          <input type="date" id="add-date" name="date" required>
+            <label for="{{ form.date.id_for_label }}">Data</label>
+            {{ form.date }}
+            {{ form.date.errors }}
         </div>
-      </div>
+    </div>
       
-      <div class="modal-row">
+    <div class="modal-row">
         <div class="form-control" style="flex: 1 1 100%;">
-          <label for="add-notes">Observações</label>
-          <textarea id="add-notes" name="notes" placeholder="Detalhes adicionais sobre este gasto..."></textarea>
+            <label for="{{ form.note.id_for_label }}">Observações</label>
+            {{ form.note }}
+            {{ form.note.errors }}
         </div>
-      </div>
+    </div>
       
-      <div class="modal-actions">
+    <div class="modal-actions">
         <button type="button" id="add-cancel" class="btn">Cancelar</button>
         <button type="submit" class="btn primary">Salvar Gasto</button>
-      </div>
-    </form>
+    </div>
+</form>
   </div>
 </div>
 {% endblock %}
@@ -802,6 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Hook into existing buttons from partial
+// Hook into existing buttons from partial
   const filterOpenBtn = document.getElementById('filter-open');
   const addOpenBtn = document.getElementById('add-open');
   
@@ -814,13 +820,24 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (addOpenBtn) {
     addOpenBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Set today's date as default
-      document.getElementById('add-date').valueAsDate = new Date();
+      e.preventDefault(); // Evita comportamento padrão
+
+      // Tenta encontrar o campo de data
+      const dateInput = document.getElementById('add-date');
+      
+      // Só tenta definir a data se o campo realmente existir
+      if (dateInput) {
+        try {
+            dateInput.valueAsDate = new Date();
+        } catch (err) {
+            console.log("Não foi possível definir a data automática", err);
+        }
+      }
+      
+      // Abre o modal de qualquer jeito
       openModal(addModal);
     });
   }
-
   // Close modals
   if (filterCancel) {
     filterCancel.addEventListener('click', function() {
@@ -889,12 +906,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add form functionality
   if (addForm) {
     addForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Save new expense logic would go here
-      const formData = new FormData(this);
-      console.log('Adding new expense:', Object.fromEntries(formData));
       closeModal(addModal);
-      addForm.reset();
     });
   }
 

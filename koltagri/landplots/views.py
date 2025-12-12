@@ -10,3 +10,4 @@ class CultivatedPlantsDetailView(TemplateView):
 
 class CultivationFormView(TemplateView):
     template_name = 'cultivation_form.html'
+

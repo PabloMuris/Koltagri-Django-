@@ -13,6 +13,21 @@
 <link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
 
 <style>
+
+/* modificado (card da task) */
+
+@media(max-width: 768px){
+  #edit {
+    display: none;
+  }
+
+  .download-btn {
+    display: none !important;
+  }
+}
+
+/* modificado (card da task) fim */
+
 :root{
   --max-width: 1000px;
   --bg: #f7f9fb;
@@ -116,7 +131,7 @@ html { font-size: var(--base-font); color: #071029; }
   }
   
   .task-actions button{ 
-  min-width: 122px;}
+  }
 }
 
 @media (min-width: 769px) {
@@ -434,15 +449,15 @@ html { font-size: var(--base-font); color: #071029; }
     <div class="task-actions">
       <button class="btn" onclick="location.href='{% url 'task_form'%}'">
         <span class="material-icons">edit</span>
-        Editar
+        <p id="edit">Editar</p>
       </button>
       <button class="btn">
         <span class="material-icons">attach_file</span>
-        Anexar
+        <P>Anexar</P>
       </button>
       <button class="btn primary">
         <span class="material-icons">check_circle</span>
-        Concluir
+        <p>Concluir</p>
       </button>
     </div>
   </section>
@@ -522,7 +537,7 @@ html { font-size: var(--base-font); color: #071029; }
           <p class="attachment-meta">Adicionado em 18/11/2023 · 2.4 MB</p>
         </div>
         <div class="attachment-actions">
-          <button class="btn">
+          <button class="btn download-btn" >
             <span class="material-icons">download</span>
           </button>
           <button class="btn">
@@ -541,7 +556,7 @@ html { font-size: var(--base-font); color: #071029; }
           <p class="attachment-meta">Adicionado em 15/11/2023 · 1.8 MB</p>
         </div>
         <div class="attachment-actions">
-          <button class="btn">
+          <button class="btn download-btn">
             <span class="material-icons">download</span>
           </button>
           <button class="btn">
@@ -560,7 +575,7 @@ html { font-size: var(--base-font); color: #071029; }
           <p class="attachment-meta">Adicionado em 19/11/2023 · 156 KB</p>
         </div>
         <div class="attachment-actions">
-          <button class="btn">
+          <button class="btn download-btn">
             <span class="material-icons">download</span>
           </button>
           <button class="btn">
@@ -636,4 +651,8 @@ html { font-size: var(--base-font); color: #071029; }
   </section>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/task_detail'%}"></script>
 {% endblock %}

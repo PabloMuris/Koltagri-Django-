@@ -1,6 +1,6 @@
 from django.contrib import admin
 # Importe seus modelos (ajuste '.models' se estiver em um local diferente)
-from .models import ExpensesCategory, Expense, IncomeCategory, Income
+from .models import ExpensesCategory, Expense, IncomeCategory, Income,AgriculturalInputs
 
 @admin.register(ExpensesCategory)
 class ExpensesCategoryAdmin(admin.ModelAdmin):
@@ -49,3 +49,18 @@ class IncomeAdmin(admin.ModelAdmin):
     
     # Bônus: Campo de busca
     search_fields = ('description', 'category__name')
+
+
+@admin.register(AgriculturalInputs)
+class AgriculturalInputsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "name",
+        "quantity",
+        "unit",
+        "purchase_date",
+        "price",
+    )
+    list_filter = ("purchase_date", "unit")
+    search_fields = ("name", "description")
+    ordering = ("-purchase_date",)

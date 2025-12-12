@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from koltagri.core.models import BaseModelWithSoftDelete
 # Create your models here.
 
 
@@ -13,14 +14,18 @@ class ExpensesCategory(models.Model):
     
 
 class Expense(models.Model):
+    
     category = models.ForeignKey(
         ExpensesCategory,
         on_delete=models.CASCADE,
         related_name="expenses"
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
     description = models.TextField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+
+    
 
     def __str__(self):
         return f"{self.category.name} - {self.amount} on {self.date}"
@@ -46,16 +51,24 @@ class Income(models.Model):
     
 
 
-class Questionnaire(models.Model):
-    QUESTIONNAIRE_TYPES = [
-        ("INSUMOS", "Insumos"),
-        ("FIXOS", "Gastos Fixos"),
-        ("VENDAS", "Vendas"),
+
+class AgriculturalInputs(BaseModelWithSoftDelete):
+
+
+    UNIT_CHOICES = [
+        ("kg", "Kilogram"),
+        ("g", "Gram"),
+        ("l", "Liter"),
+        ("ml", "Milliliter"),
+        ("pcs", "Pieces"),
+        
     ]
+    name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    unit = models.CharField(max_length=30, choices=UNIT_CHOICES)
+    purchase_date = models.DateField(default=timezone.now)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="questionnaires")
-    type = models.CharField(max_length=20, choices=QUESTIONNAIRE_TYPES)
-    created_at = models.DateTimeField(default=timezone.now)
-
-    class Meta:
-        abstract = True  
+    def __str__(self):
+        return self.name

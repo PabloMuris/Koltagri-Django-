@@ -128,7 +128,7 @@ class CultivationPlant(BaseModelWithSoftDelete):
 
     def __str__(self):
         return (f"{self.count} x {self.plant_species.name} in "
-                f"{self.cultivation.name}: {self.planting_day} -> {self.harvest_day}")
+                f"{self.cultivation.name}: {self.pk}")
     
     
 
