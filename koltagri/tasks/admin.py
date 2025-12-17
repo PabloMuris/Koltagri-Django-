@@ -5,5 +5,5 @@ from koltagri.tasks.models import Task
 
 @admin.register(Task)
 class TasksAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "start_in", "end_in")
+    list_display = ("id", "name", "start_in", "due_date", "priority")
     filter_horizontal = ("cultivation_plant",) 

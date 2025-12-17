@@ -5,7 +5,7 @@ namespace = "tasks"
 from .views import TaskTemplateView,TaskDetailTemplateView,TaskboardTemplateView,TaskParticipantTemplateView,TaskDocsTemplateView,fetch_plant_species,TaskCreateUpdateView
 urlpatterns = [
     path("",TaskTemplateView.as_view(),name= "tasks"),
-    path("tarefa/",TaskDetailTemplateView.as_view(),name= "task_detail"),
+    path("tarefa/<int:pk>/",TaskDetailTemplateView.as_view(),name= "task_detail"),
     path("nova-tarefa",TaskCreateUpdateView.as_view(),name='task_form'),
     path("tarefa/<int:pk>/editar",TaskCreateUpdateView.as_view(),name='task_form'),
     path("tarefa/participants",TaskParticipantTemplateView.as_view(),name="task_participant"),

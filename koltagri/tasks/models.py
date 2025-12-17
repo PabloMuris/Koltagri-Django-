@@ -10,23 +10,17 @@ from koltagri.business.models import AgriculturalInputs
 class Task(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    cultivation_plant= models.ManyToManyField(CultivationPlant, verbose_name=("cultivo da planta"),null=True, blank=True)
-    supplies = models.ManyToManyField(AgriculturalInputs, verbose_name=("insumos agrícolas"), blank=True,null=True)
-    start_in = models.DateTimeField()
-    end_in = models.DateTimeField()
+    cultivation_plant= models.ManyToManyField(CultivationPlant, verbose_name=("cultivo da planta"), blank=True)
+    supplies = models.ManyToManyField(AgriculturalInputs, verbose_name=("insumos agrícolas"), blank=True)
+    start_in = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateTimeField(null=True, blank=True)
     user = models.ManyToManyField("users.User", related_name='tasks')
     priority = models.IntegerField(default=0)
 
 
-    def clean(self):
-        super().clean()
-        if self.end_in < self.start_in:
-            raise ValidationError({
-                'end_in': 'The end date can\'t be earlier than start date'
-            })
+    
         
 class Attachment(models.Model):
-
     TASK = 'task'
     COMPLETION = 'completion'
     ATTACHMENT_TYPES = [
@@ -38,7 +32,6 @@ class Attachment(models.Model):
     file = models.FileField(upload_to='attachments/')
     name = models.CharField(max_length=255, blank=True)
     type = models.CharField(max_length=20, choices=ATTACHMENT_TYPES, default=TASK)
-    send_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

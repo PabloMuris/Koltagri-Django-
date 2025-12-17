@@ -3,6 +3,11 @@ from django.views.generic import TemplateView
 # Create your views here.
 
 
+from koltagri.landplots.models import Site
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404,redirect
+
 class IndexView(TemplateView):
     template_name = "index.html"
 
@@ -26,3 +31,17 @@ class LandsView(TemplateView):
 
 class PropertyView(TemplateView):
     template_name = 'property.html'
+
+
+
+@login_required
+def select_site_location(request,site_id):
+
+    selected_site = get_object_or_404(Site, id=site_id, members=request.user)
+
+    request.session['selected_site_location'] = selected_site.id
+
+    request.session['selected_site_name'] = selected_site.name
+
+    print(request.session['selected_site_location'])
+    return redirect('index')

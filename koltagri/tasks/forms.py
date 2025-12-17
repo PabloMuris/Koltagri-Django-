@@ -9,25 +9,15 @@ class TaskForm(forms.ModelForm):
         fields = [
             "name",
             "description",
-            "cultivation_plant",
-            "supplies",
-            "start_in",
-            "end_in",
+            "due_date",
             "user",
             "priority",
         ]
         widgets = {
-            "start_in": forms.DateTimeInput(attrs={"type": "datetime-local"}),
-            "end_in": forms.DateTimeInput(attrs={"type": "datetime-local"}),
-            "cultivation_plant": forms.SelectMultiple(attrs={"class": "select"}),
-            "supplies": forms.SelectMultiple(attrs={"class": "select"}),
+           
+            "due_date": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+
         }
 
 
-AttachmentFormSet = inlineformset_factory(
-    Task,
-    Attachment,
-    fields=("file", "name", "type"),
-    extra=1,
-    can_delete=True,
-)
+

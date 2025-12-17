@@ -5,7 +5,7 @@
 {% block rels %}
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/task_form_steps.css' %}">
+
 <link rel="stylesheet" href="{% static 'css/task_form.css' %}">
 {% endblock %}
 
@@ -30,7 +30,7 @@
       </div>
       <div class="step-progress-item" data-step="2">
         <div class="step-progress-circle">2</div>
-        <div class="step-progress-label">Insumos & Plantas</div>
+        <div class="step-progress-label">Insumos </div>
       </div>
       <div class="step-progress-item" data-step="3">
         <div class="step-progress-circle">3</div>
@@ -66,17 +66,7 @@
             <textarea name="content" class="step-textarea" placeholder="Descreva a atividade realizada, procedimentos, observações e resultados..." required></textarea>
           </div>
           
-          <div class="step-field">
-            <label class="step-label">
-              <span class="material-icons step-icon">attach_file</span>
-              Anexos e Documentos
-            </label>
-            <input type="file" name="attachments" class="step-file-input" multiple>
-            <div class="step-help-text">
-              <span class="material-icons">info</span>
-              Adicione fotos, documentos ou relatórios relacionados
-            </div>
-          </div>
+          
         </div>
       </div>
 
@@ -88,26 +78,7 @@
         </div>
         
         <div class="step-field-group">
-          <div class="step-field">
-            <label class="step-label">
-              <span class="material-icons step-icon">inventory_2</span>
-              Insumos Utilizados
-            </label>
-            <select name="insumos" class="step-select" multiple size="5">
-              <option value="fertilizante">Fertilizante NPK</option>
-              <option value="pesticida">Pesticida Orgânico</option>
-              <option value="sementes">Sementes Selecionadas</option>
-              <option value="herbicida">Herbicida Seletivo</option>
-              <option value="adubo_organico">Adubo Orgânico</option>
-              <option value="calcario">Calcário Agrícola</option>
-              <option value="biofertilizante">Biofertilizante</option>
-              <option value="outros">Outros Insumos</option>
-            </select>
-            <div class="step-help-text">
-              <span class="material-icons">info</span>
-              Mantenha Ctrl (ou ⌘ no Mac) pressionado para múltipla seleção
-            </div>
-          </div>
+          
           
           <div class="step-field">
             <label class="step-label">
@@ -150,6 +121,8 @@
             <input type="date" name="due_date" class="step-input step-date-input" required>
           </div>
           
+          
+          
           <div class="step-field">
             <label class="step-label">
               <span class="material-icons step-icon">flag</span>
@@ -178,30 +151,7 @@
         </div>
         
         <!-- Resumo da atividade -->
-        <div class="step-summary" id="activitySummary">
-          <h3 class="step-summary-title">
-            <span class="material-icons">check_circle</span>
-            Resumo da Atividade
-          </h3>
-          <div class="step-summary-content">
-            <div class="step-summary-item">
-              <span class="step-summary-label">Título:</span>
-              <span id="summaryTitle">Não informado</span>
-            </div>
-            <div class="step-summary-item">
-              <span class="step-summary-label">Plantas:</span>
-              <span id="summaryPlants">Nenhuma selecionada</span>
-            </div>
-            <div class="step-summary-item">
-              <span class="step-summary-label">Data de entrega:</span>
-              <span id="summaryDate">Não definida</span>
-            </div>
-            <div class="step-summary-item">
-              <span class="step-summary-label">Prioridade:</span>
-              <span id="summaryPriority">Média</span>
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       <!-- Navegação entre etapas -->
@@ -218,10 +168,7 @@
 
       <!-- Botões de ação final -->
       <div class="step-form-actions" id="stepFormActions">
-        <button type="button" class="step-btn step-btn-secondary" id="stepClearBtn">
-          <span class="material-icons">delete</span>
-          Limpar Tudo
-        </button>
+        
         <button type="submit" class="step-btn step-btn-primary">
           <span class="material-icons">send</span>
           Enviar Atividade
@@ -314,7 +261,7 @@ async function fetchPlants(query = '') {
   try {
     dropdown.innerHTML = '<div class="step-loading">Carregando plantas...</div>';
     dropdown.classList.add('active');
-    
+
     const response = await fetch(`http://localhost:8001/tarefas/plantas-especies?q=${encodeURIComponent(query)}`);
     const plants = await response.json();
     

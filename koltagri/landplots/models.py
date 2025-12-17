@@ -25,6 +25,8 @@ from koltagri.core.constants import (
     ROLE_SITE_MANAGER,
     ROLE_STUDY_TEAM,
     ROLE_STUDY_MANAGER,
+    ROLE_EMPLOYEE,
+    ROLE_TECNICAL_ASSISTANCE,
 )
 
 class ClimateZone(models.Model):
@@ -44,6 +46,11 @@ class PlantSpecies(BaseModelWithSoftDelete):
         ANNUAL = "annual", _("Anual")
         BIENNIAL = "biennial", _("Bianual")
 
+    class LuminosityNeeds(models.TextChoices):
+        FULL_SUN = "full_sun", _("Sol Pleno")
+        PARTIAL_SHADE = "partial_shade", _("Meia Sombra")
+        FULL_SHADE = "full_shade", _("Sombra Total")
+
     name = models.CharField(max_length=100)
     life_cycle = models.CharField(
         max_length=10,
@@ -56,6 +63,11 @@ class PlantSpecies(BaseModelWithSoftDelete):
     fructification = models.PositiveIntegerField()
     precipitation_needs = models.PositiveIntegerField()
     climate_zones = models.ManyToManyField(ClimateZone)
+    luminosity_needs = models.CharField(
+        max_length=15,
+        choices=LuminosityNeeds.choices,
+        default=LuminosityNeeds.PARTIAL_SHADE,
+    )
 
 
 class Site(BaseModel):
@@ -175,6 +187,7 @@ class PlantingEvent(BaseModel):
         verbose_name_plural = _("Eventos de Plantio")
         ordering = ['event_date'] # Ordenar eventos por data
 
+
 class SiteMembership(BaseModel):
     site = models.ForeignKey("Site", verbose_name=_("Site"), on_delete=models.CASCADE)
     user = models.ForeignKey(
@@ -191,6 +204,8 @@ class SiteMembership(BaseModel):
             ROLE_SITE_MANAGER,
             ROLE_STUDY_TEAM,
             ROLE_STUDY_MANAGER,
+            ROLE_EMPLOYEE,
+            ROLE_TECNICAL_ASSISTANCE,
         }
         if self.role.name not in allowed_groups:
             raise ValidationError({

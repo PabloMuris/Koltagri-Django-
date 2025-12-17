@@ -33,25 +33,16 @@ class IsInGroupPermission(BasePermission):
         ).exists()
 
 
-class IsSystemAdmin(IsInGroupPermission):
-    group_name = ROLE_SYSTEM_ADMIN
 
 
 class IsSiteOwner(IsInGroupPermission):
-    group_name = ROLE_SITE_OWNER
+    required_role = ROLE_SITE_OWNER
 
 
 class IsSiteManager(IsInGroupPermission):
-    group_name = ROLE_SITE_MANAGER
+    required_role = ROLE_SITE_MANAGER
 
 
 class IsSiteTeam(IsInGroupPermission):
-    group_name = ROLE_SITE_TEAM
+    required_role = ROLE_SITE_TEAM
 
-
-class IsStudyTeam(IsInGroupPermission):
-    group_name = ROLE_STUDY_TEAM
-
-
-class IsStudyManager(IsInGroupPermission):
-    group_name = ROLE_STUDY_MANAGER

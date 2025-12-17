@@ -42,3 +42,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.first_name
     def email_user(self, subject, message, from_email=None) -> str:
         mail.send_mail(subject, message, from_email, [self.email])
+
+

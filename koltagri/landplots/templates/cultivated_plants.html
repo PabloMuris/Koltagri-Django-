@@ -207,42 +207,33 @@ main.standard--padding{
 .hidden{ display:none !important; }
 </style>
 {% endblock %}
-
+ 
 {% block content %}
 
   {% include "partials/_search.html" with label="Nova planta" %}
 
   <section class="plant-grid">
-    <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail'%}'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_citrica" data-estacao="primavera" data-dificuldade="intermediario" data-manutencao="media">
-      <div class="card__image">
-        <img src="{% static 'example_img/laranjeira.png' %}" alt="Laranjeira">
-      </div>
-      <div class="card__description">
-        <p class="title">Laranjeira</p>
-        <span class="meta">Citrus sinensis</span>
-      </div>
-    </article>
-
-    <article class="plant-card" onclick="location.href='#'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_tropical" data-estacao="verao" data-dificuldade="facil" data-manutencao="baixa">
-      <div class="card__image">
-        <img src="{% static 'example_img/maracuja.png' %}" alt="Maracujá">
-      </div>
-      <div class="card__description">
-        <p class="title">Maracujá</p>
-        <span class="meta">Passiflora edulis</span>
-      </div>
-    </article>
-
-    <article class="plant-card" onclick="location.href='#'" data-cultivo="frutifera" data-decorativa="nao" data-categoria="fruta_tropical" data-estacao="verao" data-dificuldade="facil" data-manutencao="media">
-      <div class="card__image">
-        <img src="{% static 'example_img/banana.png' %}" alt="Banana da Terra">
-      </div>
-      <div class="card__description">
-        <p class="title">Banana da Terra</p>
-        <span class="meta">Musa × paradisiaca</span>
-      </div>
-    </article>
+    {% for plant in object_list %}
+      <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail' pk=plant.pk%}'">
+        <div class="card__image">
+          <img src="{% static 'example_img/laranjeira.png' %}" alt="{{ plant.plant_species.name }}">
+        </div>
+        <div class="card__description">
+          <p class="title">{{ plant.plant_species.name }}</p>
+          <span class="meta">
+            {% if plant.plant_species.life_cycle %}
+              {{ plant.plant_species.get_life_cycle_display }}
+            {% else %}
+              {{ plant.plant_species.name }}
+            {% endif %}
+          </span>
+        </div>
+      </article>
+    {% empty %}
+      <p>Nenhuma planta cadastrada.</p>
+    {% endfor %}
   </section>
+
 
    
   <div id="filter-modal-plants" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">

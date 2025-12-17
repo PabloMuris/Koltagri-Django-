@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'koltagri.users',
     'koltagri.core',
     'koltagri.landplots',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'social_django',
     'leaflet',
     'koltagri.tasks',
+    
 ]
 
 MIDDLEWARE = [

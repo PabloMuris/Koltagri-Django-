@@ -492,11 +492,19 @@ main{
     </section>
 
     <section class="plant-header">
-        <img src="{% static 'example_img/banana.png' %}" alt="Planta">
+        {% comment %} show species image if available, else fallback to static image {% endcomment %}
+        {% if plant.plant_species.image %}
+            <img src="{{ plant.plant_species.image.url }}" alt="{{ plant.plant_species.name }}">
+        {% else %}
+            <img src="{% static 'example_img/banana.png' %}" alt="{{ plant.plant_species.name }}">
+        {% endif %}
 
         <div class="plant-names">
-            <p class="popular">Banana da terra</p>
-            <p class="scientific">Musa x paradisica</p>
+            <p class="popular">{{ plant.plant_species.name }}</p>
+            <p class="scientific">
+                {# show scientific_name if exists, otherwise show lifecycle (or name fallback) #}
+                {{ plant.plant_species.scientific_name|default:plant.plant_species.get_life_cycle_display|default:plant.plant_species.name }}
+            </p>
         </div>
     </section>
 
@@ -504,8 +512,14 @@ main{
         <div class="status-card">
             <span class="material-icons">water_drop</span>
             <div>
-                <p>Irrigação</p>
-                <p>Diária</p>
+                <p>Irrigação (necessidade)</p>
+                <p>
+                    {% if plant.plant_species.precipitation_needs %}
+                        {{ plant.plant_species.precipitation_needs }} mm
+                    {% else %}
+                        Não informado
+                    {% endif %}
+                </p>
             </div>
         </div>
 
@@ -513,23 +527,45 @@ main{
             <span class="material-icons">wb_sunny</span>
             <div>
                 <p>Sol</p>
-                <p>Pleno</p>
+                <p>
+                    {% if plant.plant_species.luminosity_needs %}
+                        {{ plant.plant_species.get_luminosity_needs_display }}
+                    {% else %}
+                        Não informado
+                    {% endif %}
+                </p>
             </div>
         </div>
 
         <div class="status-card">
             <span class="material-icons">eco</span>
             <div>
-                <p>Transplante</p>
-                <p>20 dias</p>
+                <p>Germinação</p>
+                <p>
+                    {% if plant.plant_species.germination %}
+                        {{ plant.plant_species.germination }} dias
+                    {% else %}
+                        -
+                    {% endif %}
+                </p>
             </div>
         </div>
 
         <div class="status-card">
             <span class="material-icons">device_thermostat</span>
             <div>
-                <p>Temperatura ideal</p>
-                <p>20°-34°</p>
+                <p>Zonas Climáticas</p>
+                <p>
+                    {% with zones=plant.plant_species.climate_zones.all %}
+                        {% if zones %}
+                            {% for zone in zones %}
+                                {{ zone }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            Não informado
+                        {% endif %}
+                    {% endwith %}
+                </p>
             </div>
         </div>
     </section>
@@ -541,10 +577,11 @@ main{
                 Descrição
             </h3>
             <p>
-                A banana-da-terra é uma variedade de banana mais robusta e rica em amido, 
-                geralmente consumida cozida, frita ou assada. É uma excelente fonte de 
-                energia, potássio e vitaminas A e C. Cultivada em climas tropicais, 
-                necessita de solo fértil e bem drenado para um desenvolvimento ideal.
+                {% if plant.plant_species.description %}
+                    {{ plant.plant_species.description }}
+                {% else %}
+                    Nenhuma descrição fornecida para esta espécie.
+                {% endif %}
             </p>
         </div>
 
@@ -554,9 +591,7 @@ main{
                 Observações
             </h3>
             <p>
-                A planta apresenta bom desenvolvimento nas condições atuais. Recomenda-se 
-                monitorar a umidade do solo durante períodos de seca. As folhas mostram 
-                sinais saudáveis de crescimento, indicando boa adaptação ao ambiente.
+                
             </p>
         </div>
         
@@ -567,6 +602,9 @@ main{
             </h3>
             <div class="attachments-container">
                 <div class="attachment-list">
+                    {# Se no futuro houver um relacionamento attachments, troque esse bloco por loop dinâmico.
+                       Por enquanto mantemos exemplos estáticos para preservar o layout. #}
+
                     <div class="attachment-item">
                         <div class="attachment-icon">
                             <span class="material-icons">image</span>
@@ -657,33 +695,41 @@ main{
     const cancelAttachment = document.getElementById("cancel-attachment");
     const attachmentForm = document.getElementById("attachment-form");
 
-    editButton.addEventListener("click", (e) => {
-        modalOverlay.style.display = "flex";
-    });
-
-    closeBtn.addEventListener("click", (e) => {
-        modalOverlay.style.display = "none";
-    });
-
-    addAttachmentBtn.addEventListener("click", (e) => {
-        attachmentModal.style.display = "flex";
-    });
-
-    closeAttachmentModal.addEventListener("click", (e) => {
-        attachmentModal.style.display = "none";
-    });
-
-    cancelAttachment.addEventListener("click", (e) => {
-        attachmentModal.style.display = "none";
-    });
-
-    attachmentForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        // Aqui você adicionaria a lógica para upload do arquivo
-        alert('Anexo adicionado com sucesso!');
-        attachmentModal.style.display = "none";
-        attachmentForm.reset();
-    });
+    // safety: only add listeners if elements exist
+    if (editButton) {
+        editButton.addEventListener("click", (e) => {
+            modalOverlay.style.display = "flex";
+        });
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener("click", (e) => {
+            modalOverlay.style.display = "none";
+        });
+    }
+    if (addAttachmentBtn) {
+        addAttachmentBtn.addEventListener("click", (e) => {
+            attachmentModal.style.display = "flex";
+        });
+    }
+    if (closeAttachmentModal) {
+        closeAttachmentModal.addEventListener("click", (e) => {
+            attachmentModal.style.display = "none";
+        });
+    }
+    if (cancelAttachment) {
+        cancelAttachment.addEventListener("click", (e) => {
+            attachmentModal.style.display = "none";
+        });
+    }
+    if (attachmentForm) {
+        attachmentForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            // Aqui você adicionaria a lógica para upload do arquivo
+            alert('Anexo adicionado com sucesso!');
+            attachmentModal.style.display = "none";
+            attachmentForm.reset();
+        });
+    }
 
     // Fechar modais ao clicar fora do conteúdo
     window.addEventListener('click', (e) => {

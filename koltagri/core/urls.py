@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, LoginView,RegisterView,NotificationsView,ProfileView,TeamView,LandsView,PropertyView
+from .views import IndexView, LoginView,RegisterView,NotificationsView,ProfileView,TeamView,LandsView,PropertyView,select_site_location
 urlpatterns = [
     path("",IndexView.as_view(),name='index'),
     path("login/",LoginView.as_view(),name='login'),
@@ -8,5 +8,6 @@ urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),
     path("propriedade/participantes",TeamView.as_view(),name="team_participants"),
     path("propriedade/areas", LandsView.as_view(),name="lands"),
-    path("propriedes/",PropertyView.as_view(),name= "property")
+    path("propriedes/",PropertyView.as_view(),name= "property"),
+    path("select-site/<int:site_id>/",select_site_location,name="select_site_location"),
 ]

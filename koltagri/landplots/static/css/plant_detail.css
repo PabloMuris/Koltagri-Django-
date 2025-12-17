@@ -8,133 +8,178 @@ main{
 
  
 
-.plant-header{
+/* =========================
+   BASE
+========================= */
+
+.plant-detail {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: 32px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.plant-header img{
-    width: 260px;
-    height: auto;
+.material-icons {
+    font-size: 22px;
+    vertical-align: middle;
 }
 
-.plant-names{
-    text-align: center;
-}
+/* =========================
+   HEADER
+========================= */
 
-.plant-names .popular{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.plant-names .scientific{
-    font-size: 14px;
-    font-style: italic;
-    opacity: 0.7;
-}
-
- 
-
-.status-section{
+.plant-header {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.status-card{
-    display: flex;
-    gap: 10px;
+    gap: 24px;
     align-items: center;
-    background: white;
-    padding: 14px 18px;
-    border-radius: 12px;
-    width: 220px;
-    border: 2px solid #ececec;
+    padding: 24px;
+    border-radius: 16px;
+    background: #f4f8f5;
 }
 
-.status-card svg{
-    width: 28px;
-    height: 28px;
+.plant-header img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 16px;
+    background: #e0e0e0;
 }
 
-.status-card p:first-child{
-    font-size: 14px;
-    opacity: .6;
+.plant-names {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.status-card p:last-child{
-    font-size: 16px;
-    font-weight: 500;
+.plant-names .popular {
+    font-size: 1.6rem;
+    font-weight: 700;
 }
 
- 
+.plant-names .scientific {
+    font-size: 0.95rem;
+    color: #4d6b57;
+}
 
-.info-section{
-    background: white;
-    padding-top: 40px;
-    padding-bottom: 16px;
-    padding-inline: 16px;
+/* =========================
+   STATUS CARDS
+========================= */
+
+.status-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.status-card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 16px;
     border-radius: 14px;
-    border: 2px solid #e8e8e8;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-.info-block{
-    margin-bottom: 24px;
+.status-card span {
+    color: #2f7d4e;
 }
 
-.info-block h3{
-    font-size: 18px;
-    margin-bottom: 6px;
+.status-card p:first-child {
+    font-size: 0.8rem;
+    color: #666;
 }
 
-.info-block p{
-    text-align: justify;
-    line-height: 1.5;
+.status-card p:last-child {
+    font-weight: 600;
 }
 
-.actions{
-    position: absolute;
-    width: 100%;
+/* =========================
+   INFO SECTIONS
+========================= */
+
+.info-section {
+    display: grid;
+    gap: 24px;
+}
+
+.info-block {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.info-block h3 {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding-inline: 16px;
+    gap: 8px;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
 }
 
-.actions button{
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-
+.info-block p {
+    line-height: 1.6;
+    color: #333;
 }
 
-.actions button svg{
-    fill: black;
-
+.info-block strong {
+    color: #000;
 }
 
+/* =========================
+   TIMELINE
+========================= */
 
- .add-document{
-  display: flex;
-  flex-flow: row;
-  height: 44px;
-  width: fit-content;
-  padding: 16px;
-  border-radius: 0px 10px 0px 10px;
-  background-color:  var(--primary-color);
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: white;
-  font-size: 14px;
-  position: absolute;
-  right: 0px;
-  top: 0px;
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.info-section{ position: relative; }
+.timeline-item {
+    position: relative;
+    padding: 16px 16px 16px 24px;
+    background: #f9faf9;
+    border-radius: 12px;
+    border-left: 4px solid #2f7d4e;
+}
+
+.timeline-item .date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.timeline-item .type {
+    display: block;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.timeline-item .notes {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+    .plant-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .plant-header img {
+        width: 100%;
+        height: 180px;
+    }
+}
