@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Enviar Atividade - Etapas{% endblock %}
+{% load static %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'tasks/css/form.css' %}">
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+<form class="task-form-container" method="post" id="taskForm" action="{% url 'task_form' %}">
+  {% csrf_token %}
+  <div class="progress-container">
+    <div class="progress"></div>
+    <ol>
+      <li>step label</li>
+      <li>step label</li>
+      <li>step label</li>
+    </ol>
+  </div>
+  <div class="content-container">
+    <div class="content-field" id="taskTitleField">
+      <div class="field-title">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-160v-520H80v-120h520v120H400v520H280Zm360 0v-320H520v-120h360v120H760v320H640Z"/></svg>
+        <label for="taskTitle">Título da Atividade</label>
+      </div>
+      <input type="text" name="name" id="taskTitle" class="task-title-input">
+    </div>
+    <div class="content-field" id="taskContentField">
+      <div class="field-title">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+        <label for="taskContent">Conteúdo da Atividade</label>
+      </div>
+      <textarea id="taskContent" name="description"></textarea>
+    </div>
+    <div class="content-field" id="taskPlantsField">
+      <div class="field-title">
+        <label for="taskPlants">Plantas da Atividade</label>
+      </div>
+
+      <input type="text" name="plants" id="taskPlants" class="task-plants-input">
+      <div class="plant-results">
+        
+      </div>
+      <div class="selected-plants">
+        <div class="plant-marker" data-id="2">
+          <span class="plant-name">Nome</span>
+          <span class="material-icons remove-plant-icon">close</span>
+        </div>
+      </div>
+      <div class="checkbox-plants" style="display: none;" id="checkbox-plants">
+      </div>
+    </div>
+    <div class="content-field" id="taskPriorityField">
+      <div class="field-title">
+        <label for="taskPriority">Prioridade da Atividade</label>
+      </div>
+      <div class="priority-container" id="priority-picker">
+  <button type="button" class="priority-btn urgent" data-value="0">
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Z"/></svg>    <p>Urgente</p>
+  </button>
+  <button type="button" class="priority-btn high" data-value="1">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
+    <p>Alta</p>
+  </button>
+  <button type="button" class="priority-btn medium" data-value="2">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
+    <p>Média</p>
+  </button>
+  <button type="button" class="priority-btn low active" data-value="3">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z"/></svg>
+    <p>Baixa</p>
+  </button>
+</div>
+      <select name="priority" id="taskPriority" class="task-priority-input" style="display: none;">
+        <option value="3">Baixa</option>
+        <option value="2">Média</option>
+        <option value="1">Alta</option>
+        <option value="0">Urgente</option>
+      </select>
+    </div>
+    <div class="content-field" id="taskDateField">
+      <div class="field-title">
+        <label for="taskDate">Data da Atividade</label>
+      </div>
+      <input type="date" name="due_date" id="taskDate" class="task-date-input">
+    </div>
+     
+  </div>
+  <div class="action-container">
+    <button id="prevBtn" >Anterior</button>
+    <button id="nextBtn" >Próximo</button>
+    <button type="submit" id="submitBtn">Enviar</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/task_form/events.js' %}"></script>
+<script src="{% static 'js/task_form/slide_logic.js' %}"></script>
+<script src="{% static 'js/task_form/validation.js' %}"></script>
+<script src="{% static 'js/task_form/search_plants.js' %}"></script>
+{% endblock %}
+
+<!-- 
+Título do Atividade
+Conteúdo da Atividade
+Plantas da Atividade
+Data e prioridade 
+
+
+
+-->

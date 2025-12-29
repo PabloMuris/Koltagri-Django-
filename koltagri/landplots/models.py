@@ -136,11 +136,11 @@ class CultivationPlant(BaseModelWithSoftDelete):
         related_name="plantings"
     )
     count = models.PositiveIntegerField(default=1)
-    new_plantation = models.BooleanField(default=True)
+    new_plantation = models.BooleanField(default=True, null=True, blank=True)
 
     def __str__(self):
         return (f"{self.count} x {self.plant_species.name} in "
-                f"{self.cultivation.name}: {self.pk}")
+                f"{self.cultivation.name}")
     
     
 

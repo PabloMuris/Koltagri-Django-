@@ -9,10 +9,13 @@ PRIVATE_STRING = "PRIVATE"
 ROLE_SYSTEM_ADMIN   = "System Admin"    # Admin geral do sistema
 ROLE_SITE_OWNER     = "Site Owner"      # Criador/administrador de um site específico
 ROLE_SITE_MANAGER        = "Site Manager"         # Sócio/gerente do site (perms ≅ Site Owner)
-ROLE_SITE_TEAM       = "Site Team"        # Funcionário (perms restritas)
+ROLE_TECNICAL_ASSISTANCE = "Technical Assistance" # Assistência técnica aos agricultores
+ROLE_EMPLOYEE = "Employee"  
+      # Funcionário (perms restritas)
 ROLE_STUDY_TEAM     = "Study Team"      
 ROLE_STUDY_MANAGER  = "Study Manager" # Especialista/agrônomo do estudo
 
 
-ROLE_TECNICAL_ASSISTANCE = "Technical Assistance" # Assistência técnica aos agricultores
-ROLE_EMPLOYEE = "Employee"                   # Funcionário geral da empresa
+                 # Funcionário geral da empresa
+
+ROLE_SITE_TEAM       = "Site Team"  

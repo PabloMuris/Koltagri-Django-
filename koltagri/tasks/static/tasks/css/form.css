@@ -1,0 +1,159 @@
+form{
+  width: 100%;          /* Ocupa todo o espaço disponível... */
+  max-width: 800px;     /* ...mas para de crescer ao atingir 800px */
+  margin: 0 auto;
+  display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.content-container .content-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-container {
+    display: none;
+    flex: 0.2;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.action-container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex: 0.05;
+}
+
+.field-title{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-direction: row ;
+}
+
+.content-container svg{
+  fill: var(--secondary-color);
+}
+
+
+#taskContentField{
+    flex: 1;
+}
+
+.content-field #taskContent{
+    background-color: var(--background-icons-color);
+    height: 100%;
+    
+}
+
+
+#taskTitleField{
+    flex: 0.2;
+}
+
+#taskPlantsField{
+    flex: 1;
+}
+
+#taskPriorityField{
+    flex: 1;
+}
+
+#taskDateField{
+    flex: 0.2;
+}
+
+.content-field {
+    gap: 10px;
+}
+
+.content-field #taskContent{
+    border-radius: 10px;
+    width: 100%;
+    text-align: start;
+    
+}
+
+.content-field input{
+    background-color: var(--background-icons-color);
+    min-height: 44px;
+    border-radius: 10px;
+    padding-inline: 6px;
+}
+
+.plant-marker{
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  min-width: 44px;
+  background: #f2f2f2;
+  border-radius: 30px;
+  padding-inline: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 16px;
+  justify-content: space-around;
+  
+}
+
+.plant-results {
+  width: 100%;
+  min-height: 44px;
+  height: auto;
+  max-height: 300px;
+  border: 1px solid pink;
+  border-radius: 0px 0px 10px 10px;
+  position: absolute;
+  top: 78px;
+}
+
+.plant-results .plant-selected{
+  width: 100%;
+  height: 44px;
+  background-color: #f2f2f2;
+  border-bottom: 1px solid aquamarine;
+  border-top: 1px solid aquamarine;
+  display: flex;
+  flex-direction: row;
+  
+}
+
+
+
+#taskPlantsField{
+  position: relative;
+}
+
+
+.plant-selected{
+  display: flex;
+  padding-inline: 10px;
+  flex-flow: row;
+  align-items: center;
+  
+}
+
+
+
+#priority-picker{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+#priority-picker button{
+  display: flex;
+  height: 40px;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 2px solid #f2f2f2;
+}
+

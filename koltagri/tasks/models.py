@@ -18,8 +18,10 @@ class Task(BaseModelWithSoftDelete):
     priority = models.IntegerField(default=0)
 
 
-    
-        
+    def __str__(self):
+        return self.name
+
+
 class Attachment(models.Model):
     TASK = 'task'
     COMPLETION = 'completion'
