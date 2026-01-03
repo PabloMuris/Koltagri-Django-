@@ -189,9 +189,15 @@ class PlantingEvent(BaseModel):
 
 
 class SiteMembership(BaseModel):
-    site = models.ForeignKey("Site", verbose_name=_("Site"), on_delete=models.CASCADE)
+    site = models.ForeignKey(
+        Site,
+        on_delete=models.CASCADE,
+        related_name="memberships"
+    )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="site_memberships"
     )
     role = models.ForeignKey(Group, on_delete=models.CASCADE)
 

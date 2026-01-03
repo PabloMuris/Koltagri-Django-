@@ -1,22 +1,25 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView ,ListView,CreateView,UpdateView,DetailView,DeleteView,FormView
 from django_filters.views import FilterView
-from .models import Expense,ExpensesCategory
+from .models import Expense,ExpensesCategory,AgriculturalInputs
 from .forms import ExpenseForm
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class BusinessDashboardView(TemplateView):
+
+class BusinessDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'business.html'
 
-class PlanningView(TemplateView):
+class PlanningView(LoginRequiredMixin, TemplateView):
     template_name = 'planning_form.html'
 
-class StatisticsView(ListView):
+class StatisticsView(LoginRequiredMixin, FilterView):
     template_name = 'statistics.html'
     model = Expense
     context_object_name = 'expenses'
+    filterset_fields = ['category', 'date']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,20 +28,19 @@ class StatisticsView(ListView):
 
         return context
 
-class SuppliesView(TemplateView):
+class SuppliesView(LoginRequiredMixin, TemplateView):
     template_name = 'supplies.html'
 
-class SuppliesDetailView(TemplateView):
+class SuppliesDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'supplies_detail.html'
 
 
-class SuppliesFormView(TemplateView):
+class SuppliesFormView(LoginRequiredMixin, ListView):
     template_name = 'supplies_form.html'
+    model = AgriculturalInputs
+    context_object_name = 'supplies'
 
-
-
-
-class ExpenseCreateUpdateView(FormView):
+class ExpenseCreateUpdateView(LoginRequiredMixin,FormView):
     template_name = "statistics.html"
     form_class = ExpenseForm
 
@@ -75,3 +77,4 @@ class ExpenseCreateUpdateView(FormView):
     def form_invalid(self, form):
         """Se der erro, o FormView já recarrega a página com os erros automaticamente"""
         return super().form_invalid(form)
+    

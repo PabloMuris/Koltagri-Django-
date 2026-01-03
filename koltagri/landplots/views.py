@@ -5,16 +5,29 @@ from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from koltagri.landplots.models import CultivationPlant,PlantSpecies
 
+from django.shortcuts import get_object_or_404
+from .models import Site
 
 from .filters import CultivationPlantFilter
 
 
 class CultivatedPlantsView(LoginRequiredMixin,FilterView):
+    model = CultivationPlant
     template_name = 'cultivated_plants.html'
     filterset_class = CultivationPlantFilter
-    queryset = CultivationPlant.objects.all()
     context_object_name = 'cultivated_plants'
     paginate_by = 10
+
+
+    def get_queryset(self):
+        site_id = self.request.session.get("selected_site_location")
+
+        if not site_id:
+            return CultivationPlant.objects.none()
+
+        return CultivationPlant.objects.filter(
+            cultivation__site_id=site_id
+        )
 
 
 class CultivatedPlantsDetailView(LoginRequiredMixin, DetailView):

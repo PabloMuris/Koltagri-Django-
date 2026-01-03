@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Anexos do Participante{% endblock %}
+{% block header_title %}Anexos do {% endblock %}
+{% block header_text %}Participante{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+<link rel="stylesheet" href="{% static 'css/task_detail_docs.css'%}">
+
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="edit-button" class="hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+      </svg>
+    </button>
+  </div>
+<div class="page">
+
+   
+  <section class="participant-header">
+    <div class="participant-avatar">
+      <img src="{% static 'example_img/user1.jpg' %}" alt="Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <span class="material-icons" style="display: none;">person</span>
+    </div>
+    <div class="participant-info">
+      <h1 class="participant-name">{{ user.get_full_name }}</h1>
+      <p class="participant-meta">Especialista em poda · Membro desde Jan 2023</p>
+      <div class="participant-stats">
+        <div class="stat-item">
+          <p class="stat-value">24</p>
+          <p class="stat-label">Tarefas</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-value">47</p>
+          <p class="stat-label">Anexos</p>
+        </div>
+        <div class="stat-item">
+          <p class="stat-value">92%</p>
+          <p class="stat-label">Concluídas</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   
+  <section class="filter-section">
+    <div class="filter-group">
+      <label for="name-filter">Nome</label>
+      <input type="text" id="name-filter">
+    </div>
+    
+    
+    
+    <div class="filter-actions">
+      <button class="btn" id="clear-filters">
+        <span class="material-icons">clear</span>
+        Limpar
+      </button>
+      <button class="btn primary" id="apply-filters">
+        <span class="material-icons">search</span>
+        Aplicar
+      </button>
+    </div>
+  </section>
+
+   
+  <section class="attachments-section">
+    <h3 class="section-title">
+      <span class="material-icons">attach_file</span>
+      Anexos Enviados
+    </h3>
+
+    <div class="attachments-list">
+       
+      
+
+      {% for attach in attachments %}
+      <div class="attachment-card">
+        <div class="attachment-icon">
+          <span class="material-icons">image</span>
+        </div>
+        <div class="attachment-info">
+          <p class="attachment-name">{{ attach.name }}</p>
+          <div class="attachment-meta">
+            <span class="meta-item">
+              <span class="material-icons">assignment</span>
+              <a href="#" class="task-link">Poda de Adenium obesum</a>
+            </span>
+            <span class="meta-item">
+              <span class="material-icons">calendar_today</span>
+              18/11/2023
+            </span>
+            <span class="meta-item">
+              <span class="material-icons">description</span>
+              2.4 MB
+            </span>
+          </div>
+        </div>
+        <div class="attachment-actions">
+          <button class="btn small icon-only" title="Visualizar">
+            <span class="material-icons">visibility</span>
+          </button>
+          <button class="btn small icon-only" title="Download" onclick="window.location.href='{% url 'download_attch' attach.pk %}'">
+            <span class="material-icons">download</span>
+          </button>
+        </div>
+      </div>
+      {%endfor%}
+    </div>
+
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <span class="material-icons">attach_file</span>
+      <p>Nenhum anexo encontrado</p>
+      <p>Tente ajustar os filtros para ver mais resultados.</p>
+    </div>
+  </section>
+
+</div>
+{% if is_paginated %}
+  <nav class="pagination">
+
+    {% if page_obj.has_previous %}
+      <a href="{% querystring page=page_obj.previous_page_number %}">
+        Anterior
+      </a>
+    {% endif %}
+
+    <span>
+      Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="{% querystring page=page_obj.next_page_number %}">
+        Próxima
+      </a>
+    {% endif %}
+
+  </nav>
+{% endif %}
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

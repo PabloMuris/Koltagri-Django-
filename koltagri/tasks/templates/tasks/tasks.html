@@ -5,22 +5,18 @@
 {% block header_text %}EnrichTheSoil{% endblock %}
 
 {% block rels %}
- 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
- 
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="{% static 'css/tasks.css'%}">
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 {% endblock %}
 
-{% block styles %}
-
-{% endblock %}
+{% block styles %}{% endblock %}
 
 {% block content %}
 <div class="page">
 
-   
   <section class="top-panel" aria-labelledby="panel-title">
     <div class="property-title">
       <h1 id="panel-title">Propriedade EnrichTheSoil</h1>
@@ -40,20 +36,22 @@
         <div class="label">Adiada</div>
         <div class="value">{{ postponed|default:"8" }}</div>
       </div>
-      <div class="stat-card">
-        <div class="label">Canceladas</div>
-        <div class="value">{{ cancelled|default:"4" }}</div>
-      </div>
     </div>
-
-    
   </section>
 
-
   <div class="action-bar">
+    {# BUSCA (fora do modal) - form pequeno; value pré-preenchido a partir de request.GET #}
     <div class="search" role="search">
-      <span class="material-icons" aria-hidden="true" style="color:var(--muted)">search</span>
-      <input id="search-input" type="search" placeholder="Buscar tarefa, responsável, espécie..." aria-label="Buscar tarefas">
+      <form id="search-form" method="get" action="" style="display:flex; align-items:center; gap:.5rem;">
+        <span class="material-icons" aria-hidden="true" style="color:var(--muted)">search</span>
+        <!-- name compatível com filterset_fields: name__icontains -->
+        <input id="search-input"
+               name="name__icontains"
+               type="search"
+               placeholder="Buscar tarefa, responsável, espécie..."
+               aria-label="Buscar tarefas"
+               value="{{ request.GET.name__icontains|default:'' }}">
+      </form>
     </div>
 
     <div class="actions" role="toolbar" aria-label="ações">
@@ -69,28 +67,24 @@
     </div>
   </div>
 
-   
   <section class="tasks">
     <div class="section-title">Hoje</div>
 
     <div class="results" id="results-list" aria-live="polite">
-       
-      
-
       {% for task in tasks %}
       <a class="task-card" href="{% url 'task_detail' pk=task.pk %}">
         <div class="card-icon" aria-hidden="true">
-<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm200-190q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z"/></svg>        </div>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm200-190q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z"/></svg>
+        </div>
         <div>
           <p class="task-title">{{ task.name }}</p>
-          <p class="task-meta">{{ task.created_by }} </p>
+          <p class="task-meta">{{ task.created_by }}</p>
         </div>
-        <div class="task-time"><time datetime="2025-11-11T14:35">{{ task.created_at|date:"H:i" }}</time></div>
+        <div class="task-time"><time datetime="{{ task.created_at|date:'c' }}">{{ task.created_at|date:"H:i" }}</time></div>
       </a>
-
       {% endfor %}
 
-      <div id="no-results" class="stat-card hidden" role="status">
+      <div id="no-results" class="stat-card {% if tasks %}hidden{% endif %}" role="status">
         <div class="label">Nenhuma tarefa encontrada</div>
         <div class="small">Tente outro termo de busca ou remova filtros.</div>
       </div>
@@ -98,28 +92,22 @@
   </section>
 </div>
 
- 
-<div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
+{# FILTER MODAL #}
+<div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title" style="display:none;">
   <div class="modal-panel" role="document">
     <h3 id="filter-title">Opções de filtragem</h3>
-    <form id="filter-form">
+
+    {# Form que submete via GET; os names batem com filterset_fields \
+       (name__icontains, due_date__gte, due_date__lte). Valores já vem de request.GET. #}
+    <form id="filter-form" action="" method="get">
       <div class="modal-row">
         <div class="form-control">
           <label for="filtro_tipo">Tipo de Evento</label>
-          <select id="filtro_tipo" name="filtro_tipo">
-            <option value="">Todos (Tarefa ou Aviso)</option>
-            <option value="tarefa">Apenas Tarefas</option>
-            <option value="aviso">Apenas Avisos</option>
-          </select>
-        </div>
-        <div class="form-control">
-          <label for="filtro_especie">Espécie</label>
-          <select id="filtro_especie" name="filtro_especie">
-            <option value="">Todas as Espécies</option>
-            <option value="rosa">Rosa</option>
-            <option value="samambaia">Samambaia</option>
-            <option value="suculenta">Suculenta</option>
-            <option value="orquidea">Orquídea</option>
+          {# Aqui usamos "status" como exemplo. Se não houver filter para status, trate no backend. #}
+          <select id="filtro_tipo" name="status">
+            <option value="">Todos as Tarefas</option>
+            <option value="tarefa" {% if request.GET.status == 'tarefa' %}selected{% endif %}>Tarefas Atrasadas</option>
+            <option value="aviso" {% if request.GET.status == 'aviso' %}selected{% endif %}>Tarefas Concluídas</option>
           </select>
         </div>
       </div>
@@ -127,11 +115,11 @@
       <div class="modal-row">
         <div class="form-control">
           <label for="data_inicio">Data Inicial (ou única)</label>
-          <input id="data_inicio" name="data_inicio" readonly>
+          <input id="data_inicio" name="due_date__gte" readonly value="{{ request.GET.due_date__gte|default:'' }}">
         </div>
         <div class="form-control">
           <label for="data_fim">Data Final</label>
-          <input id="data_fim" name="data_fim" readonly>
+          <input id="data_fim" name="due_date__lte" readonly value="{{ request.GET.due_date__lte|default:'' }}">
         </div>
       </div>
 
@@ -143,8 +131,8 @@
   </div>
 </div>
 
-
-<div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title">
+{# ADD modal (demo) #}
+<div id="add-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-title" style="display:none;">
   <div class="modal-panel" role="document">
     <h3 id="add-title">Nova Insumo</h3>
     <form id="add-form" method="post" action="#">
@@ -180,114 +168,137 @@
     </form>
   </div>
 </div>
+
+{# PAGINAÇÃO: mantém querystring atual exceto page que é substituído pelo tag querystring do seu projeto #}
+{% if is_paginated %}
+<nav class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+  {% endif %}
+</nav>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
- 
-const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
- 
 document.addEventListener('DOMContentLoaded', () => {
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+
+  // flatpickr: formato compatível com Django (YYYY-MM-DD)
   if (typeof flatpickr === 'function') {
-    const d1 = $('#data_inicio');
-    const d2 = $('#data_fim');
-    if (d1) flatpickr(d1, { disableMobile: true, dateFormat: "d/m/Y" });
-    if (d2) flatpickr(d2, { disableMobile: true, dateFormat: "d/m/Y" });
+    const d1 = document.getElementById('data_inicio');
+    const d2 = document.getElementById('data_fim');
+    if (d1) flatpickr(d1, { disableMobile: true, dateFormat: "Y-m-d" });
+    if (d2) flatpickr(d2, { disableMobile: true, dateFormat: "Y-m-d" });
   }
 
-   
+  // modal UI
   function openModal(el){ if(!el) return; el.style.display = 'flex'; el.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; const focusable = el.querySelector('select, input, button'); if(focusable) focusable.focus(); }
   function closeModal(el){ if(!el) return; el.style.display = 'none'; el.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
 
-   
-  const filterModal = $('#filter-modal');
-  const filterOpenBtn = $('#filter-open');
-  const filterCancel = $('#filter-cancel');
-  if (filterOpenBtn) filterOpenBtn.addEventListener('click', (e)=> { e.preventDefault(); openModal(filterModal); });
-  if (filterCancel) filterCancel.addEventListener('click', ()=> closeModal(filterModal));
+  const filterModal = document.getElementById('filter-modal');
+  const filterOpenBtn = document.getElementById('filter-open');
+  const filterCancel = document.getElementById('filter-cancel');
+  if (filterOpenBtn) filterOpenBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(filterModal); });
+  if (filterCancel) filterCancel.addEventListener('click', () => closeModal(filterModal));
   if (filterModal){
     filterModal.addEventListener('click', (e) => { if (e.target === filterModal) closeModal(filterModal); });
   }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ closeModal(filterModal); } });
 
-   
-  const addModal = $('#add-modal');
-  const addOpenBtn = $('#add-open');
-  const addCancel = $('#add-cancel');
+  // add-modal UI (demo)
+  const addModal = document.getElementById('add-modal');
+  const addOpenBtn = document.getElementById('add-open');
+  const addCancel = document.getElementById('add-cancel');
   if (addOpenBtn) addOpenBtn.addEventListener('click', (e)=> { e.preventDefault(); openModal(addModal); });
   if (addCancel) addCancel.addEventListener('click', ()=> closeModal(addModal));
   if (addModal){
     addModal.addEventListener('click', (e) => { if (e.target === addModal) closeModal(addModal); });
   }
 
-   
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape'){
-      closeModal(filterModal);
-      closeModal(addModal);
-    }
-  });
-
-   
-  const searchInput = $('#search-input');
-  const resultsList = $('#results-list');
-  const items = resultsList ? $$('.task-card', resultsList) : [];
-  const noResults = $('#no-results');
-
-  function applySearch(){
-    const q = (searchInput && searchInput.value) ? searchInput.value.trim().toLowerCase() : '';
-    let visible = 0;
-    items.forEach(it => {
-      const title = (it.querySelector('.task-title')?.textContent || '').toLowerCase();
-      const meta = (it.querySelector('.task-meta')?.textContent || '').toLowerCase();
-      const ok = (title + ' ' + meta).includes(q);
-      it.style.display = ok ? '' : 'none';
-      if (ok) visible++;
-    });
-    if (noResults) noResults.classList.toggle('hidden', visible > 0);
-  }
-  if (searchInput) searchInput.addEventListener('input', applySearch);
-
-   
-  const filterForm = $('#filter-form');
-  if (filterForm){
-    filterForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      // read filters (demo: we only match strings inside title/meta)
-      const tipo = (this.filtro_tipo?.value || '').toLowerCase();
-      const especie = (this.filtro_especie?.value || '').toLowerCase();
-      let visible = 0;
-      items.forEach(it => {
-        const title = (it.querySelector('.task-title')?.textContent || '').toLowerCase();
-        const meta = (it.querySelector('.task-meta')?.textContent || '').toLowerCase();
-        let ok = true;
-        if (tipo && !(title.includes(tipo) || meta.includes(tipo))) ok = false;
-        if (especie && !(title.includes(especie) || meta.includes(especie))) ok = false;
-        it.style.display = ok ? '' : 'none';
-        if (ok) visible++;
-      });
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
-      // close modal after apply
-      closeModal(filterModal);
-    });
-  }
-
-   
-  const addForm = $('#add-form');
+  // demo: add-form (client-side)
+  const addForm = document.getElementById('add-form');
   if (addForm){
     addForm.addEventListener('submit', function(e){
       e.preventDefault();
-      // demo: get values
-      const name = this.name?.value || '';
-      // TODO: submit via fetch / form POST to server
-      // For now: close modal and optionally show notification
       closeModal(addModal);
-      // optionally clear form
       this.reset();
-      // user feedback (console)
-      console.log('Novo insumo (demo):', name);
+      console.log('Novo insumo (demo):', this.name?.value || '');
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Copiar o valor da busca externa para o filter-form antes de submeter
+  // ------------------------------------------------------------------
+  const filterForm = document.getElementById('filter-form');
+  const searchInput = document.getElementById('search-input'); // campo fora do modal
+  const searchForm = document.getElementById('search-form');
+
+  function addOrUpdateHidden(form, name, value) {
+    let existing = form.querySelector('input[name="' + name + '"]');
+    if (existing) {
+      existing.value = value;
+    } else {
+      const hid = document.createElement('input');
+      hid.type = 'hidden';
+      hid.name = name;
+      hid.value = value;
+      form.appendChild(hid);
+    }
+  }
+
+  if (filterForm) {
+    filterForm.addEventListener('submit', function () {
+      // pega valor atual do campo de busca (pode ser vazio)
+      const q = (searchInput && searchInput.value) ? searchInput.value.trim() : '';
+      const paramName = 'name__icontains'; // ajustar se seu filterset usa outro nome
+
+      // coloca/atualiza hidden no form de filtros
+      addOrUpdateHidden(this, paramName, q);
+
+      // opcional: resetar pagina para 1 ao aplicar novos filtros
+      addOrUpdateHidden(this, 'page', '1');
+
+      // NÃO chamamos preventDefault — deixamos o form submeter normalmente via GET.
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // Quando o usuário pressiona Enter no campo de busca (search-form),
+  // preservamos os filtros já ativos na URL (exceto page, que colocamos 1)
+  // ------------------------------------------------------------------
+  if (searchForm) {
+    searchForm.addEventListener('submit', function (e) {
+      // O formulário de busca tem apenas name__icontains; para preservar
+      // filtros ativos, pegamos a query atual e adicionamos hidden inputs.
+      const params = new URLSearchParams(window.location.search);
+      // cria/atualiza hidden inputs no search-form para cada parâmetro existente,
+      // exceto name__icontains (vai ser enviado pelo campo) e exceto page (resetamos)
+      params.forEach((value, key) => {
+        if (!key) return;
+        if (key === 'name__icontains') return;
+        if (key === 'page') return; // queremos resetar página para 1
+        // cria hidden para preservar o filtro ativo
+        let existing = this.querySelector('input[name="' + key + '"]');
+        if (!existing) {
+          const hid = document.createElement('input');
+          hid.type = 'hidden';
+          hid.name = key;
+          hid.value = value;
+          this.appendChild(hid);
+        }
+      });
+      // set page to 1
+      addOrUpdateHidden(this, 'page', '1');
+      // allow normal submit
     });
   }
 

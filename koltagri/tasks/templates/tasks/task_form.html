@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-<form class="task-form-container" method="post" id="taskForm" action="{% url 'task_form' %}">
+<form class="task-form-container" method="post" id="taskForm"  action="{% if task_id %}{% url 'task_form' pk=task_id %}{% else %}{% url 'task_form' %}{% endif %}">
   {% csrf_token %}
   <div class="progress-container">
     <div class="progress"></div>
@@ -28,31 +28,40 @@
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-160v-520H80v-120h520v120H400v520H280Zm360 0v-320H520v-120h360v120H760v320H640Z"/></svg>
         <label for="taskTitle">Título da Atividade</label>
       </div>
-      <input type="text" name="name" id="taskTitle" class="task-title-input">
+      <input type="text" name="name" id="taskTitle" class="task-title-input" value="{{ form.name.value|default_if_none:'' }}">
     </div>
     <div class="content-field" id="taskContentField">
       <div class="field-title">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
         <label for="taskContent">Conteúdo da Atividade</label>
       </div>
-      <textarea id="taskContent" name="description"></textarea>
+      <textarea id="taskContent" name="description">{{ form.description.value|default_if_none:'' }}</textarea>
     </div>
     <div class="content-field" id="taskPlantsField">
       <div class="field-title">
         <label for="taskPlants">Plantas da Atividade</label>
       </div>
 
-      <input type="text" name="plants" id="taskPlants" class="task-plants-input">
+      <input type="text" name="plants" id="taskPlants" class="task-plants-input" >
       <div class="plant-results">
         
       </div>
       <div class="selected-plants">
-        <div class="plant-marker" data-id="2">
-          <span class="plant-name">Nome</span>
-          <span class="material-icons remove-plant-icon">close</span>
-        </div>
+        <!-- Plantas selecionadas aparecerão aqui -->
+         {% for plant in plants %}
+         <div class="plant-marker" id="marker-plant-{{ plant.id }}">
+    <span class="plant-name">{{ plant.name }}</span>
+    <span class="material-icons remove-plant-icon" style="cursor:pointer">
+        close
+    </span>
+</div>
+         {% endfor %}
       </div>
       <div class="checkbox-plants" style="display: none;" id="checkbox-plants">
+        {% for plant in plants %}
+        <input id="checkbox-plant-{{ plant.id }}" type="checkbox" name="plants" value="{{ plant.id }}" style="display: none;">
+
+        {% endfor %}
       </div>
     </div>
     <div class="content-field" id="taskPriorityField">

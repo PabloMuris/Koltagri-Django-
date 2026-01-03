@@ -52,8 +52,8 @@
     </div>
 
     <div class="results" id="results-list" aria-live="polite">
-      {% for participant in participants %}
-      <div class="participant-card" onclick="location.href='{% url 'task_attachments' task_pk=1 user_pk=1 %}'">
+       
+      <div class="participant-card">
         <div class="participant-avatar">
           <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <span class="material-icons" style="display: none;">person</span>
@@ -70,13 +70,93 @@
           <button class="action-btn" title="Enviar mensagem">
             <span class="material-icons">mail</span>
           </button>
-          
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
         </div>
       </div>
-      {% endfor %}
 
        
-      
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Joana Silva</p>
+          <p class="participant-role">Auxiliar · Cuidados pós-poda</p>
+        </div>
+        <div class="participant-status status-active">
+          <span class="material-icons" style="font-size: 16px;">check_circle</span>
+          Ativo
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+       
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons" style="display: none;">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Carlos Eduardo</p>
+          <p class="participant-role">Supervisor · Controle de qualidade</p>
+        </div>
+        <div class="participant-status status-pending">
+          <span class="material-icons" style="font-size: 16px;">schedule</span>
+          Pendente
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+       
+      <div class="participant-card">
+        <div class="participant-avatar">
+          <span class="material-icons">person</span>
+        </div>
+        <div class="participant-info">
+          <p class="participant-name">Mariana Costa</p>
+          <p class="participant-role">Consultora · Especialista em adenium</p>
+        </div>
+        <div class="participant-status status-inactive">
+          <span class="material-icons" style="font-size: 16px;">cancel</span>
+          Inativo
+        </div>
+        <div class="participant-actions">
+          <button class="action-btn" title="Enviar mensagem">
+            <span class="material-icons">mail</span>
+          </button>
+          <button class="action-btn" title="Editar participante">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn" title="Remover participante">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
 
        
       <div id="no-results" class="empty-state hidden" role="status">

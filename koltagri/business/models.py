@@ -6,14 +6,14 @@ from koltagri.core.models import BaseModelWithSoftDelete
 # Create your models here.
 
 
-class ExpensesCategory(models.Model):
+class ExpensesCategory(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
     
 
-class Expense(models.Model):
+class Expense(BaseModelWithSoftDelete):
     
     category = models.ForeignKey(
         ExpensesCategory,
@@ -29,8 +29,8 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.category.name} - {self.amount} on {self.date}"
-    
-class IncomeCategory(models.Model):
+
+class IncomeCategory(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -69,6 +69,7 @@ class AgriculturalInputs(BaseModelWithSoftDelete):
     unit = models.CharField(max_length=30, choices=UNIT_CHOICES)
     purchase_date = models.DateField(default=timezone.now)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    product_image = models.ImageField(upload_to='agricultural_inputs/products/images', null=True, blank=True)
 
     def __str__(self):
         return self.name

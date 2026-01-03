@@ -442,9 +442,9 @@ html { font-size: var(--base-font); color: #071029; }
       <span class="material-icons">assignment</span>
     </div>
     <div class="task-info">
-      <h1 class="task-title">Poda de adenium obesum</h1>
-      <p class="task-meta">Criada em 15/11/2023 · Prazo: 20/11/2023 · Responsável: Pablo Murilo</p>
-      <p class="task-meta">Espécie: Adenium · Local: Estufa Principal</p>
+      <h1 class="task-title">{{task_d.name}}</h1>
+      <p class="task-meta">Criada em {{ task_d.created_at }} · Prazo: {{ task_d.due_date }} · Responsável: {{ task_d.responsible }}</p>
+      <p class="task-meta">Espécie(s): Adenium · Local: Estufa Principal</p>
     </div>
     <div class="task-actions">
       <button class="btn" onclick="location.href='{% url 'task_form'%}'">
@@ -455,9 +455,13 @@ html { font-size: var(--base-font); color: #071029; }
         <span class="material-icons">attach_file</span>
         <P>Anexar</P>
       </button>
-      <button class="btn primary">
+      <button class="btn primary" onclick="location.href='{% url 'conclude_task' pk=task_id %}'">
         <span class="material-icons">check_circle</span>
-        <p>Concluir</p>
+        {% if is_completed %}
+          <p>Reabrir</p>
+        {% else %}
+          <p>Concluir</p>
+        {% endif %}
       </button>
     </div>
   </section>
@@ -472,15 +476,7 @@ html { font-size: var(--base-font); color: #071029; }
         Descrição da Tarefa
       </h3>
       <div class="description-content">
-        <p>Realizar a poda de manutenção nas plantas de Adenium obesum localizadas na estufa principal. A poda deve ser feita seguindo os protocolos estabelecidos para a espécie, removendo galhos secos e realizando o corte formativo para estimular o crescimento.</p>
-        
-        <h4>Instruções específicas:</h4>
-        <ul>
-          <li>Utilizar tesouras de poda esterilizadas</li>
-          <li>Realizar cortes em ângulo de 45 graus</li>
-          <li>Aplicar pasta seladora nos cortes maiores que 1cm</li>
-          <li>Registrar fotos antes e após a poda</li>
-        </ul>
+        {{ task_d.description }}
       </div>
     </div>
 
@@ -521,8 +517,8 @@ html { font-size: var(--base-font); color: #071029; }
         Seus anexos
       </h3>
       <button class="btn primary">
-        <span class="material-icons">add</span>
-        Adicionar Anexo
+        <span class="material-icons">arrow_outward </span>
+        Todos os anexos
       </button>
     </div>
 
@@ -591,63 +587,18 @@ html { font-size: var(--base-font); color: #071029; }
   <section class="participants-section">
     <div class="participants-header">
       <h3 class="section-title">
-        <span class="material-icons">groups</span>
+        <span class="material-icons" ></span>
         Participantes da Tarefa
       </h3>
-      <button class="btn primary">
-        <span class="material-icons">person_add</span>
-        Adicionar Participante
+      <button class="btn primary" onclick="location.href='{% url 'task_participant' pk=task_id %}'" >
+        <span class="material-icons">arrow_outward</span>
+        Participantes
+
       </button>
+      
     </div>
 
-    <div class="participants-list">
-       
-      <div class="participant-card" onclick="location.href='{% url 'docs' %}'">
-        <div class="participant-avatar">
-          <img src="{% static 'example_img/user1.jpg' %}" alt="Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="material-icons" style="display: none;">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Pablo Murilo</p>
-          <p class="participant-role">Responsável principal · Especialista em poda</p>
-        </div>
-        <div class="participant-status status-active">
-          <span class="material-icons" style="font-size: 16px;">check_circle</span>
-          Ativo
-        </div>
-      </div>
-
-       
-      <div class="participant-card">
-        <div class="participant-avatar">
-          <span class="material-icons">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Joana Silva</p>
-          <p class="participant-role">Auxiliar · Cuidados pós-poda</p>
-        </div>
-        <div class="participant-status status-active">
-          <span class="material-icons" style="font-size: 16px;">check_circle</span>
-          Ativo
-        </div>
-      </div>
-
-       
-      <div class="participant-card">
-        <div class="participant-avatar">
-          <img src="{% static 'example_img/user2.jpg' %}" alt="Carlos Eduardo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="material-icons" style="display: none;">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Carlos Eduardo</p>
-          <p class="participant-role">Supervisor · Controle de qualidade</p>
-        </div>
-        <div class="participant-status status-pending">
-          <span class="material-icons" style="font-size: 16px;">schedule</span>
-          Pendente
-        </div>
-      </div>
-    </div>
+    
   </section>
 
 </div>

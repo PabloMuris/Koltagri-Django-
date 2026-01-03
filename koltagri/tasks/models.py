@@ -16,7 +16,15 @@ class Task(BaseModelWithSoftDelete):
     due_date = models.DateTimeField(null=True, blank=True)
     user = models.ManyToManyField("users.User", related_name='tasks')
     priority = models.IntegerField(default=0)
+    site = models.ForeignKey("landplots.Site", on_delete=models.CASCADE, related_name='tasks',null=True, blank=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["site", "name"],
+                name="unique_task_name_per_site"
+            )
+        ]
 
     def __str__(self):
         return self.name
@@ -34,15 +42,16 @@ class Attachment(models.Model):
     file = models.FileField(upload_to='attachments/')
     name = models.CharField(max_length=255, blank=True)
     type = models.CharField(max_length=20, choices=ATTACHMENT_TYPES, default=TASK)
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='attachments',null=True)
     def __str__(self):
         return self.name
     
 class TaskCompletion(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='completions')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='completed_tasks')
-    completed_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True)
     is_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user} → {self.task}"
+    

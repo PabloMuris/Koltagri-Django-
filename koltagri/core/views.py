@@ -1,6 +1,10 @@
+import os
+from django.http import HttpResponse, HttpResponseNotFound,HttpResponseNotAllowed
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,View
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
+
 
 
 from koltagri.landplots.models import Site
@@ -43,5 +47,9 @@ def select_site_location(request,site_id):
 
     request.session['selected_site_name'] = selected_site.name
 
+    request.session.modified = True
+
     print(request.session['selected_site_location'])
     return redirect('index')
+
+

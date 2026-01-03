@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
 <link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'business/css/expenses/pagination.css' %}">
 {% endblock %}
 
 {% block styles %}
@@ -498,14 +499,7 @@ body {
       <div class="trend">45% do total</div>
     </div>
     
-    <div class="overview-card">
-      <div class="label">Previsão Mensal</div>
-      <div class="value">R$ 3.800,00</div>
-      <div class="trend positive">
-        <span class="material-icons" style="font-size: 16px;">check_circle</span>
-        <span>Dentro do orçamento</span>
-      </div>
-    </div>
+   
   </div>
 
    
@@ -538,11 +532,11 @@ body {
           <span class="material-icons">shopping_cart</span>
         </div>
         <div class="historic-item-info">
-          <p class="historic-item-title">Compra de Insumos</p>
-          <p class="historic-item-description">Fertilizantes e adubos para plantação</p>
+          <p class="historic-item-title">{{ expense.description }}</p>
+          <p class="historic-item-description"></p>
           <span class="category-badge category-insumos">
             <span class="material-icons" style="font-size: 14px;">grass</span>
-            Insumos
+            {{expense.category.name}}
           </span>
         </div>
         <div class="historic-item-meta">
@@ -551,60 +545,6 @@ body {
         </div>
       </div>
       {% endfor %}
-
-      <div class="historic-item">
-        <div class="historic-item-icon">
-          <span class="material-icons">build</span>
-        </div>
-        <div class="historic-item-info">
-          <p class="historic-item-title">Manutenção de Equipamentos</p>
-          <p class="historic-item-description">Reparo no sistema de irrigação</p>
-          <span class="category-badge category-manutencao">
-            <span class="material-icons" style="font-size: 14px;">handyman</span>
-            Manutenção
-          </span>
-        </div>
-        <div class="historic-item-meta">
-          <div class="historic-item-amount">- R$ 320,00</div>
-          <div class="historic-item-time">11:20</div>
-        </div>
-      </div>
-
-      <div class="historic-item">
-        <div class="historic-item-icon">
-          <span class="material-icons">bolt</span>
-        </div>
-        <div class="historic-item-info">
-          <p class="historic-item-title">Conta de Energia</p>
-          <p class="historic-item-description">Consumo do mês de novembro</p>
-          <span class="category-badge category-energia">
-            <span class="material-icons" style="font-size: 14px;">flash_on</span>
-            Energia
-          </span>
-        </div>
-        <div class="historic-item-meta">
-          <div class="historic-item-amount">- R$ 890,00</div>
-          <div class="historic-item-time">09:15</div>
-        </div>
-      </div>
-
-      <div class="historic-item">
-        <div class="historic-item-icon">
-          <span class="material-icons">water_drop</span>
-        </div>
-        <div class="historic-item-info">
-          <p class="historic-item-title">Conta de Água</p>
-          <p class="historic-item-description">Uso irrigação e consumo</p>
-          <span class="category-badge category-agua">
-            <span class="material-icons" style="font-size: 14px;">opacity</span>
-            Água
-          </span>
-        </div>
-        <div class="historic-item-meta">
-          <div class="historic-item-amount">- R$ 280,00</div>
-          <div class="historic-item-time">08:45</div>
-        </div>
-      </div>
     </div>
   </section>
 </div>
