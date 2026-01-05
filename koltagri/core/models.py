@@ -17,7 +17,7 @@ def get_sentinel_user():
 
 
 class UUIDModel(models.Model):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4,null=True)
 
     class Meta:
         abstract = True

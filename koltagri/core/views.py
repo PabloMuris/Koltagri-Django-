@@ -53,3 +53,5 @@ def select_site_location(request,site_id):
     return redirect('index')
 
 
+class SelectSiteView(TemplateView):
+    template_name = 'select_site.html'

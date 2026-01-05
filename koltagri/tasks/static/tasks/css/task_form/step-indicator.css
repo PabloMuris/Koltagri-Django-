@@ -1,0 +1,51 @@
+:root{
+  --step-size:40px;
+}
+
+
+
+.progress-container ol{
+  list-style-type: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  counter-reset: step-number;
+  z-index: 3;
+}
+
+.progress-container{
+  position: relative;
+}
+
+.progress-container::before{
+  content: "";
+  height: 4px;
+  width: 100%;
+  background-color: #a9a9a9;
+  position: absolute;
+  top: calc(var(--step-size)/2);
+  translate: 0% -50%;
+  z-index: -1;
+}
+.progress-container li{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #a9a9a9;
+  flex: 1
+}
+
+.progress-container li::before{
+  counter-increment: step-number;
+  content: counter(step-number);
+  background-color: #a9a9a9;
+  width: var(--step-size);
+  height: var(--step-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+}
+

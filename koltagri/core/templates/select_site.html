@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meus Locais | Koltagri{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/pagination.css' %}">
+<style>
+/* ===== Layout base ===== */
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:1.5rem;
+}
+
+.filters{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap:1rem;
+    margin-bottom:2rem;
+}
+
+/* ===== Cards estilo dashboard ===== */
+.sites-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap:1.5rem;
+}
+
+.site-card{
+    background: linear-gradient(135deg, #0b2d52, #0e3a6d);
+    color:#fff;
+    border-radius:16px;
+    padding:1.5rem;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.site-card::after{
+    content:"";
+    position:absolute;
+    top:-40px;
+    right:-40px;
+    width:140px;
+    height:140px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+}
+
+.site-title{
+    font-size:1.2rem;
+    font-weight:600;
+    margin-bottom:.25rem;
+}
+
+.site-location{
+    font-size:.85rem;
+    opacity:.85;
+}
+
+.site-meta{
+    display:flex;
+    gap:.75rem;
+    margin:1rem 0 1.25rem;
+}
+
+.meta-pill{
+    display:flex;
+    align-items:center;
+    gap:.35rem;
+    background:rgba(255,255,255,.15);
+    padding:.35rem .65rem;
+    border-radius:999px;
+    font-size:.75rem;
+}
+
+.site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.role-badge{
+    background:#1f8fff;
+    padding:.35rem .7rem;
+    border-radius:8px;
+    font-size:.75rem;
+    font-weight:500;
+}
+
+.site-actions a{
+    background:#fff;
+    color:#0b2d52;
+    padding:.45rem .85rem;
+    border-radius:8px;
+    font-size:.8rem;
+    font-weight:500;
+}
+
+.site-actions a:hover{
+    opacity:.9;
+}
+
+/* ===== Empty ===== */
+.empty-state{
+    text-align:center;
+    padding:3rem 1rem;
+    color:var(--text-muted);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Meus Locais</h1>
+        <p class="text-muted">Visão geral dos locais em que você participa</p>
+    </div>
+</div>
+
+<form method="get" class="filters">
+    <input type="text" name="search" class="form-control" placeholder="Buscar local" value="{{ request.GET.search }}">
+
+    <select name="role" class="form-control">
+        <option value="">Função</option>
+        <option value="owner" {% if request.GET.role == 'owner' %}selected{% endif %}>Responsável</option>
+        <option value="manager" {% if request.GET.role == 'manager' %}selected{% endif %}>Técnico</option>
+        <option value="member" {% if request.GET.role == 'member' %}selected{% endif %}>Membro</option>
+    </select>
+
+    <select name="status" class="form-control">
+        <option value="">Status</option>
+        <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Ativo</option>
+        <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inativo</option>
+    </select>
+
+    <button class="btn btn-primary">Filtrar</button>
+</form>
+
+{% if page_obj.object_list %}
+<div class="sites-grid">
+    {% for site in page_obj.object_list %}
+    <div class="site-card">
+        <div>
+            <div class="site-title">{{ site.name }}</div>
+            <div class="site-location">{{ site.city }} · {{ site.state }}</div>
+        </div>
+
+        <div class="site-meta">
+            <div class="meta-pill">🌱 Produção</div>
+            <div class="meta-pill">📍 {{ site.area|default:'—' }} ha</div>
+        </div>
+
+        <div class="site-footer">
+            <span class="role-badge">{{ site.user_role_display }}</span>
+            <div class="site-actions">
+                <a href="{% url 'site_detail' site.id %}">Acessar</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode|cut:'page=' }}">Anterior</a>
+    {% endif %}
+
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode|cut:'page=' }}">Próxima</a>
+    {% endif %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>Nenhum local encontrado</h3>
+    <p>Você ainda não participa de nenhum local.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -647,7 +647,7 @@
             <h1 class="page-title">Insumos</h1>
         </div>
         <div class="page-actions">
-            <button class="btn primary" id="add-insumo-btn">
+            <button class="btn primary" id="add-insumo-btn" onclick="window.location.href='{% url 'supplies_form'%}'">
                 <span class="material-icons">add</span>
                 Novo Insumo
             </button>
@@ -677,7 +677,7 @@
     <!-- Insumos Grid -->
     <div class="insumos-grid" id="insumos-container">
         {% for insumo in supplies %}
-        <a class="insumo-card" href="/supplies/detail/?id={{ insumo.id }}">
+        <a class="insumo-card" href="{% url 'supplies_detail' insumo.id %}" id="insumo-{{ insumo.id }}">
             <div class="insumo-image">
                 <img src="{{ insumo.image_url }}"
                      alt="{{ insumo.name }}"
@@ -827,7 +827,8 @@
         </div>
     </div>
 </div>
-
+tton type="button" class="close-btn" id="close-insumo-modal">
+            <s
 <div class="modal-overlay" id="insumo-modal">
     <div class="modal-content">
         <button type="button" class="close-btn" id="close-insumo-modal">
@@ -938,4 +939,210 @@
 
 {% block scripts %}
 <script src="{% static 'js/supplies_list.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos dos modais
+    const filterModal = document.getElementById('filter-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    
+    // Botões para abrir modais
+    const filterModalBtn = document.getElementById('filter-modal-btn');
+    const deleteButtons = document.querySelectorAll('.delete-insumo');
+    
+    // Botões para fechar modais
+    const closeFilterModalBtn = document.getElementById('close-filter-modal');
+    const closeDeleteModalBtn = document.getElementById('close-delete-modal');
+    const cancelFiltersBtn = document.getElementById('cancel-filters');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    
+    // Variável para armazenar o ID do insumo a ser deletado
+    let currentDeleteId = null;
+    let currentDeleteName = null;
+    
+    // Funções para abrir modais
+    function openModal(modal) {
+        modal.style.display = 'flex';
+    }
+    
+    function closeModal(modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Abrir modal de filtro
+    if (filterModalBtn) {
+        filterModalBtn.addEventListener('click', function() {
+            openModal(filterModal);
+        });
+    }
+    
+    // Abrir modal de deletar para cada botão de deletar
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Obter o ID do insumo a partir do atributo data-id
+            currentDeleteId = this.getAttribute('data-id');
+            
+            // Obter o nome do insumo para mostrar no modal
+            const insumoCard = this.closest('.insumo-card');
+            currentDeleteName = insumoCard.querySelector('.insumo-name').textContent;
+            document.getElementById('delete-insumo-nome').textContent = currentDeleteName;
+            
+            openModal(deleteModal);
+        });
+    });
+    
+    // Fechar modal de filtro
+    if (closeFilterModalBtn) {
+        closeFilterModalBtn.addEventListener('click', function() {
+            closeModal(filterModal);
+        });
+    }
+    
+    if (cancelFiltersBtn) {
+        cancelFiltersBtn.addEventListener('click', function() {
+            closeModal(filterModal);
+        });
+    }
+    
+    // Fechar modal de deletar
+    if (closeDeleteModalBtn) {
+        closeDeleteModalBtn.addEventListener('click', function() {
+            closeModal(deleteModal);
+            currentDeleteId = null;
+            currentDeleteName = null;
+        });
+    }
+    
+    if (cancelDeleteBtn) {
+        cancelDeleteBtn.addEventListener('click', function() {
+            closeModal(deleteModal);
+            currentDeleteId = null;
+            currentDeleteName = null;
+        });
+    }
+    
+    // Fechar modais ao clicar fora do conteúdo
+    window.addEventListener('click', function(event) {
+        if (event.target === filterModal) {
+            closeModal(filterModal);
+        }
+        if (event.target === deleteModal) {
+            closeModal(deleteModal);
+            currentDeleteId = null;
+            currentDeleteName = null;
+        }
+    });
+    
+    // Fechar modais com a tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal(filterModal);
+            closeModal(deleteModal);
+            currentDeleteId = null;
+            currentDeleteName = null;
+        }
+    });
+    
+    // Para o botão "Limpar Filtros" no modal de filtro
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            // Limpar todos os campos do formulário de filtro
+            document.getElementById('filter-quantidade-min').value = '';
+            document.getElementById('filter-quantidade-max').value = '';
+            document.getElementById('filter-preco-min').value = '';
+            document.getElementById('filter-preco-max').value = '';
+            document.getElementById('filter-renovavel').value = '';
+            document.getElementById('filter-unidade').value = '';
+            document.getElementById('filter-validade').value = '';
+        });
+    }
+    
+    // Para o botão "Aplicar Filtros" no modal de filtro
+    const applyFiltersBtn = document.getElementById('apply-filters');
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', function() {
+            // Coletar valores dos filtros
+            const quantidadeMin = document.getElementById('filter-quantidade-min').value;
+            const quantidadeMax = document.getElementById('filter-quantidade-max').value;
+            const precoMin = document.getElementById('filter-preco-min').value;
+            const precoMax = document.getElementById('filter-preco-max').value;
+            const renovavel = document.getElementById('filter-renovavel').value;
+            const unidade = document.getElementById('filter-unidade').value;
+            const validade = document.getElementById('filter-validade').value;
+            
+            // Construir query string para os filtros
+            const params = new URLSearchParams();
+            
+            if (quantidadeMin) params.append('quantidade_min', quantidadeMin);
+            if (quantidadeMax) params.append('quantidade_max', quantidadeMax);
+            if (precoMin) params.append('preco_min', precoMin);
+            if (precoMax) params.append('preco_max', precoMax);
+            if (renovavel) params.append('renovavel', renovavel);
+            if (unidade) params.append('unidade', unidade);
+            if (validade) params.append('validade', validade);
+            
+            // Redirecionar para a URL atual com os parâmetros de filtro
+            window.location.href = window.location.pathname + '?' + params.toString();
+        });
+    }
+    
+    // Para o botão "Excluir" no modal de deletar
+    const confirmDeleteBtn = document.getElementById('confirm-delete');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', function() {
+            if (currentDeleteId) {
+                // Redirecionar para a URL de deletar com o ID do insumo
+                window.location.href = `/insumo/deletar/${currentDeleteId}/`;
+            }
+        });
+    }
+    
+    // Opcional: Se quiser fazer delete via AJAX em vez de redirecionar:
+    // const confirmDeleteBtn = document.getElementById('confirm-delete');
+    // if (confirmDeleteBtn) {
+    //     confirmDeleteBtn.addEventListener('click', function() {
+    //         if (currentDeleteId) {
+    //             // Fazer requisição AJAX para deletar
+    //             fetch(`/insumo/deletar/${currentDeleteId}/`, {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'X-CSRFToken': getCookie('csrftoken'),
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             })
+    //             .then(response => {
+    //                 if (response.ok) {
+    //                     // Remover o card do insumo da tela
+    //                     const cardToRemove = document.getElementById(`insumo-${currentDeleteId}`);
+    //                     if (cardToRemove) {
+    //                         cardToRemove.remove();
+    //                     }
+    //                     closeModal(deleteModal);
+    //                 }
+    //             })
+    //             .catch(error => console.error('Error:', error));
+    //         }
+    //     });
+    // }
+    
+    // Função auxiliar para pegar o token CSRF (se usar AJAX)
+    // function getCookie(name) {
+    //     let cookieValue = null;
+    //     if (document.cookie && document.cookie !== '') {
+    //         const cookies = document.cookie.split(';');
+    //         for (let i = 0; i < cookies.length; i++) {
+    //             const cookie = cookies[i].trim();
+    //             if (cookie.substring(0, name.length + 1) === (name + '=')) {
+    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     return cookieValue;
+    // }
+});
+</script>
 {% endblock %}

@@ -6,7 +6,9 @@ const plantResults = document.querySelector(".plant-results");
 const selectedPlantsContainer = document.querySelector(".selected-plants");
 const checkboxContainer = document.getElementById("checkbox-plants");
 
-
+document.addEventListener("DOMContentLoaded",() => {
+    plantResults.style.display = "none";
+});
 // ===============================
 // 1. Evento de busca (Input)
 // ===============================
@@ -15,8 +17,10 @@ plantInput.addEventListener("input", () => {
 
     if (query.length > 0) {
         carregarPlantas(query);
+        plantResults.style.display = "flex";
     } else {
         plantResults.innerHTML = "";
+        plantResults.style.display = "none";
     }
 });
 
@@ -72,6 +76,7 @@ plantResults.addEventListener("click", (event) => {
 
     plantResults.innerHTML = "";
     plantInput.value = "";
+    plantResults.style.display = "none";
 });
 
 

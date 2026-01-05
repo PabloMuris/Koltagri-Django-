@@ -18,14 +18,7 @@ class Task(BaseModelWithSoftDelete):
     priority = models.IntegerField(default=0)
     site = models.ForeignKey("landplots.Site", on_delete=models.CASCADE, related_name='tasks',null=True, blank=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["site", "name"],
-                name="unique_task_name_per_site"
-            )
-        ]
-
+    
     def __str__(self):
         return self.name
 

@@ -11,13 +11,10 @@
 <style>
 main{
     position: relative;
-    background-color: #6b7688;
+    background-color: #f2f2f2;
+    min-height: 100vh;
 }
-    .user-actions{
-        position:absolute;
-        width: 100% !important;
-    }
-.user
+
 :root {
     --primary-color: #4aa582da;
     --primary-dark: #3a8a6a;
@@ -33,9 +30,65 @@ main{
 
 main {
     background: var(--bg-color);
-    margin-inline: 16px;
+    padding: 16px;
 }
 
+/* Ajuste para o container de ações */
+.user-actions {
+    width: 100%; 
+    display: flex; 
+    flex-flow: row; 
+    align-items: center;
+    justify-content: space-between; 
+    height: 44px;
+    margin-bottom: 20px;
+}
+
+.user-actions button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    width: 44px;
+    border-radius: 10px;
+    background: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-actions button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.user-actions button svg {
+    fill: white;
+}
+
+/* Estilo específico para os botões de ação à direita */
+.right-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilo específico para o botão de deletar */
+.user-actions button#delete-button {
+    background: #d32f2f;
+}
+
+.user-actions button#delete-button:hover {
+    background: #b71c1c;
+}
+
+/* Estilo para o botão de voltar */
+.user-actions button#back-button {
+    background: #6b7688;
+}
+
+.user-actions button#back-button:hover {
+    background: #5a6478;
+}
  
 .insumo-header {
     display: flex;
@@ -43,7 +96,6 @@ main {
     align-items: center;
     gap: 16px;
     margin-bottom: 32px;
-    position: relative;
 }
 
 .insumo-header img {
@@ -59,11 +111,12 @@ main {
 .insumo-names .nome {
     font-size: 20px;
     font-weight: 500;
+    color: var(--accent-color);
 }
 
 .insumo-names .tipo {
     font-size: 14px;
-    opacity: 0.7;
+    color: var(--muted-color);
 }
 
  
@@ -84,21 +137,24 @@ main {
     border-radius: 12px;
     width: 220px;
     border: 2px solid #ececec;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .status-card svg {
     width: 28px;
     height: 28px;
+    color: var(--primary-color);
 }
 
 .status-card p:first-child {
     font-size: 14px;
-    opacity: .6;
+    color: var(--muted-color);
 }
 
 .status-card p:last-child {
     font-size: 16px;
     font-weight: 500;
+    color: var(--text-color);
 }
 
  
@@ -108,6 +164,7 @@ main {
     border-radius: 14px;
     border: 2px solid #e8e8e8;
     margin-bottom: 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .info-block {
@@ -117,11 +174,13 @@ main {
 .info-block h3 {
     font-size: 18px;
     margin-bottom: 6px;
+    color: var(--accent-color);
 }
 
 .info-block p {
     text-align: justify;
     line-height: 1.5;
+    color: var(--text-color);
 }
 
  
@@ -147,36 +206,6 @@ main {
 
 .artificial {
     color: #FF9800;
-}
-
-.supplies-actions {
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    display: flex;
-    gap: 10px;
-}
-
-.supplies-actions button {
-    min-height: 44px;
-    width: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--primary-color);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.supplies-actions button:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-}
-
-.supplies-actions button svg {
-    fill: white;
 }
 
  
@@ -398,6 +427,37 @@ main {
     margin-top: 10px;
 }
 
+/* Modal de exclusão */
+.delete-modal .modal-content {
+    max-width: 400px;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.warning-text {
+    color: #d32f2f;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.btn.delete-btn {
+    background: #d32f2f;
+    color: white;
+    border-color: transparent;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.delete-btn:hover {
+    background: #b71c1c;
+}
+
  
 @media (max-width: 768px) {
     .status-section {
@@ -410,10 +470,8 @@ main {
         max-width: 300px;
     }
     
-    .supplies-actions {
-        position: static;
-        justify-content: center;
-        margin-top: 15px;
+    .user-actions {
+        padding: 0 10px;
     }
 }
 </style>
@@ -423,84 +481,28 @@ main {
 
 <div class="user-actions">
     <button type="button" id="back-button" onclick="location.href='{% url 'business_board' %}'">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
         <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
       </svg>
     </button>
-    <button type="button" id="edit-button">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
-        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-      </svg>
-    </button>
+    
+    <div class="right-actions">
+      <button type="button" id="edit-button" onclick="window.location.href='{% url 'supplies_form_edit' insumo.id %}'">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+          <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+        </svg>
+      </button>
+      
+      <button type="button" id="delete-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+          <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
-<div class="modal-overlay" id="edit-modal" style="translate: 0 0;">
-    <div class="modal-content">
-        <button type="button" class="close-btn" id="close-edit-modal">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
-                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-            </svg>
-        </button>
-        <h2 class="modal-title">Editar Insumo</h2>
-        <form id="edit-form">
-            <div class="form-group">
-                <label for="insumo-name">Nome do Insumo</label>
-                <input type="text" id="insumo-name" value="Composto Orgânico" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="insumo-type">Tipo</label>
-                <select id="insumo-type">
-                    <option value="fertilizante" selected>Fertilizante</option>
-                    <option value="defensivo">Defensivo</option>
-                    <option value="corretivo">Corretivo</option>
-                    <option value="semente">Semente</option>
-                    <option value="outro">Outro</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="insumo-classification">Classificação</label>
-                <select id="insumo-classification">
-                    <option value="organico" selected>Orgânico</option>
-                    <option value="mineral">Mineral</option>
-                    <option value="orgamineral">Orgamineral</option>
-                    <option value="artificial">Artificial</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="insumo-renewable">Renovável</label>
-                <select id="insumo-renewable">
-                    <option value="sim" selected>Sim</option>
-                    <option value="nao">Não</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="insumo-price">Preço (R$)</label>
-                <input type="number" id="insumo-price" step="0.01" value="45.50" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="insumo-unit">Unidade de Medida</label>
-                <select id="insumo-unit">
-                    <option value="kg" selected>Quilograma (kg)</option>
-                    <option value="g">Grama (g)</option>
-                    <option value="l">Litro (l)</option>
-                    <option value="ml">Mililitro (ml)</option>
-                    <option value="un">Unidade</option>
-                    <option value="sc">Saco</option>
-                </select>
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="btn" id="cancel-edit">Cancelar</button>
-                <button type="submit" class="btn primary">Salvar Alterações</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Elemento oculto para armazenar dados do insumo -->
+<div id="insumo-data" data-insumo-id="{{ insumo.id }}" data-insumo-nome="{{ insumo.nome }}" style="display: none;"></div>
 
  
 <div class="modal-overlay" id="attachment-modal">
@@ -530,9 +532,30 @@ main {
     </div>
 </div>
 
+<!-- Modal para Confirmar Exclusão -->
+<div class="modal-overlay delete-modal" id="delete-modal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" id="close-delete-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title">Excluir Insumo</h2>
+        <div class="delete-message">
+            <p>Tem certeza que deseja excluir o insumo <span class="warning-text" id="delete-insumo-nome"></span>?</p>
+            <p>Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn" id="cancel-delete">Cancelar</button>
+            <form method="post" action="{% url 'supplies_delete' insumo.id %}" >
+    {% csrf_token %}
+    <button type="submit" class="btn delete-btn">Excluir</button>
+</form>
+        </div>
+    </div>
+</div>
+
 <section class="insumo-header">
-     
-    
     <img src="{% static 'example_img/composto_organico.jpeg' %}" alt="Composto Orgânico">
 
     <div class="insumo-names">
@@ -632,79 +655,132 @@ main {
 
 {% block scripts %}
 <script>
+// Obter dados do insumo
+const insumoData = document.getElementById('insumo-data');
+const INSUMO_ID = insumoData ? insumoData.getAttribute('data-insumo-id') : null;
+const INSUMO_NOME = insumoData ? insumoData.getAttribute('data-insumo-nome') : '';
 
-const editButton = document.getElementById('edit-button');
-const addAttachmentBtn = document.getElementById('add-attachment-btn');
+// Elementos do modal de exclusão
+const deleteButton = document.getElementById('delete-button');
+const deleteModal = document.getElementById('delete-modal');
+const closeDeleteModal = document.getElementById('close-delete-modal');
+const cancelDelete = document.getElementById('cancel-delete');
+const deleteInsumoNome = document.getElementById('delete-insumo-nome');
+
+// Elementos do modal de anexos
 const addAttachmentMain = document.getElementById('add-attachment-main');
-
-
-const editModal = document.getElementById('edit-modal');
 const attachmentModal = document.getElementById('attachment-modal');
-const closeEditModal = document.getElementById('close-edit-modal');
 const closeAttachmentModal = document.getElementById('close-attachment-modal');
-const cancelEdit = document.getElementById('cancel-edit');
 const cancelAttachment = document.getElementById('cancel-attachment');
-const close_btn = document.getElementById("")
-
-const editForm = document.getElementById('edit-form');
 const attachmentForm = document.getElementById('attachment-form');
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
+    
+    // Configurar nome do insumo no modal de exclusão
+    if (deleteInsumoNome && INSUMO_NOME) {
+        deleteInsumoNome.textContent = INSUMO_NOME;
+    } else if (deleteInsumoNome) {
+        // Fallback: pegar do título da página
+        const nomeElement = document.querySelector('.insumo-names .nome');
+        if (nomeElement) {
+            deleteInsumoNome.textContent = nomeElement.textContent;
+        }
+    }
 });
 
 // Configurar event listeners
 function setupEventListeners() {
-    // Botões de ação
-    editButton.addEventListener('click', openEditModal);
-    addAttachmentBtn.addEventListener('click', openAttachmentModal);
-    addAttachmentMain.addEventListener('click', openAttachmentModal);
+    // Botões de ação - EXCLUSÃO
+    if (deleteButton) {
+        deleteButton.addEventListener('click', openDeleteModal);
+    }
     
-    // Modais
-    closeEditModal.addEventListener('click', () => {closeEditModalFunc()});
-    closeAttachmentModal.addEventListener('click', closeAttachmentModalFunc);
-    cancelEdit.addEventListener('click', closeEditModalFunc);
-    cancelAttachment.addEventListener('click', closeAttachmentModalFunc);
+    // Botões de ação - ANEXOS
+    if (addAttachmentMain) {
+        addAttachmentMain.addEventListener('click', openAttachmentModal);
+    }
+    
+    // Modais - EXCLUSÃO
+    if (closeDeleteModal) {
+        closeDeleteModal.addEventListener('click', closeDeleteModalFunc);
+    }
+    
+    if (cancelDelete) {
+        cancelDelete.addEventListener('click', closeDeleteModalFunc);
+    }
+    
+    // Modais - ANEXOS
+    if (closeAttachmentModal) {
+        closeAttachmentModal.addEventListener('click', closeAttachmentModalFunc);
+    }
+    
+    if (cancelAttachment) {
+        cancelAttachment.addEventListener('click', closeAttachmentModalFunc);
+    }
     
     // Formulários
-    editForm.addEventListener('submit', saveInsumo);
-    attachmentForm.addEventListener('submit', addAttachment);
+    if (attachmentForm) {
+        attachmentForm.addEventListener('submit', addAttachment);
+    }
     
     // Fechar modais ao clicar fora
-    editModal.addEventListener('click', function(e) {
-        if (e.target === editModal) closeEditModalFunc();
-    });
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) closeDeleteModalFunc();
+        });
+    }
     
-    attachmentModal.addEventListener('click', function(e) {
-        if (e.target === attachmentModal) closeAttachmentModalFunc();
+    if (attachmentModal) {
+        attachmentModal.addEventListener('click', function(e) {
+            if (e.target === attachmentModal) closeAttachmentModalFunc();
+        });
+    }
+    
+    // Fechar modais com a tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeDeleteModalFunc();
+            closeAttachmentModalFunc();
+        }
     });
 }
 
-// Funções do modal de edição
-function openEditModal() {
-    editModal.style.display = 'flex';
-}
-
-function closeEditModalFunc() {
-    editModal.style.display = 'none';
-}
-
-function saveInsumo(e) {
+// Funções do modal de exclusão
+function openDeleteModal(e) {
     e.preventDefault();
+    e.stopPropagation();
     
-    // Aqui você implementaria a lógica para salvar as alterações
-    // Por enquanto, apenas fechamos o modal
-    alert('Alterações salvas com sucesso!');
-    closeEditModalFunc();
+    if (deleteModal) {
+        deleteModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Previne scroll do body
+    }
 }
 
-function openAttachmentModal() {
-    attachmentModal.style.display = 'flex';
+function closeDeleteModalFunc() {
+    if (deleteModal) {
+        deleteModal.style.display = 'none';
+        document.body.style.overflow = ''; // Restaura scroll do body
+    }
+}
+
+// Funções do modal de anexos
+function openAttachmentModal(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (attachmentModal) {
+        attachmentModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeAttachmentModalFunc() {
-    attachmentModal.style.display = 'none';
+    if (attachmentModal) {
+        attachmentModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
 }
 
 function addAttachment(e) {
@@ -721,8 +797,9 @@ function addAttachment(e) {
     alert('Anexo adicionado com sucesso!');
     closeAttachmentModalFunc();
     
-    
-    attachmentForm.reset();
+    if (attachmentForm) {
+        attachmentForm.reset();
+    }
 }
 </script>
 {% endblock %}

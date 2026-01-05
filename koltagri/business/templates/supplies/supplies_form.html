@@ -14,11 +14,902 @@
 {% block styles %}
 <style>
 
+.modal-overlay{
+    translate: 0 0;
+}
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+/* Header Styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Search and Filter Row */
+.search-filter-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 701px) {
+    .search-filter-row {
+        grid-template-columns: 1fr auto auto;
+    }
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-color);
+}
+
+/* Filtros Ativos */
+.active-filters {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.filter-tag .material-icons {
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.filter-tag .material-icons:hover {
+    opacity: 1;
+}
+
+.clear-all-filters {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.clear-all-filters:hover {
+    text-decoration: underline;
+}
+
+/* Insumos Grid */
+.insumos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.insumo-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.insumo-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.insumo-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insumo-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.insumo-card:hover .insumo-image img {
+    transform: scale(1.05);
+}
+
+.insumo-image .material-icons {
+    font-size: 48px;
+    color: var(--muted-color);
+}
+
+.insumo-content {
+    padding: 20px;
+}
+
+.insumo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.insumo-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+    flex: 1;
+    text-decoration: none;
+}
+
+.insumo-name:hover {
+    color: var(--primary-color);
+}
+
+.insumo-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.insumo-details {
+    color: var(--muted-color);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.insumo-detail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.insumo-description {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Status e Badges */
+.quantidade-baixa {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+.quantidade-normal {
+    color: var(--primary-dark);
+}
+
+.renovavel-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.renovavel-sim {
+    background-color: rgba(74, 165, 130, 0.1);
+    color: var(--primary-dark);
+}
+
+.renovavel-nao {
+    background-color: rgba(107, 118, 136, 0.1);
+    color: var(--muted-color);
+}
+
+.validade-proxima {
+    color: #ff9800;
+    font-weight: 500;
+}
+
+.validade-expirada {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.btn.icon-only {
+    padding: 8px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0 0 20px 0;
+}
+
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+    transform: scale(1.2);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.delete-modal .modal-content {
+    max-width: 400px;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.warning-text {
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg-color);
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.image-preview .material-icons {
+    font-size: 48px;
+    color: var(--muted-color);
+}
+
+.image-upload-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.image-upload-actions .btn {
+    flex: 1;
+}
+
+/* Modal de Filtros Específico */
+.filter-modal .modal-content {
+    max-width: 450px;
+}
+
+.filter-section-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.filter-option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-option-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.range-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.range-inputs input {
+    flex: 1;
+}
+
+.range-separator {
+    color: var(--muted-color);
+    font-weight: 500;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-color);
+}
+
+.empty-state .material-icons {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-filter-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .insumos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .active-filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .clear-all-filters {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .image-upload-actions {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+    .search-filter-row {
+        grid-template-columns: 1fr auto;
+    }
+}
+
+/* Estilos para erros do formulário */
+.form-error {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+input.error,
+textarea.error,
+select.error {
+    border-color: #d32f2f !important;
+}
+
+input.error:focus,
+textarea.error:focus,
+select.error:focus {
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1) !important;
+}
+
+/* Estilo para o botão de remover imagem */
+.remove-image-btn {
+    background-color: #f8f9fa;
+    color: #dc3545;
+}
+
+.remove-image-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="page-container">
+    <!-- Cabeçalho da página -->
+    <div class="page-header">
+        <div class="header-left">
+            <a href="javascript:history.back()" class="back-button" title="Voltar">
+                <span class="material-icons">arrow_back</span>
+            </a>
+            <h1 class="page-title">{% if insumo %}Editar Insumo{% else %}Novo Insumo{% endif %}</h1>
+        </div>
+    </div>
+
+    <!-- Formulário de edição -->
+    <form method="post" enctype="multipart/form-data" class="insumo-form" novalidate action="{% if is_edit %}{% url 'supplies_form_edit' insumo.pk %}{% else %}{% url 'supplies_form' %}{% endif %}">
+        {% csrf_token %}
+        
+        <!-- Nome do Insumo -->
+        <div class="form-group">
+            <label for="id_name">Nome do Insumo *</label>
+            <input 
+                type="text" 
+                id="id_name" 
+                name="name" 
+                value="{{ form.name.value|default_if_none:'' }}"
+                placeholder="Digite o nome do insumo" 
+                required
+                class="{% if form.name.errors %}error{% endif %}"
+                maxlength="200"
+            >
+            {% if form.name.errors %}
+                <div class="form-error">
+                    {% for err in form.name.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Imagem do Insumo -->
+        <div class="form-group">
+            <label for="id_image">Imagem do Insumo</label>
+            <div class="image-upload-container">
+                <div class="image-preview" id="image-preview">
+                    {% if insumo and insumo.image %}
+                        <img src="{{ insumo.image.url }}" alt="Imagem do insumo">
+                    {% else %}
+                        <span class="material-icons">image</span>
+                    {% endif %}
+                </div>
+                
+                <input 
+                    type="file" 
+                    id="id_image" 
+                    name="image" 
+                    accept="image/*" 
+                    style="display: none;"
+                >
+                
+                <div class="image-upload-actions">
+                    <button type="button" class="btn" id="upload-btn">
+                        <span class="material-icons">upload</span>
+                        Carregar Imagem
+                    </button>
+                </div>
+            </div>
+            {% if form.image.errors %}
+                <div class="form-error">
+                    {% for err in form.image.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Linha: Quantidade e Preço -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="id_quantity">Quantidade *</label>
+                <input 
+                    type="number" 
+                    id="id_quantity" 
+                    name="quantity" 
+                    value="{{ form.quantity.value|default_if_none:'' }}" 
+                    placeholder="0" 
+                    min="0" 
+                    step="0.01"
+                    required
+                    class="{% if form.quantity.errors %}error{% endif %}"
+                >
+                {% if form.quantity.errors %}
+                    <div class="form-error">
+                        {% for err in form.quantity.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_price">Preço (R$) *</label>
+                <input 
+                    type="number" 
+                    id="id_price" 
+                    name="price" 
+                    value="{{ form.price.value|default_if_none:'' }}" 
+                    placeholder="0.00" 
+                    step="0.01" 
+                    min="0" 
+                    required
+                    class="{% if form.price.errors %}error{% endif %}"
+                >
+                {% if form.price.errors %}
+                    <div class="form-error">
+                        {% for err in form.price.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-group">
+            <label for="id_description">Descrição</label>
+            <textarea 
+                id="id_description" 
+                name="description" 
+                rows="3" 
+                placeholder="Digite uma descrição para o insumo"
+                class="{% if form.description.errors %}error{% endif %}"
+            >{{ form.description.value|default_if_none:'' }}</textarea>
+            {% if form.description.errors %}
+                <div class="form-error">
+                    {% for err in form.description.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Linha: Remover, Unidade de Medida e Data de compra -->
+        <div class="form-row">
+            <!-- Botão Remover (para deletar o insumo) -->
+            <div class="form-group" style="justify-content: center; margin-top: 8px;">
+                <button type="button" class="btn remove-image-btn" id="delete-insumo-btn">
+                    <span class="material-icons">delete</span>
+                    Remover
+                </button>
+            </div>
+
+            <!-- Unidade de Medida -->
+            <div class="form-group">
+                <label for="id_unit">Unidade de Medida *</label>
+                <select id="id_unit" name="unit" required class="{% if form.unit.errors %}error{% endif %}">
+                    <option value="">Selecione uma unidade</option>
+                    {% for value,label in form.fields.unit.choices %}
+                        <option value="{{ value }}" {% if form.unit.value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.unit.errors %}
+                    <div class="form-error">
+                        {% for err in form.unit.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Data de compra -->
+            <div class="form-group">
+                <label for="id_purchase_date">Data de compra</label>
+                <input 
+                    type="date" 
+                    id="id_purchase_date" 
+                    name="purchase_date" 
+                    value="{{ form.purchase_date.value|default_if_none:''|date:'Y-m-d' }}"
+                    class="{% if form.purchase_date.errors %}error{% endif %}"
+                >
+                {% if form.purchase_date.errors %}
+                    <div class="form-error">
+                        {% for err in form.purchase_date.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Ações do Formulário -->
+        <div class="form-actions">
+            <button type="button" class="btn" onclick="window.history.back()">
+                Cancelar
+            </button>
+            <button type="submit" class="btn primary">
+                <span class="material-icons">save</span>
+                Salvar
+            </button>
+        </div>
+
+        <!-- Licença (Rodapé informativo) -->
+        <div class="license-info" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <p style="font-size: 0.85rem; color: var(--muted-color);">
+                <strong>Licença:</strong> 1.5, 8, 9, 5<br>
+                <strong>Exemplo:</strong> cidas emovíveis
+            </p>
+        </div>
+    </form>
+</div>
 {% endblock %}
 
 {% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadBtn = document.getElementById('upload-btn');
+        const deleteInsumoBtn = document.getElementById('delete-insumo-btn');
+        const imageInput = document.getElementById('id_image');
+
+        // Abrir seletor de arquivo ao clicar no botão de upload
+        if (uploadBtn && imageInput) {
+            uploadBtn.addEventListener('click', function() {
+                imageInput.click();
+            });
+        }
+
+        // Deletar insumo (apenas UI; você pode ligar à rota de delete se quiser)
+        if (deleteInsumoBtn) {
+            deleteInsumoBtn.addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja remover este insumo?')) {
+                    console.log('Insumo marcado para remoção');
+                }
+            });
+        }
+    });
+
+    // Validação do formulário
+    (function() {
+        const form = document.querySelector('.insumo-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            const name = document.getElementById('id_name').value.trim();
+            const quantity = document.getElementById('id_quantity').value;
+            const price = document.getElementById('id_price').value;
+            const unit = document.getElementById('id_unit').value;
+            
+            if (!name || !quantity || !price || !unit) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios (*)');
+                if (!name) document.getElementById('id_name').focus();
+                return;
+            }
+
+            // permite submit
+            console.log('Formulário sendo enviado...');
+        });
+    })();
+</script>
 {% endblock %}

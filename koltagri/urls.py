@@ -25,13 +25,13 @@ router = routers.SimpleRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'api/v1/', include('djoser.urls')),
-    re_path(r'api/v1/auth/', include('djoser.urls.jwt')),
     path('',include('koltagri.core.urls')),
     path('cultivos/',include('koltagri.landplots.urls')),
     path('negocios/',include('koltagri.business.urls')),
     path('tarefas/',include('koltagri.tasks.urls')),
     path('usuario/',include('koltagri.person.urls')),
+     path('accounts/', include('allauth.urls')),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

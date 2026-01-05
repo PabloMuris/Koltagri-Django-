@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, LoginView,RegisterView,NotificationsView,ProfileView,TeamView,LandsView,PropertyView,select_site_location
+from .views import IndexView, LoginView,RegisterView,NotificationsView,ProfileView,TeamView,LandsView,PropertyView,select_site_location,SelectSiteView
 urlpatterns = [
     path("",IndexView.as_view(),name='index'),
     path("login/",LoginView.as_view(),name='login'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path("propriedade/areas", LandsView.as_view(),name="lands"),
     path("propriedes/",PropertyView.as_view(),name= "property"),
     path("select-site/<int:site_id>/",select_site_location,name="select_site_location"),
+    path("select-site/",SelectSiteView.as_view(),name="select_site"),
 ]

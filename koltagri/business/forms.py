@@ -1,5 +1,6 @@
 from django import forms
 from .models import Expense, ExpensesCategory,AgriculturalInputs
+from django.utils import timezone
 
 class ExpenseForm(forms.ModelForm):
  
@@ -37,7 +38,53 @@ class ExpenseForm(forms.ModelForm):
             }),
         }
 
-class SuppliesForm(forms.ModelForm):
+class AgriculturalInputValidationForm(forms.Form):
+    name = forms.CharField(max_length=200)
+    description = forms.CharField(required=False)
+    quantity = forms.DecimalField(max_digits=10, decimal_places=2)
+    unit = forms.ChoiceField(choices=[
+        ("kg", "Kilogram"),
+        ("g", "Gram"),
+        ("l", "Liter"),
+        ("ml", "Milliliter"),
+        ("pcs", "Pieces"),
+    ])
+    purchase_date = forms.DateField(required=False)
+    price = forms.DecimalField(max_digits=10, decimal_places=2)
+    image = forms.ImageField(required=False)
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if len(name) < 3:
+            raise forms.ValidationError("O nome precisa ter ao menos 3 caracteres.")
+        return name
+
+    def clean_purchase_date(self):
+        return self.cleaned_data.get("purchase_date") or timezone.now().date()
+
+    name = forms.CharField(max_length=200)
+    description = forms.CharField(required=False)
+    quantity = forms.DecimalField(max_digits=10, decimal_places=2)
+    unit = forms.ChoiceField(choices=[
+        ("kg", "Kilogram"),
+        ("g", "Gram"),
+        ("l", "Liter"),
+        ("ml", "Milliliter"),
+        ("pcs", "Pieces"),
+    ])
+    purchase_date = forms.DateField(required=False)
+    price = forms.DecimalField(max_digits=10, decimal_places=2)
+    image = forms.ImageField(required=False)
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if len(name) < 3:
+            raise forms.ValidationError("O nome precisa ter ao menos 3 caracteres.")
+        return name
+
+    def clean_purchase_date(self):
+        return self.cleaned_data.get("purchase_date") or timezone.now().date()
+
     class Meta:
         model = AgriculturalInputs
         fields = ['name','description', 'quantity', 'unit', 'purchase_date','price', ]
