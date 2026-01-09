@@ -171,74 +171,52 @@ select:focus{
 <div class="form-shell">
   
   
-  <form action="" method="post" class="form-panel" aria-labelledby="form-title">
-    {% csrf_token %}
-    <h1 id="form-title">Cadastro de Cultivo</h1>
-    <div class="form-sub">Preencha os dados básicos do cultivo. Campos com * são obrigatórios.</div>
+  <form method="post" class="form-panel">
+  {% csrf_token %}
 
-     
-    <div class="stack" role="group" aria-label="Dados principais">
-      <div class="row">
-        <div class="col">
-          <label for="sites">Locais *</label>
-          <select name="sites" id="sites" required aria-required="true">
-            <option value="">Selecione</option>
-            <option value="TD">Toda a propriedade</option>
-            <option value="margem">Margem</option>
-            <option value="afloramento">Afloramento rochoso</option>
-            <option value="vale">Vale</option>
-          </select>
-        </div>
+  <h1 id="form-title">Cadastro de Cultivo</h1>
+  <div class="form-sub">
+    Informe a área, a espécie e a quantidade de plantas.
+  </div>
 
-        <div class="col">
-          <label for="species">Espécie *</label>
-          <select name="species" id="species" required aria-required="true">
-            <option value="">Selecione</option>
-            <option value="milho">Milho</option>
-            <option value="arroz">Arroz</option>
-            <option value="adenium">Adenium</option>
-            <option value="uva">Uva</option>
-          </select>
-        </div>
-      </div>
+  <div class="stack">
 
-      <div>
-        <label for="safra">Safra</label>
-        <input type="text" id="safra" name="safra" placeholder="Ex: 2024/2025" inputmode="numeric" aria-describedby="safra-help">
-        <div id="safra-help" class="helper">Formato livre (ex.: 2024/2025). Pode deixar em branco se não souber.</div>
-      </div>
+    <!-- Área / Cultivation -->
+    <div>
+      <label for="{{ form.cultivation.id_for_label }}">Área *</label>
+      {{ form.cultivation }}
+      {% if form.cultivation.errors %}
+        <div class="helper">{{ form.cultivation.errors }}</div>
+      {% endif %}
     </div>
 
-     
-    <fieldset class="stack" style="border:0; padding:0; margin:0;" aria-labelledby="dates-legend">
-      <legend id="dates-legend" style="font-weight:600; color:var(--text); margin-bottom:4px;">Datas principais</legend>
-
-      <div class="row">
-        <div class="col">
-          <label for="plantio">Plantio *</label>
-          <input type="date" id="plantio" name="plantio" required aria-required="true" />
-        </div>
-
-        <div class="col">
-          <label for="transplante">Transplante (opcional)</label>
-          <input type="date" id="transplante" name="transplante" />
-        </div>
-
-        <div class="col" style="max-width:220px;">
-          <label for="colheita">Colheita *</label>
-          <input type="date" id="colheita" name="colheita" required aria-required="true" />
-        </div>
-      </div>
-
-      <div class="small-note">Em dispositivos móveis, o seletor nativo de data será usado para melhor acessibilidade. Em desktop, o navegador mostrará o seletor padrão.</div>
-    </fieldset>
-
-     
-    <div class="actions" role="group" aria-label="Ações do formulário">
-      <button type="reset" class="btn ghost" aria-label="Limpar formulário">Limpar</button>
-      <button type="submit" class="btn primary" aria-label="Enviar formulário">Concluir</button>
+    <!-- Espécie -->
+    <div>
+      <label for="{{ form.plant_species.id_for_label }}">Espécie *</label>
+      {{ form.plant_species }}
+      {% if form.plant_species.errors %}
+        <div class="helper">{{ form.plant_species.errors }}</div>
+      {% endif %}
     </div>
-  </form>
+
+    <!-- Quantidade -->
+    <div>
+      <label for="{{ form.count.id_for_label }}">Quantidade de plantas *</label>
+      {{ form.count }}
+      {% if form.count.errors %}
+        <div class="helper">{{ form.count.errors }}</div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button type="reset" class="btn ghost">Limpar</button>
+    <button type="submit" class="btn primary">Salvar cultivo</button>
+  </div>
+
+</form>
+
 </div>
 {% endblock %}
 

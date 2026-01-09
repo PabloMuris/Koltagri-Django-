@@ -4,15 +4,22 @@
 {% block title %}Insumo{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
 
 <style>
+
+    .user-actions button{
+  background-color: transparent !important;
+  
+}
+.user-actions button svg{
+    fill:#071029 !important;
+}
 main{
     position: relative;
     background-color: #f2f2f2;
-    min-height: 100vh;
 }
 
 :root {
@@ -556,10 +563,13 @@ main {
 </div>
 
 <section class="insumo-header">
-    <img src="{% static 'example_img/composto_organico.jpeg' %}" alt="Composto Orgânico">
-
+    {% if insumo.image %}
+    <img src="{{ insumo.image.url }}" alt="{{ insumo.name }}">
+{% else %}
+    <img src="{% static 'img/placeholder-insumo.png' %}" alt="Sem imagem">
+{% endif %}
     <div class="insumo-names">
-        <p class="nome">Composto Orgânico</p>
+        <p class="nome">{{insumo.name}}</p>
         <p class="tipo">Fertilizante</p>
     </div>
 </section>

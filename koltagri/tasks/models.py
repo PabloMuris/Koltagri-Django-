@@ -17,8 +17,8 @@ class Task(BaseModelWithSoftDelete):
     user = models.ManyToManyField("users.User", related_name='tasks')
     priority = models.IntegerField(default=0)
     site = models.ForeignKey("landplots.Site", on_delete=models.CASCADE, related_name='tasks',null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
 
-    
     def __str__(self):
         return self.name
 

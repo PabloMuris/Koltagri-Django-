@@ -12,16 +12,25 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
 
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Informações pessoais', {'fields': ('first_name', 'last_name')}),
-        ('Permissões', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-    )
+    (None, {'fields': ('email', 'username', 'password')}),
+    ('Informações pessoais', {'fields': ('first_name', 'last_name')}),
+    ('Permissões', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+)
+
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name'),
-        }),
-    )
+    (None, {
+        'classes': ('wide',),
+        'fields': (
+            'email',
+            'username',
+            'password1',
+            'password2',
+            'first_name',
+            'last_name',
+        ),
+    }),
+)
+
 
 admin.site.register(User, UserAdmin)

@@ -55,7 +55,7 @@ class CultivationPlantInline(admin.TabularInline):
 
 
 @admin.register(Cultivation)
-class CultivationAdmin(gis_admin.GISModelAdmin): # Usa GISModelAdmin para o mapa
+class CultivationAdmin(admin.ModelAdmin): # Usa GISModelAdmin para o mapa
     list_display = ('name', 'site', 'id')
     list_filter = ('site',)
     search_fields = ('name', 'site__name')

@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Detalhes da Tarefa{% endblock %}
@@ -418,6 +419,183 @@ html { font-size: var(--base-font); color: #071029; }
 #edit-button{
   visibility: hidden;
 }
+
+/* ========== MOBILE OPTIMIZATIONS ========== */
+@media (max-width: 768px) {
+  /* Reorganizar a ordem dos elementos para priorizar a descrição */
+  .page {
+    gap: 12px;
+  }
+  
+  /* Header mais compacto */
+  .task-header {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .task-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .task-icon .material-icons {
+    font-size: 32px;
+  }
+  
+  .task-title {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  .task-meta {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  /* Remover informações secundárias do header no mobile */
+  .task-info p.task-meta:nth-child(3) {
+    display: none;
+  }
+  
+  /* Botões mais compactos */
+  .task-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .task-actions .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .task-actions .btn p {
+    display: none;
+  }
+  
+  .task-actions .btn.primary p {
+    display: block;
+  }
+  
+  /* Reordenar a seção de detalhes - sidebar vai primeiro */
+  .task-details {
+    flex-direction: column;
+  }
+  
+  /* Card de informações mais compacto */
+  .info-card {
+    min-width: unset;
+    padding: 16px;
+    order: -1; /* Mover para cima da descrição */
+    margin-bottom: 0;
+  }
+  
+  .info-grid {
+    gap: 8px;
+  }
+  
+  .info-item {
+    padding: 6px 0;
+  }
+  
+  /* Descrição com menos padding */
+  .task-description {
+    padding: 16px;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  .description-content {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  /* Anexos mais compactos */
+  .attachments-section,
+  .participants-section {
+    padding: 16px;
+    margin-top: 8px;
+  }
+  
+  .attachments-header,
+  .participants-header {
+    margin-bottom: 12px;
+  }
+  
+  .attachment-card,
+  .participant-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .attachment-icon,
+  .participant-avatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .attachment-icon .material-icons,
+  .participant-avatar .material-icons {
+    font-size: 22px;
+  }
+  
+  .attachment-name,
+  .participant-name {
+    font-size: 0.95rem;
+  }
+  
+  .attachment-meta,
+  .participant-role {
+    font-size: 0.8rem;
+  }
+  
+  /* Botões de seção sem texto no mobile */
+  .attachments-header .btn p,
+  .participants-header .btn p {
+    display: none;
+  }
+  
+  .attachments-header .btn,
+  .participants-header .btn {
+    padding: 8px 12px;
+  }
+  
+  /* Esconder elementos menos importantes no mobile */
+  .attachment-actions .btn:not(.download-btn) p,
+  .participant-status {
+    font-size: 0.8rem;
+  }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 480px) {
+  .task-actions .btn {
+    padding: 6px 8px;
+  }
+  
+  .task-actions .btn .material-icons {
+    font-size: 18px;
+  }
+  
+  .attachment-card,
+  .participant-card {
+    grid-template-columns: auto 1fr;
+  }
+  
+  .attachment-actions,
+  .participant-status {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    margin-top: 8px;
+    justify-content: flex-start;
+  }
+}
+
+/* ========== FIM DAS OTIMIZAÇÕES MOBILE ========== */
 </style>
 {% endblock %}
 

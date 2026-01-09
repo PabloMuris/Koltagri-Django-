@@ -1,0 +1,962 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tarefas Expandidas{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+<style>
+:root {
+    --primary-color: #4aa582da;
+    --primary-dark: #3a8a6a;
+    --accent-color: #00204b;
+    --text-color: #071029;
+    --muted-color: #6b7688;
+    --bg-color: #f7f9fb;
+    --panel-bg: #ffffff;
+    --border-color: #e9eef6;
+    --radius: 12px;
+    --gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-section {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-color);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.task-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.task-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.task-meta {
+    color: var(--muted-color);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.task-time {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted-color);
+    font-size: 0.85rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--primary-color);
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0 0 20px 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.date-fields {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.date-fields .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.date-note {
+    font-size: 12px;
+    color: var(--muted-color);
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-color);
+    grid-column: 1 / -1;
+}
+
+.empty-state .material-icons {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--accent-color);
+    transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.filters-summary {
+    background: #f0f7f3;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filters-summary .active-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.filter-tag .remove {
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.filter-tag .remove:hover {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .page-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        min-width: 100%;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .date-fields {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions {
+        flex-wrap: wrap;
+    }
+    
+    .filters-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+.search-form-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: none;
+}
+
+.search-btn:hover {
+    background: var(--primary-dark);
+}
+
+.search-btn.visible {
+    display: block;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">Tarefas</h1>
+        <div class="page-actions">
+            <a href="{% url 'task_form' %}" class="btn primary">
+                <span class="material-icons">add</span>
+                Nova tarefa
+            </a>
+        </div>
+    </div>
+
+    <!-- Resumo dos filtros ativos -->
+    {% if request.GET %}
+    <div class="filters-summary">
+        <div class="active-filters">
+            {% if request.GET.name__icontains %}
+            <span class="filter-tag">
+                Busca: "{{ request.GET.name__icontains }}"
+                <span class="material-icons remove" onclick="removeFilter('name__icontains')">close</span>
+            </span>
+            {% endif %}
+            
+            {% if request.GET.status == 'overdue' %}
+            <span class="filter-tag">
+                Apenas atrasadas
+                <span class="material-icons remove" onclick="removeFilter('status')">close</span>
+            </span>
+            {% elif request.GET.status == 'not_overdue' %}
+            <span class="filter-tag">
+                Apenas não atrasadas
+                <span class="material-icons remove" onclick="removeFilter('status')">close</span>
+            </span>
+            {% endif %}
+            
+            {% if request.GET.due_date__gte %}
+            <span class="filter-tag">
+                A partir de: {{ request.GET.due_date__gte }}
+                <span class="material-icons remove" onclick="removeFilter('due_date__gte')">close</span>
+            </span>
+            {% endif %}
+            
+            {% if request.GET.due_date__lte %}
+            <span class="filter-tag">
+                Até: {{ request.GET.due_date__lte }}
+                <span class="material-icons remove" onclick="removeFilter('due_date__lte')">close</span>
+            </span>
+            {% endif %}
+            
+            {% if request.GET.due_date %}
+            <span class="filter-tag">
+                Data exata: {{ request.GET.due_date }}
+                <span class="material-icons remove" onclick="removeFilter('due_date')">close</span>
+            </span>
+            {% endif %}
+        </div>
+        <button class="btn small" onclick="clearAllFilters()">
+            <span class="material-icons">clear_all</span>
+            Limpar tudo
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- Área de busca e filtros -->
+    <div class="filter-section">
+        <div class="filter-row">
+            <div class="search-form-wrapper">
+                <div class="search-box">
+                    <span class="material-icons search-icon">search</span>
+                    <form id="search-form" method="get" style="display: inline-block; width: 100%;">
+                        <input type="text" 
+                               id="search-input" 
+                               name="name__icontains" 
+                               placeholder="Buscar tarefas por nome..." 
+                               value="{{ request.GET.name__icontains|default:'' }}"
+                               autocomplete="off">
+                        <!-- Botão de submit visível apenas para acessibilidade -->
+                        <button type="submit" class="search-btn" id="search-submit" aria-label="Buscar">
+                            <span class="material-icons">search</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn" id="clear-search">
+                    <span class="material-icons">clear</span>
+                    Limpar busca
+                </button>
+                <button class="btn" id="filter-toggle">
+                    <span class="material-icons">filter_list</span>
+                    Mais filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginação superior -->
+    <div class="pagination">
+        <div>
+            {% if page_obj.has_previous %}
+            <a href="{% querystring page=page_obj.previous_page_number %}">
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">chevron_left</span>
+                Anterior
+            </a>
+            {% endif %}
+        </div>
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        <div>
+            {% if page_obj.has_next %}
+            <a href="{% querystring page=page_obj.next_page_number %}">
+                Próxima
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">chevron_right</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Lista de tarefas -->
+    <div class="results-grid" id="results-container">
+        {% for task in tasks %}
+        <a class="task-card" href="{% url 'task_detail' pk=task.pk %}">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div class="card-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm200-190q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z"/>
+                    </svg>
+                </div>
+                <div style="flex: 1;">
+                    <p class="task-title">{{ task.name|truncatechars:50 }}</p>
+                    <p class="task-meta">
+                        {% if task.created_by %}
+                        {{ task.created_by.get_full_name|default:task.created_by.username }}
+                        {% else %}
+                        Sem responsável
+                        {% endif %}
+                    </p>
+                    {% if task.due_date %}
+                    <p class="task-meta">
+                        <span class="material-icons" style="font-size: 14px; vertical-align: middle;">event</span>
+                        {{ task.due_date|date:"d/m/Y" }}
+                        {% if task.is_completed %}
+                        <span style="color: #4CAF50; margin-left: 8px;">
+                            <span class="material-icons" style="font-size: 14px; vertical-align: middle;">check_circle</span>
+                            Concluída
+                        </span>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="task-time">
+                <p>Criada em: {{ task.created_at|date:"d/m/Y" }}</p>
+                <time datetime="{{ task.created_at|date:'c' }}">{{ task.created_at|date:"H:i" }}</time>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <span class="material-icons">task_alt</span>
+            <p>Nenhuma tarefa encontrada com os filtros atuais</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" onclick="clearAllFilters()">
+                    <span class="material-icons">clear_all</span>
+                    Limpar filtros
+                </button>
+                <a href="{% url 'task_form' %}" class="btn primary">
+                    <span class="material-icons">add</span>
+                    Criar nova tarefa
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação inferior -->
+    <div class="pagination">
+        <div>
+            {% if page_obj.has_previous %}
+            <a href="{% querystring page=page_obj.previous_page_number %}">
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">chevron_left</span>
+                Anterior
+            </a>
+            {% endif %}
+        </div>
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        <div>
+            {% if page_obj.has_next %}
+            <a href="{% querystring page=page_obj.next_page_number %}">
+                Próxima
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">chevron_right</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Filtro -->
+<div class="modal-overlay" id="filter-modal">
+    <div class="modal-content">
+        <button class="close-btn" id="close-filter-modal">
+            <span class="material-icons">close</span>
+        </button>
+        <h3 class="modal-title">Filtrar Tarefas</h3>
+        <form id="filter-form" method="get">
+            <!-- Campo de busca -->
+            <div class="form-group">
+                <label for="modal-search-input">Buscar por nome</label>
+                <input type="text" 
+                       id="modal-search-input" 
+                       name="name__icontains" 
+                       placeholder="Digite para buscar..." 
+                       value="{{ request.GET.name__icontains|default:'' }}">
+            </div>
+            
+            <!-- Status da tarefa -->
+            <div class="form-group">
+                <label for="status">Status da Tarefa</label>
+                <select id="status" name="status">
+                    <option value="">Todas as tarefas</option>
+                    <option value="overdue" {% if request.GET.status == 'overdue' %}selected{% endif %}>
+                        Apenas atrasadas
+                    </option>
+                    <option value="not_overdue" {% if request.GET.status == 'not_overdue' %}selected{% endif %}>
+                        Apenas não atrasadas
+                    </option>
+                </select>
+            </div>
+            
+            <!-- Data exata -->
+            <div class="form-group">
+                <label for="due_date">Data exata (opcional)</label>
+                <input type="date" 
+                       id="due_date" 
+                       name="due_date" 
+                       value="{{ request.GET.due_date|default:'' }}">
+            </div>
+            
+            <!-- Data inicial e final -->
+            <div class="date-fields">
+                <div class="form-group">
+                    <label for="due_date__gte">Data inicial</label>
+                    <input type="date" 
+                           id="due_date__gte" 
+                           name="due_date__gte" 
+                           value="{{ request.GET.due_date__gte|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="due_date__lte">Data final</label>
+                    <input type="date" 
+                           id="due_date__lte" 
+                           name="due_date__lte" 
+                           value="{{ request.GET.due_date__lte|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="date-note">
+                <span class="material-icons" style="font-size: 14px; vertical-align: middle;">info</span>
+                Dica: Se você selecionar apenas data inicial, verá todas as tarefas a partir desta data.
+                Se selecionar apenas data final, verá todas as tarefas até esta data.
+            </div>
+            
+            <!-- Ações do modal -->
+            <div class="form-actions">
+                <button type="button" id="reset-filters" class="btn">
+                    <span class="material-icons" style="font-size: 16px;">restart_alt</span>
+                    Limpar tudo
+                </button>
+                <button type="button" id="cancel-filter" class="btn">Cancelar</button>
+                <button type="submit" class="btn primary">Aplicar filtros</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos DOM
+    const filterModal = document.getElementById('filter-modal');
+    const filterToggle = document.getElementById('filter-toggle');
+    const closeFilterModal = document.getElementById('close-filter-modal');
+    const cancelFilter = document.getElementById('cancel-filter');
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const clearSearchBtn = document.getElementById('clear-search');
+    const filterForm = document.getElementById('filter-form');
+    const modalSearchInput = document.getElementById('modal-search-input');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+    const statusSelect = document.getElementById('status');
+    const dateExact = document.getElementById('due_date');
+    const dateStart = document.getElementById('due_date__gte');
+    const dateEnd = document.getElementById('due_date__lte');
+    const searchSubmitBtn = document.getElementById('search-submit');
+    
+    // Estado
+    let searchTimeout = null;
+    
+    // Sincronizar campo de busca do modal com o campo principal
+    function syncSearchFields() {
+        modalSearchInput.value = searchInput.value;
+    }
+    
+    // Abrir modal de filtro
+    filterToggle.addEventListener('click', function() {
+        // Sincronizar valores atuais
+        syncSearchFields();
+        statusSelect.value = "{{ request.GET.status|default:'' }}";
+        dateExact.value = "{{ request.GET.due_date|default:'' }}";
+        dateStart.value = "{{ request.GET.due_date__gte|default:'' }}";
+        dateEnd.value = "{{ request.GET.due_date__lte|default:'' }}";
+        
+        filterModal.style.display = 'flex';
+    });
+    
+    // Fechar modal
+    function closeModal() {
+        filterModal.style.display = 'none';
+    }
+    
+    closeFilterModal.addEventListener('click', closeModal);
+    cancelFilter.addEventListener('click', closeModal);
+    
+    // Fechar modal ao clicar fora
+    filterModal.addEventListener('click', function(e) {
+        if (e.target === filterModal) {
+            closeModal();
+        }
+    });
+    
+    // Limpar apenas o campo de busca
+    clearSearchBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        
+        // Submeter busca vazia
+        const params = new URLSearchParams(window.location.search);
+        params.delete('name__icontains');
+        params.set('page', '1');
+        
+        // Coletar todos os outros parâmetros
+        const otherParams = {};
+        params.forEach((value, key) => {
+            if (key && key !== 'page') {
+                otherParams[key] = value;
+            }
+        });
+        
+        // Construir URL com parâmetros restantes
+        const queryString = Object.keys(otherParams).length > 0 
+            ? '?' + new URLSearchParams(otherParams).toString() + '&page=1'
+            : '?page=1';
+            
+        window.location.href = window.location.pathname + queryString;
+    });
+    
+    // Resetar todos os filtros no modal
+    resetFiltersBtn.addEventListener('click', function() {
+        modalSearchInput.value = '';
+        statusSelect.value = '';
+        dateExact.value = '';
+        dateStart.value = '';
+        dateEnd.value = '';
+    });
+    
+    // Função para remover um filtro específico
+    window.removeFilter = function(filterName) {
+        const params = new URLSearchParams(window.location.search);
+        params.delete(filterName);
+        params.delete('page');
+        
+        window.location.href = window.location.pathname + '?' + params.toString();
+    };
+    
+    // Função para limpar todos os filtros
+    window.clearAllFilters = function() {
+        window.location.href = window.location.pathname;
+    };
+    
+    // Função para fazer busca
+    function performSearch() {
+        clearTimeout(searchTimeout);
+        
+        // Coletar todos os parâmetros atuais da URL
+        const currentParams = new URLSearchParams(window.location.search);
+        const searchValue = searchInput.value.trim();
+        
+        // Atualizar o parâmetro de busca
+        if (searchValue) {
+            currentParams.set('name__icontains', searchValue);
+        } else {
+            currentParams.delete('name__icontains');
+        }
+        
+        // Resetar para página 1
+        currentParams.set('page', '1');
+        
+        // Construir nova URL
+        const newUrl = window.location.pathname + '?' + currentParams.toString();
+        
+        // Redirecionar
+        window.location.href = newUrl;
+    }
+    
+    // Mostrar botão de busca quando o campo tem foco
+    searchInput.addEventListener('focus', function() {
+        searchSubmitBtn.classList.add('visible');
+    });
+    
+    // Esconder botão de busca quando o campo perde foco
+    searchInput.addEventListener('blur', function() {
+        setTimeout(() => {
+            searchSubmitBtn.classList.remove('visible');
+        }, 200);
+    });
+    
+    // Submissão do formulário de busca (Enter ou botão)
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        performSearch();
+    });
+    
+    // Busca em tempo real com debounce (opcional - pode remover se quiser apenas por Enter)
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        
+        // Se o campo estiver vazio, buscar imediatamente
+        if (this.value.trim() === '') {
+            performSearch();
+        }
+    });
+    
+    // Submissão do formulário de filtro do modal
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Coletar dados do formulário do modal
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams();
+        
+        // Adicionar todos os parâmetros (exceto vazios)
+        for (const [key, value] of formData.entries()) {
+            if (value && value.trim() !== '') {
+                params.append(key, value);
+            }
+        }
+        
+        // Resetar para página 1
+        params.set('page', '1');
+        
+        // Atualizar campo de busca principal com o valor do modal
+        const modalSearchValue = modalSearchInput.value.trim();
+        searchInput.value = modalSearchValue;
+        
+        // Fechar modal
+        closeModal();
+        
+        // Redirecionar com novos filtros
+        window.location.href = window.location.pathname + '?' + params.toString();
+    });
+    
+    // Atalho de teclado: ESC fecha modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && filterModal.style.display === 'flex') {
+            closeModal();
+        }
+        
+        // Ctrl + F para abrir filtros
+        if (e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            filterToggle.click();
+        }
+    });
+    
+    // Sincronizar campo de busca principal com o do modal
+    searchInput.addEventListener('input', function() {
+        syncSearchFields();
+    });
+    
+    // Permitir busca com Enter no modal também
+    modalSearchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            filterForm.submit();
+        }
+    });
+    
+    // Validação de datas
+    function validateDates() {
+        if (dateStart.value && dateEnd.value && dateStart.value > dateEnd.value) {
+            dateEnd.setCustomValidity('A data final deve ser igual ou posterior à data inicial');
+            return false;
+        } else {
+            dateEnd.setCustomValidity('');
+            return true;
+        }
+    }
+    
+    dateStart.addEventListener('change', validateDates);
+    dateEnd.addEventListener('change', validateDates);
+    
+    // Inicializar campos de data
+    function setupDateInputs() {
+        if (dateExact) {
+            dateExact.placeholder = 'YYYY-MM-DD';
+            dateExact.title = 'Digite a data exata ou use o seletor';
+        }
+        
+        if (dateStart) {
+            dateStart.placeholder = 'YYYY-MM-DD';
+            dateStart.title = 'Data inicial (inclusiva)';
+        }
+        
+        if (dateEnd) {
+            dateEnd.placeholder = 'YYYY-MM-DD';
+            dateEnd.title = 'Data final (inclusiva)';
+        }
+    }
+    
+    setupDateInputs();
+    
+    // Inicializar campo de busca
+    searchInput.value = "{{ request.GET.name__icontains|default:'' }}";
+    syncSearchFields();
+});
+</script>
+{% endblock %}

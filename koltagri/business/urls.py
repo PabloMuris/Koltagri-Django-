@@ -7,7 +7,8 @@ from .views import (
    SuppliesFormView,
    ExpenseCreateUpdateView,
    AgriculturalInputCreateUpdateView,
-   SupplieDeleteView
+   SupplieDeleteView,
+   ExpenseUpdateView
 )
 urlpatterns = [
    path("",BusinessDashboardView.as_view(),name="business_board"),
@@ -17,5 +18,6 @@ urlpatterns = [
    path("insumos/novo-insumo/",AgriculturalInputCreateUpdateView.as_view(),name="supplies_form"), 
    path("insumos/editar-insumo/<int:pk>/",AgriculturalInputCreateUpdateView.as_view(),name="supplies_form_edit"),
    path("gastos",ExpenseCreateUpdateView.as_view(),name="expense_create_update"),
-   path("insumo/deletar/<int:pk>/",SupplieDeleteView.as_view(),name="supplies_delete")
+   path("insumo/deletar/<int:pk>/",SupplieDeleteView.as_view(),name="supplies_delete"),
+   path("gastos/editar/<int:pk>/",ExpenseUpdateView.as_view(),name="expense_edit"),
 ]

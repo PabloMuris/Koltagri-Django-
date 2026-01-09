@@ -3,40 +3,36 @@ from .models import Expense, ExpensesCategory,AgriculturalInputs
 from django.utils import timezone
 
 class ExpenseForm(forms.ModelForm):
- 
-    category = forms.ModelChoiceField(
-        queryset=ExpensesCategory.objects.all(), 
-        empty_label="Selecione uma categoria",
-     
-        widget=forms.Select(attrs={'id': 'add-category'})
-    )
-
     class Meta:
         model = Expense
         fields = ['description', 'amount', 'category', 'date', 'note']
-        
-        
         widgets = {
             'description': forms.TextInput(attrs={
-                'id': 'add-description', 
-                'placeholder': 'Ex: Compra de fertilizantes',
-               
+                'class': 'form-control',
+                'placeholder': 'Descrição do gasto'
             }),
             'amount': forms.NumberInput(attrs={
-                'id': 'add-amount', 
-                'placeholder': '0,00',
-                'step': '0.01'
+                'class': 'form-control',
+                'step': '0.01',
+                'placeholder': '0.00'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
             }),
             'date': forms.DateInput(attrs={
-                'id': 'add-date', 
-                'type': 'date' 
+                'class': 'form-control',
+                'type': 'date'
             }),
             'note': forms.Textarea(attrs={
-                'id': 'add-notes', 
-                'placeholder': 'Detalhes adicionais sobre este gasto...',
-                'rows': 3  
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Observações adicionais...'
             }),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = ExpensesCategory.objects.all()
 
 class AgriculturalInputValidationForm(forms.Form):
     name = forms.CharField(max_length=200)

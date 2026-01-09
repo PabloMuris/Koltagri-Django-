@@ -100,5 +100,44 @@ class Country(models.Model):
     def __str__(self):
         return self.abbreviation
     
+class State(models.Model):
+    name = models.CharField(
+        verbose_name=_("Name"), max_length=100
+    )
+    abbreviation = models.CharField(
+        verbose_name=_("Abbreviation"), max_length=3, unique=True
+    )
 
+    country = models.ForeignKey(
+        Country,
+        verbose_name=_("Country"),
+        on_delete=models.CASCADE,
+        related_name="states"
+    )
 
+    class Meta:
+        verbose_name = _("State")
+        verbose_name_plural = _("States")
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+class City(models.Model):
+    name = models.CharField(
+        verbose_name=_("Name"), max_length=100
+    )
+    state = models.ForeignKey(
+        State,
+        verbose_name=_("State"),
+        on_delete=models.CASCADE,
+        related_name="cities"
+    )
+
+    class Meta:
+        verbose_name = _("City")
+        verbose_name_plural = _("Cities")
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name

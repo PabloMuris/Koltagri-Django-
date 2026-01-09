@@ -5,6 +5,7 @@ from django.views.generic import TemplateView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
+from django_filters.views import FilterView
 
 
 from koltagri.landplots.models import Site
@@ -12,7 +13,7 @@ from koltagri.landplots.models import Site
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404,redirect
 
-class IndexView(TemplateView):
+class IndexView(LoginRequiredMixin,TemplateView):
     template_name = "index.html"
 
 class LoginView(TemplateView):
@@ -43,6 +44,9 @@ def select_site_location(request,site_id):
 
     selected_site = get_object_or_404(Site, id=site_id, members=request.user)
 
+    if not selected_site:
+        return redirect('select_site')
+
     request.session['selected_site_location'] = selected_site.id
 
     request.session['selected_site_name'] = selected_site.name
@@ -53,5 +57,11 @@ def select_site_location(request,site_id):
     return redirect('index')
 
 
-class SelectSiteView(TemplateView):
+class SelectSiteView(LoginRequiredMixin,FilterView):
     template_name = 'select_site.html'
+    model = Site
+    context_object_name = 'sites'
+    filterset_fields = ["name"]
+
+    def get_queryset(self):
+        return Site.objects.filter(members=self.request.user)

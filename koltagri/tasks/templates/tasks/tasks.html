@@ -12,7 +12,29 @@
 <link rel="stylesheet" href="{% static 'css/tasks.css' %}">
 {% endblock %}
 
-{% block styles %}{% endblock %}
+{% block styles %}
+<style>
+
+  .top-panel{
+    padding-bottom: 96px;
+    position: relative;
+  }
+  .advanced-filters{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    position: absolute;
+    bottom: 20px;
+   
+    color: white;
+    background-color: var(--primary-color);
+    padding-left: 15px;
+    border-radius: 0px 10px 10px 0px;
+    min-height: 40px;
+    padding: 10px 15px;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="page">
@@ -33,10 +55,16 @@
         <div class="value">{{ not_done|default:"34" }}</div>
       </div>
       <div class="stat-card">
-        <div class="label">Adiada</div>
-        <div class="value">{{ postponed|default:"8" }}</div>
+        <div class="label">Atrasadas</div>
+        <div class="value">{{ postponed|default:"3" }}</div>
       </div>
+      
     </div>
+    <a href="" class="advanced-filters">
+      <span class="material-icons" aria-hidden="true">tune</span>
+      <span class="sr-only">Listagem avançada</span>
+      <span class="ribbon-text">Listagem avançada</span>
+    </a>
   </section>
 
   <div class="action-bar">
@@ -67,6 +95,19 @@
     </div>
   </div>
 
+ 
+    <div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+  {% endif %}
+    </div>
+    
   <section class="tasks">
     <div class="section-title">Hoje</div>
 
@@ -171,17 +212,7 @@
 
 {# PAGINAÇÃO: mantém querystring atual exceto page que é substituído pelo tag querystring do seu projeto #}
 {% if is_paginated %}
-<nav class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
-  {% endif %}
 
-  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-
-  {% if page_obj.has_next %}
-    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
-  {% endif %}
-</nav>
 {% endif %}
 
 {% endblock %}

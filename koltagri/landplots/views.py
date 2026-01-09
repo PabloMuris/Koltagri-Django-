@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView,ListView,DetailView,FormView,CreateView,UpdateView,DeleteView
+from django.views.generic import TemplateView,ListView,DetailView,FormView,CreateView,UpdateView,DeleteView,View
 # Create your views here
 from django_filters.views import FilterView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,9 +8,11 @@ from koltagri.landplots.models import CultivationPlant,PlantSpecies
 from django.shortcuts import get_object_or_404
 from .models import Site
 
+from .forms import CultivationPlantForm
+
 from .filters import CultivationPlantFilter
 
-
+from django.urls import reverse_lazy
 class CultivatedPlantsView(LoginRequiredMixin,FilterView):
     model = CultivationPlant
     template_name = 'cultivated_plants.html'
@@ -50,7 +52,8 @@ class CultivatedPlantsDetailView(LoginRequiredMixin, DetailView):
             )
         )
 
-class CultivationFormView(LoginRequiredMixin,TemplateView):
-    template_name = 'cultivation_form.html'
-
-
+class CultivationPlantCreateView(CreateView):
+    model = CultivationPlant
+    form_class = CultivationPlantForm
+    template_name = "landplots/cultivation_form.html"
+    success_url = reverse_lazy("cultivated_plants")

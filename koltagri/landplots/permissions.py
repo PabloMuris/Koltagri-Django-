@@ -1,17 +1,15 @@
 from rest_framework import permissions
 from rest_framework.permissions import BasePermission
 from koltagri.core.constants import (
-    ROLE_SYSTEM_ADMIN,
-    ROLE_SITE_OWNER,
-    ROLE_SITE_MANAGER,
-    ROLE_SITE_TEAM,
-    ROLE_STUDY_TEAM,
-    ROLE_STUDY_MANAGER)
+    ROLE_EMPLOYEE,
+    ROLE_TECNICAL_ASSISTANCE,
+    ROLE_SITE_MANAGER
+)
 
 from .models import SiteMembership
 
-class IsInGroupPermission(BasePermission):
-    required_role = None 
+class IsInGroupPermissionMixin(BasePermission):
+    required_roles = None  # agora no plural
 
     def has_permission(self, request, view):
         site_id = (
@@ -23,26 +21,34 @@ class IsInGroupPermission(BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
 
-        if not self.required_role or not site_id:
+        if not self.required_roles or not site_id:
             return False
+
+        # garante que sempre será uma lista
+        roles = self.required_roles
+        if not isinstance(roles, (list, tuple, set)):
+            roles = [roles]
 
         return SiteMembership.objects.filter(
             user=request.user,
             site_id=site_id,
-            role__name=self.required_role
+            role__name__in=roles
         ).exists()
 
 
+class IsEmployeePermission(IsInGroupPermissionMixin):
+    required_roles = ROLE_EMPLOYEE
 
 
-class IsSiteOwner(IsInGroupPermission):
-    required_role = ROLE_SITE_OWNER
+class IsTechnicalAssistancePermission(IsInGroupPermissionMixin):
+    required_roles = [
+        ROLE_EMPLOYEE,
+        ROLE_SITE_MANAGER
+    ]
 
-
-class IsSiteManager(IsInGroupPermission):
-    required_role = ROLE_SITE_MANAGER
-
-
-class IsSiteTeam(IsInGroupPermission):
-    required_role = ROLE_SITE_TEAM
-
+class IsStaffPermission(IsInGroupPermissionMixin):
+    required_roles = (
+        ROLE_EMPLOYEE,
+        ROLE_SITE_MANAGER,
+        ROLE_TECNICAL_ASSISTANCE
+    )

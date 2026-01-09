@@ -9,6 +9,9 @@ from django_filters.views import FilterView
 import mimetypes
 
 
+from django.db.models import Q
+
+
 from koltagri.landplots.models import CultivationPlant, PlantSpecies,Site,SiteMembership
 from koltagri.business.models import AgriculturalInputs
 from .forms import TaskForm
@@ -33,8 +36,16 @@ from django.core.exceptions import PermissionDenied
 
 User = get_user_model()
 
+from django.utils import timezone
+from django.urls import reverse
+from django.db.models import Min, Max
+from datetime import timedelta
+
+
 from django.http import HttpResponseNotAllowed
 # Create your views here.
+
+from koltagri.core.mixins import IsManagerMixin, IsStaffMixin,IsManagerOrTechnicalAssistanceMixin 
 
 class TaskTemplateView(LoginRequiredMixin, FilterView):
     template_name = "tasks/tasks.html"
@@ -43,7 +54,8 @@ class TaskTemplateView(LoginRequiredMixin, FilterView):
     paginate_by = 3
     filterset_fields = {
         "name": ["icontains"],
-        "due_date": ["gte", "lte"],
+        "due_date": ["gte",'exact', "lte"],
+        "is_completed": ["exact"],
     }
 
     def get_queryset(self):
@@ -57,6 +69,32 @@ class TaskTemplateView(LoginRequiredMixin, FilterView):
             .get_queryset()
             .filter(site=site_id)
         )
+    
+    def get_context_data(self, **kwargs):
+
+        
+        context = super().get_context_data(**kwargs)
+        today = timezone.localdate()
+        start_of_week = today - timedelta(days=today.weekday())  # monday
+        end_of_week = start_of_week + timedelta(days=6)
+        prev_week_start = start_of_week - timedelta(days=7)
+        prev_week_end = start_of_week - timedelta(days=1)
+        next_week_start = end_of_week + timedelta(days=1)
+        next_week_end = end_of_week + timedelta(days=7)
+
+        extremes = Task.objects.aggregate(min_date=Min('due_date'), max_date=Max('due_date'))
+        min_date = extremes['min_date']
+        max_date = extremes['max_date']
+
+        context['preset_urls'] = {
+            'today': f"?due_date__gte={today}&due_date__lte={today}",
+            'last_week_until_today': f"?due_date__gte={prev_week_start}&due_date__lte={today}",
+            'today_until_next_week': f"?due_date__gte={today}&due_date__lte={next_week_end}",
+            'before_prev_week_until_extreme': f"?due_date__lte={prev_week_end}&due_date__gte={min_date if min_date else ''}",
+            'next_week_until_extreme': f"?due_date__gte={next_week_start}&due_date__lte={max_date if max_date else ''}",
+        }
+
+        return context
 
 class TaskDetailTemplateView(DetailView):
     template_name = "tasks/tasks_detail.html"
@@ -79,7 +117,7 @@ class TaskboardTemplateView(ListView):
     context_object_name = "task_d"
     model = Task 
 
-class TaskCreateUpdateView(LoginRequiredMixin, View):
+class TaskCreateUpdateView(IsManagerOrTechnicalAssistanceMixin, View):
     template_name = "tasks/task_form.html"
     
     def get(self, request, pk=None):
@@ -155,21 +193,38 @@ class TaskCreateUpdateView(LoginRequiredMixin, View):
             "task_id": pk,
         })
 
-class TaskParticipantTemplateView(LoginRequiredMixin, ListView):
+
+class TaskParticipantTemplateView(LoginRequiredMixin, ListView):  # Alterado de FilterView para ListView
     template_name = "tasks/task_team.html"
     context_object_name = "participants"
     model = SiteMembership
+    paginate_by = 10
 
-    def get_queryset(self):  
+    def get_queryset(self):
         site_id = self.request.session.get("selected_site_location")
         site = get_object_or_404(Site, id=site_id)
-        return (
-            SiteMembership.objects
-            .filter(site=site)
-            
-        )
-    
+        
+        # Obter o parâmetro de busca da requisição GET
+        search_query = self.request.GET.get('search', '').strip()
+        
+        queryset = SiteMembership.objects.filter(site=site).select_related('user')
+        
+        # Aplicar filtro de busca se houver um termo
+        if search_query:
+            # Busca tanto no first_name quanto no last_name
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=search_query) |
+                Q(user__last_name__icontains=search_query)
+            )
+        
+        return queryset.order_by('user__first_name', 'user__last_name')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Adiciona o termo de busca ao contexto para manter o campo preenchido
+        context['search_query'] = self.request.GET.get('search', '')
+        context['task_pk'] = self.kwargs.get('pk')
+        return context
 
 class TaskDocsTemplateView(TemplateView):
     template_name = "tasks/task_detail_docs.html"
@@ -180,7 +235,7 @@ class TaskAttachmentsTemplateView(LoginRequiredMixin, FilterView):
     model = Attachment
     context_object_name = "attachments"
     filterset_fields = ["name"]
-    paginate_by = 1
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -266,3 +321,43 @@ class DownloadFileView(LoginRequiredMixin, View):
             response["Content-Type"] = mime_type
 
         return response
+    
+
+from django.db.models import Min, Max
+from .filters import TaskFilter
+from django.views.generic.list import ListView
+
+class SimpleFilteringTasksView(LoginRequiredMixin, FilterView):
+    template_name = "tasks/tasks_expanded.html"
+    context_object_name = "tasks"
+    model = Task
+    paginate_by = 10
+    filterset_class = TaskFilter  # Use o filtro customizado
+
+    def get_queryset(self):
+        site_id = self.request.session.get("selected_site_location")
+
+        if not site_id:
+            return Task.objects.none()
+
+        queryset = Task.objects.filter(site=site_id)
+        
+        # Ordenação padrão: mais antigas primeiro
+        queryset = queryset.order_by('due_date', 'created_at')
+        
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Adicionar limites de datas para o frontend
+        site_id = self.request.session.get("selected_site_location")
+        if site_id:
+            extremes = Task.objects.filter(site=site_id).aggregate(
+                min_date=Min('due_date'), 
+                max_date=Max('due_date')
+            )
+            context['min_date'] = extremes['min_date']
+            context['max_date'] = extremes['max_date']
+        
+        return context

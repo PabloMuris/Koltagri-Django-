@@ -69,6 +69,9 @@ class PlantSpecies(BaseModelWithSoftDelete):
         default=LuminosityNeeds.PARTIAL_SHADE,
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Site(BaseModel):
     name = models.CharField(max_length=100)
@@ -85,7 +88,7 @@ class Site(BaseModel):
         through_fields=("site", "user"),
     )
     timezone = models.CharField(default="UTC", max_length=50)
-    area = geomodels.MultiPolygonField(null=True, blank=True)
+    
 
     class Meta:
         verbose_name = "Site"
@@ -112,7 +115,6 @@ class Site(BaseModel):
 
 class Cultivation(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
-    area = geomodels.MultiPolygonField(null=True, blank=True)
     site = models.ForeignKey(
         Site,
         on_delete=models.CASCADE,

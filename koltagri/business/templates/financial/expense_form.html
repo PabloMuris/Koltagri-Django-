@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Despesa{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+:root{
+  --primary-color: #3b82a0;
+  --primary-dark: #2d677f;
+  --bg: #f7f9fb;
+  --card-bg: #fff;
+  --border: #f2f2f2;
+  --radius: 12px;
+  --text: #102734;
+  --muted: #6b777a;
+  --gap: 16px;
+}
+
+*{ box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+
+.form-shell { max-width: 800px; margin: 18px auto; padding: 0 16px; }
+.form-panel{ background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; width: 100%; }
+.form-panel h1{ margin:0 0 6px 0; font-size: 1.25rem; color: var(--text); font-weight: 600; }
+.form-sub { font-size: 0.95rem; color: var(--muted); margin-bottom: 12px; }
+
+.row { display:flex; gap: 12px; }
+.col { flex: 1; }
+.stack { display:flex; flex-direction:column; gap:10px; }
+
+label{ font-size: 14px; color: var(--text); font-weight: 600; margin-bottom: 6px; display:block; }
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width:100%;
+  height:44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border:1px solid var(--border);
+  background: #f7f8f8;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+}
+
+textarea { height: 120px; padding-top: 12px; resize: vertical; }
+
+input[type="date"] { padding-left: 12px; }
+input[type="number"] { -moz-appearance:textfield; } /* evitar setinhas no Firefox se quiser */
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(59,130,112,0.06);
+}
+
+.helper { font-size: 13px; color: var(--muted); }
+
+.actions { display:flex; gap:16px; margin-top: 18px; justify-content: flex-end; }
+.btn { border-radius: 8px; padding: 10px 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: #fff; color: var(--text); }
+.btn.primary{ background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+.btn.ghost{ background: transparent; border: 1px solid var(--border); color: var(--primary-color); }
+
+@media (max-width: 760px){
+  .row{ flex-direction: column; }
+  .actions{ flex-direction: column-reverse; gap: 10px; }
+  .actions .btn{ width: 100%; }
+}
+
+.small-note { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.field-errors { color: #b91c1c; font-size: 13px; margin-top: 6px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions" style="display:flex; gap:8px; margin-bottom:12px;">
+  <button type="button" id="back-button" onclick="location.href='{% url 'statistics' %}'" class="btn ghost" aria-label="Voltar">
+    ← Voltar
+  </button>
+</div>
+
+<div class="form-shell">
+  <form method="post" class="form-panel" novalidate>
+    {% csrf_token %}
+    <h1 id="form-title">{% if expense %}Editar Despesa{% else %}Nova Despesa{% endif %}</h1>
+    <div class="form-sub">
+      Use o formulário abaixo para registrar ou editar a despesa.
+    </div>
+
+    {# Hidden id para compatibilidade com views que detectam edição pelo POST #}
+    {% if expense %}
+      <input type="hidden" name="id" value="{{ expense.id }}">
+    {% endif %}
+
+    {# Mostra erros globais do form se houver #}
+    {% if form.non_field_errors %}
+      <div class="field-errors">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="stack" role="group" aria-label="Dados da despesa">
+
+      <div class="row">
+        <div class="col">
+          <label for="{{ form.category.id_for_label }}">Categoria *</label>
+          {{ form.category }}
+          {% if form.category.errors %}
+            <div class="field-errors">{{ form.category.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col" style="max-width:260px;">
+          <label for="{{ form.amount.id_for_label }}">Valor (R$) *</label>
+          {{ form.amount }}
+          {% if form.amount.errors %}
+            <div class="field-errors">{{ form.amount.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div>
+        <label for="{{ form.date.id_for_label }}">Data *</label>
+        {{ form.date }}
+        {% if form.date.errors %}
+          <div class="field-errors">{{ form.date.errors }}</div>
+        {% endif %}
+        <div class="small-note">Se o navegador suportar, será usado o seletor nativo de data.</div>
+      </div>
+
+      <div>
+        <label for="{{ form.description.id_for_label }}">Descrição</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <div class="field-errors">{{ form.description.errors }}</div>
+        {% endif %}
+        <div class="helper">Breve descrição da despesa (opcional).</div>
+      </div>
+
+      <div>
+        <label for="{{ form.note.id_for_label }}">Observações</label>
+        {{ form.note }}
+        {% if form.note.errors %}
+          <div class="field-errors">{{ form.note.errors }}</div>
+        {% endif %}
+        <div class="helper">Notas internas, faturas, etc (opcional).</div>
+      </div>
+
+    </div>
+
+    <div class="actions" role="group" aria-label="Ações do formulário">
+      <button type="reset" class="btn ghost" aria-label="Limpar formulário">Limpar</button>
+      <button type="submit" class="btn primary" aria-label="Salvar despesa">Salvar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function(){
+  // detecção mínima para input[type="date"]
+  var input = document.createElement('input');
+  input.setAttribute('type','date');
+  var isDateSupported = (input.type === 'date');
+  if(!isDateSupported){
+    console.info('Date input not supported — considere usar um polyfill (flatpickr).');
+  }
+})();
+</script>
+{% endblock %}

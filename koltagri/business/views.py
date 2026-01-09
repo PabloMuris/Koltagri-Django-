@@ -12,6 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib import messages
 from django.urls import reverse
+from django.views.generic.edit import FormView,UpdateView
+
+from koltagri.landplots.permissions import IsInGroupPermissionMixin
 
 class BusinessDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'business.html'
@@ -176,3 +179,12 @@ class AgriculturalInputCreateUpdateView(LoginRequiredMixin, View):
             "insumo": insumo,
             "is_edit": insumo is not None,
         })
+
+
+class ExpenseUpdateView(LoginRequiredMixin,UpdateView):
+    model = Expense
+    form_class = ExpenseForm
+    template_name = "financial/expense_form.html"
+
+    def get_success_url(self):
+        return reverse("statistics")
