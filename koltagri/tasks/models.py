@@ -7,6 +7,8 @@ from koltagri.business.models import AgriculturalInputs
 
 
 
+
+
 class Task(BaseModelWithSoftDelete):
     name = models.CharField(max_length=100)
     description = models.TextField()

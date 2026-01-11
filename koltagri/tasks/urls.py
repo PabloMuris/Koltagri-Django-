@@ -13,7 +13,8 @@ from .views import (
     TaskCreateUpdateView,
     conclude_task,
     DownloadFileView,
-    SimpleFilteringTasksView    
+    SimpleFilteringTasksView,
+    upload_task_attachment  
 )
 urlpatterns = [
     
@@ -26,4 +27,9 @@ urlpatterns = [
     path("concluir-tarefa/<int:pk>/", conclude_task, name="conclude_task"),
     path("download/<int:pk>/", DownloadFileView.as_view(), name="download_attch"),
     path("", SimpleFilteringTasksView.as_view(), name="tasks"),
-]
+     path(
+        "tasks/<int:task_id>/attachments/upload/",
+        upload_task_attachment,
+        name="upload_task_attachment"
+    ),
+    ]

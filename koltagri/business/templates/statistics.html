@@ -514,7 +514,7 @@ body {
   <section class="historic-section">
     <div class="section-header">
       <h3 class="section-title">Histórico de Gastos</h3>
-      <div class="date-filter">
+      <div class="date-filter" style="visibility: hidden;">
         <button class="date-btn active">Hoje</button>
         <button class="date-btn">Semana</button>
         <button class="date-btn">Mês</button>
@@ -525,11 +525,11 @@ body {
     <div class="historic-items">
        
       {% for expense in expenses%}
-      <div class="historic-item">
+      <div class="historic-item" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
         <div class="historic-item-icon">
           <span class="material-icons">shopping_cart</span>
         </div>
-        <div class="historic-item-info">
+        <div class="historic-item-info" style="flex: 1;">
           <p class="historic-item-title">{{ expense.description }}</p>
           <p class="historic-item-description"></p>
           <span class="category-badge category-insumos">
@@ -540,6 +540,10 @@ body {
         <div class="historic-item-meta">
           <div class="historic-item-amount">{{expense.amount}}</div>
           <div class="historic-item-time">14:35</div>
+        </div>
+        <div class="actions">
+          <button type="button" style="background: none; border: none; padding: 0; margin: 0;" onclick="location.href='{% url 'expense_edit' expense.id %}'" title="Editar Gasto">
+        <svg xmlns="http://www.w3.org/2000/svg" style="fill: #071029;" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>          </button>
         </div>
       </div>
       {% endfor %}
@@ -879,4 +883,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
+<script src="{% static 'business/js/filter_expenses.js'%}"></script>
 {% endblock %}

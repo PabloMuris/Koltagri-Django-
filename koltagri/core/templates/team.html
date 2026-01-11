@@ -546,47 +546,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
 
     <div class="results" id="results-list" aria-live="polite">
-       
-      <div class="participant-card" data-role="gerente">
-        <div class="participant-avatar">
-          <img src="{% static 'example_img/user1.jpg' %}" alt="Foto de Ana Silva" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="material-icons" style="display: none;">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Ana Silva</p>
-          <p class="participant-email">ana.silva@enrichthesoil.com</p>
-        </div>
-        <div class="role-selector">
-          <div class="role-display role-gerente">
-            <span class="material-icons" style="font-size: 16px;">admin_panel_settings</span>
-            Gerente
-            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
-          </div>
-          <div class="role-options">
-            <div class="role-option" data-value="gerente">
-              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
-              Gerente
-            </div>
-            <div class="role-option" data-value="tecnico">
-              <span class="material-icons" style="color: #1565c0;">engineering</span>
-              Técnico
-            </div>
-            <div class="role-option" data-value="colaborador">
-              <span class="material-icons" style="color: #7b1fa2;">group</span>
-              Colaborador
-            </div>
-          </div>
-        </div>
-        <div class="participant-actions">
-          <button class="action-btn" title="Enviar mensagem">
-            <span class="material-icons">mail</span>
-          </button>
-          <button class="action-btn" title="Remover participante">
-            <span class="material-icons">delete</span>
-          </button>
-        </div>
-      </div>
-
+      {% for person in people%}
        
       <div class="participant-card" data-role="tecnico">
         <div class="participant-avatar">
@@ -627,86 +587,9 @@ html { font-size: var(--base-font); color: #071029; }
         </div>
       </div>
 
+       {%endfor%}
        
-      <div class="participant-card" data-role="colaborador">
-        <div class="participant-avatar">
-          <img src="{% static 'example_img/user2.jpg' %}" alt="Foto de Mariana Costa" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="material-icons" style="display: none;">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Mariana Costa</p>
-          <p class="participant-email">mariana.costa@enrichthesoil.com</p>
-        </div>
-        <div class="role-selector">
-          <div class="role-display role-colaborador">
-            <span class="material-icons" style="font-size: 16px;">group</span>
-            Colaborador
-            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
-          </div>
-          <div class="role-options">
-            <div class="role-option" data-value="gerente">
-              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
-              Gerente
-            </div>
-            <div class="role-option" data-value="tecnico">
-              <span class="material-icons" style="color: #1565c0;">engineering</span>
-              Técnico
-            </div>
-            <div class="role-option" data-value="colaborador">
-              <span class="material-icons" style="color: #7b1fa2;">group</span>
-              Colaborador
-            </div>
-          </div>
-        </div>
-        <div class="participant-actions">
-          <button class="action-btn" title="Enviar mensagem">
-            <span class="material-icons">mail</span>
-          </button>
-          <button class="action-btn" title="Remover participante">
-            <span class="material-icons">delete</span>
-          </button>
-        </div>
-      </div>
-
-       
-      <div class="participant-card" data-role="tecnico">
-        <div class="participant-avatar">
-          <span class="material-icons">person</span>
-        </div>
-        <div class="participant-info">
-          <p class="participant-name">Roberto Alves</p>
-          <p class="participant-email">roberto.alves@enrichthesoil.com</p>
-        </div>
-        <div class="role-selector">
-          <div class="role-display role-tecnico">
-            <span class="material-icons" style="font-size: 16px;">engineering</span>
-            Técnico
-            <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
-          </div>
-          <div class="role-options">
-            <div class="role-option" data-value="gerente">
-              <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
-              Gerente
-            </div>
-            <div class="role-option" data-value="tecnico">
-              <span class="material-icons" style="color: #1565c0;">engineering</span>
-              Técnico
-            </div>
-            <div class="role-option" data-value="colaborador">
-              <span class="material-icons" style="color: #7b1fa2;">group</span>
-              Colaborador
-            </div>
-          </div>
-        </div>
-        <div class="participant-actions">
-          <button class="action-btn" title="Enviar mensagem">
-            <span class="material-icons">mail</span>
-          </button>
-          <button class="action-btn" title="Remover participante">
-            <span class="material-icons">delete</span>
-          </button>
-        </div>
-      </div>
+      
 
        
       <div id="no-results" class="empty-state hidden" role="status">

@@ -625,85 +625,11 @@ html { font-size: var(--base-font); color: #071029; }
       <p class="task-meta">Criada em {{ task_d.created_at }} · Prazo: {{ task_d.due_date }} · Responsável: {{ task_d.responsible }}</p>
       <p class="task-meta">Espécie(s): Adenium · Local: Estufa Principal</p>
     </div>
-    <div class="task-actions">
-      <button class="btn" onclick="location.href='{% url 'task_form'%}'">
-        <span class="material-icons">edit</span>
-        <p id="edit">Editar</p>
-      </button>
-      <label class="btn" for="attachment-input">
-  <span class="material-icons">attach_file</span>
-  <p>Anexar</p>
-</label>
-
-<input
-  type="file"
-  id="attachment-input"
-  hidden
-  onchange="uploadTaskAttachment(this)"
->
-
-      <button class="btn primary" onclick="location.href='{% url 'conclude_task' pk=task_id %}'">
-        <span class="material-icons">check_circle</span>
-        {% if is_completed %}
-          <p>Reabrir</p>
-        {% else %}
-          <p>Concluir</p>
-        {% endif %}
-      </button>
-    </div>
-    <div class="task-owner-actions" style="position: absolute; right: 0px;  border-bottom-right-radius: 0px;
-  border-top-right-radius: 0px;
-  border-right: transparent;
-">
-      <button class="btn" onclick="location.href='{% url 'task_participant' pk=task_id %}'">
-        <span class="material-icons">person</span>
-        <p>Participantes</p>
-      </button>
-    </div>
+    
   </section>
 
    
-  <div class="task-details">
-    
-     
-    <div class="task-description">
-      <h3 class="section-title">
-        <span class="material-icons">description</span>
-        Descrição da Tarefa
-      </h3>
-      <div class="description-content">
-        {{ task_d.description }}
-      </div>
-    </div>
 
-     
-    <div class="task-sidebar">
-      <div class="info-card">
-        <h3 class="section-title">
-          <span class="material-icons">info</span>
-          Informações
-        </h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Status</span>
-            <span class="info-value" style="color: #f57c00;">Em andamento</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Prioridade</span>
-            <span class="info-value" style="color: #d32f2f;">Alta</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Tempo Restante</span>
-            <span class="info-value">4 horas</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Criada por</span>
-            <span class="info-value">Ana Silva</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
    
   <section class="attachments-section">
@@ -779,50 +705,27 @@ html { font-size: var(--base-font); color: #071029; }
   </section>
   
 
-   
+    <section class="participants-section">
+    <div class="participants-header">
+      <h3 class="section-title">
+        <span class="material-icons" ></span>
+        Participantes da Tarefa
+      </h3>
+      <button class="btn primary" >
+        <span class="material-icons">arrow_outward</span>
+        Participantes
+
+      </button>
+      
+    </div>
+
+    
+  </section>
  
 
 </div>
 {% endblock %}
 
 {% block scripts %}
-
 <script src="{% static 'js/task_detail'%}"></script>
-<script>
-function uploadTaskAttachment(input) {
-    const file = input.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    fetch("{% url 'upload_task_attachment' task_id %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-            return;
-        }
-
-        // feedback rápido
-        alert("Arquivo anexado com sucesso!");
-
-        // opcional: recarregar para mostrar na lista
-        location.reload();
-    })
-    .catch(() => {
-        alert("Erro ao enviar o anexo.");
-    })
-    .finally(() => {
-        input.value = "";
-    });
-}
-</script>
-
 {% endblock %}

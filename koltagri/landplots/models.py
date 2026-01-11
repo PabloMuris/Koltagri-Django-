@@ -84,9 +84,9 @@ class Site(BaseModel):
     )
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        through="SiteMembership",
+        through="landplots.SiteMembership",
         through_fields=("site", "user"),
-    )
+)
     timezone = models.CharField(default="UTC", max_length=50)
     
 

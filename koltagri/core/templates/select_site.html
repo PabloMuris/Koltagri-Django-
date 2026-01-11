@@ -420,20 +420,12 @@
      
     <div class="properties-grid" id="properties-container">
         {% for site in sites%}
-        <div class="property-card">
+        <div class="property-card" onclick="location.href='{{ site.id }}'">
 
     <div class="property-header">
         <h3 class="property-name">{{ site.name }}</h3>
 
-        <div class="property-actions">
-            <button class="btn small icon-only edit-property" data-id="1">
-                <span class="material-icons">edit</span>
-            </button>
-
-            <button class="btn small icon-only delete-property" data-id="1">
-                <span class="material-icons">delete</span>
-            </button>
-        </div>
+        
     </div>
 
     <div class="property-details">
@@ -447,20 +439,14 @@
             <span>10 hectares</span>
         </div>
 
-        <!-- Esse bloco só existe se property.coordinates existir -->
-        <div class="property-detail">
-            <span class="material-icons">map</span>
-            <span>-7.12345, -35.12345</span>
-        </div>
+        
     </div>
 
     <p class="property-description">
         Descrição da propriedade
     </p>
 
-    <div class="status-badge status-active">
-        Ativa
-    </div>
+    
 
         </div>
         {%endfor%}
@@ -548,4 +534,17 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("apply-filters");
+
+
+    searchButton.addEventListener("click", function() {
+        const query = searchInput.value.trim();
+        if (query) {
+            // Redirecionar para a URL de busca com o parâmetro de consulta
+            window.location.href = `?name__icontains=${encodeURIComponent(query)}`;
+        }
+    });
+</script>
 {% endblock %}

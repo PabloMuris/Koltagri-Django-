@@ -8,7 +8,9 @@ from .views import (
    ExpenseCreateUpdateView,
    AgriculturalInputCreateUpdateView,
    SupplieDeleteView,
-   ExpenseUpdateView
+   ExpenseUpdateView,
+   ExpenseDeleteView,
+   expense_data_view
 )
 urlpatterns = [
    path("",BusinessDashboardView.as_view(),name="business_board"),
@@ -20,4 +22,6 @@ urlpatterns = [
    path("gastos",ExpenseCreateUpdateView.as_view(),name="expense_create_update"),
    path("insumo/deletar/<int:pk>/",SupplieDeleteView.as_view(),name="supplies_delete"),
    path("gastos/editar/<int:pk>/",ExpenseUpdateView.as_view(),name="expense_edit"),
+   path("gastos/deletar/<int:pk>",ExpenseDeleteView.as_view(),name='expense_delete'),
+   path("expense-data/", expense_data_view, name="expense_data"),
 ]

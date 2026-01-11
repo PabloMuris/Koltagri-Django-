@@ -1,10 +1,12 @@
 from django.shortcuts import render,get_list_or_404,get_object_or_404
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404,HttpResponseForbidden
 from django.views.generic import ListView,TemplateView,View,DetailView
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from asgiref.sync import sync_to_async
 from django_filters.views import FilterView
+from django.views.decorators.http import require_POST
+
 
 import mimetypes
 
@@ -361,3 +363,42 @@ class SimpleFilteringTasksView(LoginRequiredMixin, FilterView):
             context['max_date'] = extremes['max_date']
         
         return context
+    
+
+
+@login_required
+@require_POST
+def upload_task_attachment(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    file = request.FILES.get("file")
+    if not file:
+        return JsonResponse(
+            {"error": "Nenhum arquivo enviado"},
+            status=400
+        )
+
+    # verifica se o usuário faz parte do site da tarefa (opcional, mas recomendado)
+    if task.site and not request.user.sitemembership_set.filter(site=task.site).exists():
+        return HttpResponseForbidden("Você não tem acesso a esta tarefa")
+
+    # regra do tipo do anexo
+    if task.user.filter(id=request.user.id).exists():
+        attachment_type = Attachment.TASK
+    else:
+        attachment_type = Attachment.COMPLETION
+
+    attachment = Attachment.objects.create(
+        task=task,
+        file=file,
+        name=file.name,
+        type=attachment_type,
+        user=request.user
+    )
+
+    return JsonResponse({
+        "id": attachment.id,
+        "name": attachment.name,
+        "type": attachment.get_type_display(),
+        "file_url": attachment.file.url,
+    })

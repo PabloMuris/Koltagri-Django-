@@ -11,6 +11,9 @@ from .manager import SoftDeleteManager
 # Create your models here.
 User = get_user_model()
 
+from django.conf import settings
+from django.utils import timezone
+
 
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(email="deleted")[0]
@@ -104,9 +107,7 @@ class State(models.Model):
     name = models.CharField(
         verbose_name=_("Name"), max_length=100
     )
-    abbreviation = models.CharField(
-        verbose_name=_("Abbreviation"), max_length=3, unique=True
-    )
+    
 
     country = models.ForeignKey(
         Country,
@@ -141,3 +142,34 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SiteInvite(models.Model):
+    site = models.ForeignKey(
+        "landplots.Site",
+        on_delete=models.CASCADE,
+        related_name="invites"
+    )
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+
+    role = models.CharField(
+        max_length=30,
+        default="EMPLOYEE"
+    )
+
+    is_used = models.BooleanField(default=False)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        if self.is_used:
+            return False
+        if self.expires_at and timezone.now() > self.expires_at:
+            return False
+        return True

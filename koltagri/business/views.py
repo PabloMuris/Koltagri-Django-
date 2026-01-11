@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView ,ListView,CreateView,UpdateView,DetailView,DeleteView,FormView
 from django_filters.views import FilterView
@@ -7,7 +8,7 @@ from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import AgriculturalInputValidationForm
-
+from django.db.models import Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.contrib import messages
@@ -15,6 +16,8 @@ from django.urls import reverse
 from django.views.generic.edit import FormView,UpdateView
 
 from koltagri.landplots.permissions import IsInGroupPermissionMixin
+
+from django.contrib.auth.decorators import login_required
 
 class BusinessDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'business.html'
@@ -26,7 +29,8 @@ class StatisticsView(LoginRequiredMixin, FilterView):
     template_name = 'statistics.html'
     model = Expense
     context_object_name = 'expenses'
-    filterset_fields = ['category', 'date']
+    filterset_fields = ['category', 'date','description']
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,8 +94,8 @@ class ExpenseCreateUpdateView(LoginRequiredMixin,FormView):
 
 class SupplieDeleteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        expense = get_object_or_404(AgriculturalInputs, id=kwargs.get("pk"))
-        expense.delete()
+        supllie = get_object_or_404(AgriculturalInputs, id=kwargs.get("pk"))
+        supllie.delete()
         return redirect("supplies")
 
 
@@ -188,3 +192,37 @@ class ExpenseUpdateView(LoginRequiredMixin,UpdateView):
 
     def get_success_url(self):
         return reverse("statistics")
+    
+
+
+@login_required
+def expense_data_view(request):
+    site_id = request.session.get("selected_site_location")
+
+    if not site_id:
+        return JsonResponse({"error": "Site não selecionado"}, status=400)
+
+    expenses = (
+        Expense.objects
+        .filter(site_id=site_id)
+        .values("category__name")
+        .annotate(total=Sum("amount"))
+        .order_by("category__name")
+    )
+
+    labels = [e["category__name"] for e in expenses]
+    data = [float(e["total"]) for e in expenses]
+
+    return JsonResponse({
+        "labels": labels,
+        "data": data
+    })
+
+class ExpenseDeleteView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        expense = get_object_or_404(Expense, id=kwargs.get("pk"))
+        expense.delete()
+        return redirect("statistics")
+
+
+
