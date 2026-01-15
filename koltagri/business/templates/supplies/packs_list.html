@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Packs{% endblock %}
+{% block header_title %}Koltagri{% endblock %}
+{% block header_text %}packs de insumos{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+{% endblock %}
+
+{% block styles %}
+<style>
+  #edit-button{ visibility: hidden; }
+
+:root{
+  --bg:#f2f2f2;
+  --muted:#66788f;
+  --primary:#4aa58a;
+  --accent:#00204b;
+  --card-bg:#ffffff;
+  --border:#e8eef6;
+  --radius:10px;
+  --gap:16px;
+  --container-max:1200px;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto;
+}
+
+.container-wide{
+  width:100%;
+  margin:24px 0;
+}
+
+.supplies-indicators{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:var(--gap);
+  background:var(--bg);
+  padding:20px;
+  border-radius:var(--radius);
+}
+
+.supplies-header h1{
+  margin:0;
+  font-size:20px;
+  color:var(--accent);
+}
+
+.supplies-header p{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.add-supply{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--primary);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.indicators-grid{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+.supply-card{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+.icon-wrap{
+  width:48px;
+  height:48px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(74,165,138,.12);
+  color:var(--primary);
+}
+
+.filter-search-section{ margin-top:20px; }
+
+.results{
+  display:grid;
+  gap:12px;
+  margin-top:20px;
+}
+
+.result_card{
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:12px;
+  padding:14px;
+  border-radius:8px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  cursor:pointer;
+}
+
+.card_description .class__title{
+  margin:0;
+  font-size:15px;
+  font-weight:600;
+  color:var(--accent);
+}
+
+.card_description .task__author{
+  margin-top:6px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.card__datetime{
+  font-size:13px;
+  color:var(--muted);
+  text-align:right;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+  <button type="button" id="back-button" onclick="location.href='{% url 'business_board'%}'">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e3e3e3">
+      <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+    </svg>
+  </button>
+</div>
+
+<div class="container-wide">
+
+  <!-- INDICADORES -->
+  <section class="supplies-indicators">
+    <div class="supplies-header">
+      <h1>Packs de Insumos</h1>
+      <p>Controle de compras e disponibilidade por lote</p>
+    </div>
+
+    <a href="" class="add-supply hidden-on-mobile">
+      <span class="material-icons">add_circle_outline</span>
+      Novo Pack
+    </a>
+
+    <div class="indicators-grid">
+      <div class="supply-card">
+        <div class="icon-wrap"><span class="material-icons">inventory_2</span></div>
+        <div>
+          <strong>Total de Packs</strong>
+          <p>{{ total_packs }}</p>
+        </div>
+      </div>
+
+      <div class="supply-card">
+        <div class="icon-wrap"><span class="material-icons">paid</span></div>
+        <div>
+          <strong>Valor Total</strong>
+          <p>R$ {{ total_value }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSCA -->
+  <section class="filter-search-section">
+    {% include "partials/_search.html"  %}
+  </section>
+
+  <!-- LISTAGEM -->
+  <section class="tasks-result">
+    <div class="results">
+
+      {% for pack in packs %}
+      <div class="result_card"
+           onclick="location.href='{% url 'pack_detail' pack.id %}'">
+
+        <div class="card__image">
+          <span class="material-icons">local_shipping</span>
+        </div>
+
+        <div class="card_description">
+          <p class="class__title">{{ pack.name }}</p>
+          <p class="task__author">
+            {{ pack.agricultural_input.name }}
+          </p>
+        </div>
+
+        <div class="card__datetime">
+          <p>{{ pack.quantity }} {{ pack.agricultural_input.unit }}</p>
+          <p>R$ {{ pack.price }}</p>
+        </div>
+      </div>
+      {% empty %}
+      <p style="color:var(--muted)">Nenhum pack cadastrado.</p>
+      {% endfor %}
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}

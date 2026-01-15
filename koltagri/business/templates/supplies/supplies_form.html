@@ -740,47 +740,7 @@ select.error:focus {
         </div>
 
         <!-- Linha: Quantidade e Preço -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="id_quantity">Quantidade *</label>
-                <input 
-                    type="number" 
-                    id="id_quantity" 
-                    name="quantity" 
-                    value="{{ form.quantity.value|default_if_none:'' }}" 
-                    placeholder="0" 
-                    min="0" 
-                    step="0.01"
-                    required
-                    class="{% if form.quantity.errors %}error{% endif %}"
-                >
-                {% if form.quantity.errors %}
-                    <div class="form-error">
-                        {% for err in form.quantity.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="id_price">Preço (R$) *</label>
-                <input 
-                    type="number" 
-                    id="id_price" 
-                    name="price" 
-                    value="{{ form.price.value|default_if_none:'' }}" 
-                    placeholder="0.00" 
-                    step="0.01" 
-                    min="0" 
-                    required
-                    class="{% if form.price.errors %}error{% endif %}"
-                >
-                {% if form.price.errors %}
-                    <div class="form-error">
-                        {% for err in form.price.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+        
 
         <!-- Descrição -->
         <div class="form-group">
@@ -826,21 +786,7 @@ select.error:focus {
             </div>
 
             <!-- Data de compra -->
-            <div class="form-group">
-                <label for="id_purchase_date">Data de compra</label>
-                <input 
-                    type="date" 
-                    id="id_purchase_date" 
-                    name="purchase_date" 
-                    value="{{ form.purchase_date.value|default_if_none:''|date:'Y-m-d' }}"
-                    class="{% if form.purchase_date.errors %}error{% endif %}"
-                >
-                {% if form.purchase_date.errors %}
-                    <div class="form-error">
-                        {% for err in form.purchase_date.errors %}{{ err }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+            
         </div>
 
         <!-- Ações do Formulário -->
@@ -895,12 +841,10 @@ select.error:focus {
         if (!form) return;
 
         form.addEventListener('submit', function(e) {
-            const name = document.getElementById('id_name').value.trim();
-            const quantity = document.getElementById('id_quantity').value;
-            const price = document.getElementById('id_price').value;
+            const name = document.getElementById('id_name').value.trim();            const price = document.getElementById('id_price').value;
             const unit = document.getElementById('id_unit').value;
             
-            if (!name || !quantity || !price || !unit) {
+            if (!name || !price || !unit) {
                 e.preventDefault();
                 alert('Por favor, preencha todos os campos obrigatórios (*)');
                 if (!name) document.getElementById('id_name').focus();

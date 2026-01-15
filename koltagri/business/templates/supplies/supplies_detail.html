@@ -570,7 +570,7 @@ main {
 {% endif %}
     <div class="insumo-names">
         <p class="nome">{{insumo.name}}</p>
-        <p class="tipo">Fertilizante</p>
+        
     </div>
 </section>
 
@@ -606,58 +606,31 @@ main {
         </div>
     </div>
 
-    <div class="status-card">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path>
-            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon>
-        </svg>
-        <div>
-            <p>Quantidade</p>
-            <p>120 kg</p>
-        </div>
-    </div>
+    
 
-    <div class="price-card">
-        <div class="price" style="font-size: 14px;">R$ 45,50</div>
-        <div class="unit">por quilograma</div>
-    </div>
+    
 </section>
 
-<section class="info-section">
-    <div class="info-block">
+<section class="info-section" style="width: 100%;">
+    <div class="info-block" >
         <h3>Descrição</h3>
         <p>
-            O composto orgânico é um fertilizante natural produzido a partir da decomposição 
-            de materiais orgânicos como restos de alimentos, folhas, esterco e palha. 
-            Rico em nutrientes essenciais para as plantas, melhora a estrutura do solo, 
-            aumenta a retenção de água e promove o desenvolvimento de microrganismos benéficos.
+           {{insumo.description}}
         </p>
     </div>
 
     <div class="info-block">
-        <h3>Anexos</h3>
+        <h3>Ações</h3>
         <button class="add-attachment-btn" id="add-attachment-main">
             <span class="material-icons">attach_file</span>
-            Adicionar Anexo
+            Pacotes
+        </button>
+        <button class="packages-btn" id="package-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-183v-274L200-596v274l240 139Zm80 0 240-139v-274L520-457v274Zm-80 92L160-252q-19-11-29.5-29T120-321v-318q0-22 10.5-40t29.5-29l280-161q19-11 40-11t40 11l280 161q19 11 29.5 29t10.5 40v318q0 22-10.5 40T800-252L520-91q-19 11-40 11t-40-11Zm200-528 77-44-237-137-78 45 238 136Zm-160 93 78-45-237-137-78 45 237 137Z"/></svg>
+            <p>Pacotes</p>
         </button>
         
-        <div class="attachments-list">
-            <div class="attachment-item">
-                <span class="material-icons attachment-icon">description</span>
-                <a href="#" class="attachment-link">Manual de aplicação.pdf</a>
-                <span class="attachment-meta">2.4 MB</span>
-            </div>
-            <div class="attachment-item">
-                <span class="material-icons attachment-icon">image</span>
-                <a href="#" class="attachment-link">Análise laboratorial.jpg</a>
-                <span class="attachment-meta">1.8 MB</span>
-            </div>
-            <div class="attachment-item">
-                <span class="material-icons attachment-icon">description</span>
-                <a href="#" class="attachment-link">Ficha técnica.pdf</a>
-                <span class="attachment-meta">856 KB</span>
-            </div>
-        </div>
+        
     </div>
 </section>
 

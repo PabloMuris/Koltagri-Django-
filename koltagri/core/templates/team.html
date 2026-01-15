@@ -418,7 +418,7 @@ html { font-size: var(--base-font); color: #071029; }
 
  
 .hidden{ display:none !important; }
-.sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.sr-only{ position:absolute !important; width:1px !important; height:1px !important; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
  
 .empty-state{
@@ -529,13 +529,16 @@ html { font-size: var(--base-font); color: #071029; }
       <span class="material-icons" aria-hidden="true">search</span>
       <input id="search-input" type="search" placeholder="Buscar participante..." aria-label="Buscar participantes">
     </div>
-
+    {% if is_site_manager %}
     <div class="actions" role="toolbar" aria-label="ações">
       <button id="invite-open" class="btn primary" type="button">
         <span class="material-icons" aria-hidden="true">person_add</span>
         Convidar Participante
       </button>
     </div>
+    {% endif %}
+
+
   </div>
 
    
@@ -563,15 +566,15 @@ html { font-size: var(--base-font); color: #071029; }
             <span class="material-icons" style="font-size: 16px;">arrow_drop_down</span>
           </div>
           <div class="role-options">
-            <div class="role-option" data-value="gerente">
+            <div class="role-option" data-value="Site Manager">
               <span class="material-icons" style="color: #2e7d32;">admin_panel_settings</span>
               Gerente
             </div>
-            <div class="role-option" data-value="tecnico">
+            <div class="role-option" data-value="Technical Assistance">
               <span class="material-icons" style="color: #1565c0;">engineering</span>
               Técnico
             </div>
-            <div class="role-option" data-value="colaborador">
+            <div class="role-option" data-value="Employee">
               <span class="material-icons" style="color: #7b1fa2;">group</span>
               Colaborador
             </div>
@@ -607,14 +610,16 @@ html { font-size: var(--base-font); color: #071029; }
     <div class="modal-header">
       <h3 id="invite-title">Convidar Participante</h3>
     </div>
-    <form id="invite-form" method="post" action="#">
+
+    <form id="invite-form" method="post" action="{% url 'create-invite' site_id=request.session.selected_site_location %}">
+      {% csrf_token %}
       <div class="modal-row">
         <div class="form-control">
           <label for="invite-role">Papel do participante</label>
           <select id="invite-role" name="role" required>
-            <option value="colaborador">Colaborador</option>
-            <option value="tecnico">Técnico</option>
-            <option value="gerente">Gerente</option>
+            <option value="Employee">Colaborador</option>
+            <option value="Technical Assistance">Técnico</option>
+            <option value="Site Manager">Gerente</option>
           </select>
         </div>
         <div class="form-control">
@@ -633,7 +638,7 @@ html { font-size: var(--base-font); color: #071029; }
         <div class="form-control" style="flex: 1 1 100%;">
           <label>Link de convite</label>
           <div class="invite-link-container">
-            <input type="text" id="invite-link" class="invite-link" value="https://enrichthesoil.com/convite/abc123def456" readonly>
+            <input type="text" id="invite-link" class="invite-link" value="" placeholder="Nenhum link gerado ainda" readonly>
             <button type="button" id="copy-link" class="copy-btn">
               <span class="material-icons" style="font-size: 18px;">content_copy</span>
               Copiar
@@ -704,12 +709,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Mostrar notificação
-  function showNotification(message) {
+  function showNotification(message, isError) {
     notificationText.textContent = message;
+    notification.style.background = isError ? '#b00020' : '';
     notification.classList.add('show');
     
     setTimeout(() => {
       notification.classList.remove('show');
+      notification.style.background = '';
     }, 3000);
   }
 
@@ -737,31 +744,92 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Copiar link de convite
+  // Copiar link de convite (usa clipboard quando disponível)
   if (copyLinkBtn) {
     copyLinkBtn.addEventListener('click', function() {
-      inviteLink.select();
-      document.execCommand('copy');
-      
-      // Mostrar notificação
-      showNotification('Link copiado para a área de transferência!');
+      const text = inviteLink.value;
+      if (!text) {
+        showNotification('Nenhum link para copiar', true);
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => showNotification('Link copiado para a área de transferência!'))
+          .catch(() => showNotification('Erro ao copiar link', true));
+      } else {
+        // fallback
+        inviteLink.select();
+        try {
+          document.execCommand('copy');
+          showNotification('Link copiado para a área de transferência!');
+        } catch (e) {
+          showNotification('Erro ao copiar link', true);
+        }
+      }
     });
   }
 
-  // Gerar novo link
-  if (generateNewBtn) {
+  // Gerar novo link -> chama CreateInviteView via AJAX (fetch)
+  if (generateNewBtn && inviteForm) {
     generateNewBtn.addEventListener('click', function() {
-      // Em uma implementação real, isso faria uma requisição ao servidor
-      // Para gerar um novo token de convite
       const role = inviteRole.value;
       const expires = inviteExpires.value;
-      
-      // Simular geração de novo link
-      const newToken = Math.random().toString(36).substring(2, 15);
-      inviteLink.value = `https://enrichthesoil.com/convite/${newToken}`;
-      
-      // Mostrar notificação
-      showNotification('Novo link de convite gerado!');
+
+      const url = inviteForm.action;
+      if (!url) {
+        showNotification('Ação de convite não configurada no servidor', true);
+        return;
+      }
+
+      console.log(url);
+
+      // pega csrf do campo gerado por {% csrf_token %}
+      const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+      const csrfToken = csrfInput ? csrfInput.value : null;
+
+      generateNewBtn.disabled = true;
+      generateNewBtn.textContent = 'Gerando...';
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          role: role,
+          expires: expires
+        })
+      })
+      .then(async (response) => {
+        const text = await response.text();
+        let data = {};
+        try { data = text ? JSON.parse(text) : {}; } catch(e){ data = {}; }
+
+        if (!response.ok) {
+          const err = data.error || data.message || 'Erro ao gerar convite';
+          throw new Error(err);
+        }
+        return data;
+      })
+      .then(data => {
+        if (data.invite_link) {
+          inviteLink.value = data.invite_link;
+          showNotification('Convite gerado com sucesso!');
+        } else {
+          showNotification('Resposta inesperada do servidor', true);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        showNotification(String(err.message || err), true);
+      })
+      .finally(() => {
+        generateNewBtn.disabled = false;
+        generateNewBtn.textContent = 'Gerar Novo Link';
+      });
     });
   }
 

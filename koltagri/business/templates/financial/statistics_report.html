@@ -1,0 +1,633 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gastos{% endblock %}
+{% block header_title %}Estatísticas{% endblock %}
+{% block header_text %}Todos os gastos{% endblock %}
+
+{% block rels %}
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'business/css/expenses/pagination.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+
+  .action-bar #filter-open svg {
+    fill: black;
+  }
+
+  .search{
+    background: white;
+  }
+
+
+#edit-button{
+  visibility: hidden;
+}
+:root {
+  --primary: #4a6fa5;
+  --accent: #00204b;
+  --muted: #6b7688;
+  --bg: #f7f9fb;
+  --panel-bg: #ffffff;
+  --border: #e9eef6;
+  --radius: 12px;
+  --gap: 16px;
+  --text-dark: #071029;
+  --text-muted: #6b777a;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+ 
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+ 
+.user-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.user-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-actions button:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+ 
+.finance-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.overview-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.overview-card .label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.overview-card .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.overview-card .trend {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trend.positive {
+  color: #2e7d32;
+}
+
+.trend.negative {
+  color: #d32f2f;
+}
+
+ 
+.finance-graphic {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ 
+.filter-search-section {
+  margin-bottom: 24px;
+}
+
+ 
+.historic-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0;
+}
+
+.date-filter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.date-btn {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-bg);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.date-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.date-btn:hover:not(.active) {
+  border-color: var(--primary);
+}
+
+ 
+.historic-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historic-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.historic-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+ 
+.historic-item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+}
+
+.historic-item-icon .material-icons {
+  font-size: 24px;
+  color: var(--primary);
+}
+
+ 
+.historic-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.historic-item-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--accent);
+  margin: 0;
+}
+
+.historic-item-description {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+ 
+.historic-item-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.historic-item-amount {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--accent);
+}
+
+.historic-item-time {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+ 
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.category-insumos { background: #e8f5e8; color: #2e7d32; }
+.category-manutencao { background: #e3f2fd; color: #1565c0; }
+.category-energia { background: #fff3e0; color: #f57c00; }
+.category-agua { background: #e8eaf6; color: #3f51b5; }
+
+ 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.32);
+  z-index: 1200;
+  padding: 20px;
+}
+
+.modal-panel {
+  width: 100%;
+  max-width: 520px;
+  background: var(--panel-bg);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  margin: 0;
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.form-control {
+  flex: 1;
+  min-width: 160px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.form-control input,
+.form-control select,
+.form-control textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.form-control textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+ 
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+ 
+@media (max-width: 768px) {
+  .finance-overview {
+    grid-template-columns: 1fr;
+  }
+  
+  .historic-item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px;
+  }
+  
+  .historic-item-meta {
+    grid-column: 2;
+    grid-row: 2;
+    align-items: flex-start;
+    margin-top: 4px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .date-filter {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+  
+  .date-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 0 12px;
+  }
+  
+  .finance-graphic {
+    height: 300px;
+    padding: 16px;
+  }
+  
+  .historic-section {
+    padding: 16px;
+  }
+}
+</style>
+
+<style>
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+
+   
+  <div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'business_board' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="expand-button">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>
+    </button>
+  </div>
+
+   
+  <div class="finance-overview">
+    <div class="overview-card">
+      <div class="label">Total de Gastos</div>
+      <div class="value">R$ 12.458,00</div>
+      <div class="trend positive">
+        <span class="material-icons" style="font-size: 16px;">arrow_upward</span>
+        <span>12% vs último mês</span>
+      </div>
+    </div>
+    
+    <div class="overview-card">
+      <div class="label">Gastos do Mês</div>
+      <div class="value">R$ 3.245,00</div>
+      <div class="trend negative">
+        <span class="material-icons" style="font-size: 16px;">arrow_downward</span>
+        <span>5% vs mês anterior</span>
+      </div>
+    </div>
+    
+    <div class="overview-card">
+      <div class="label">Categoria Principal</div>
+      <div class="value">Insumos</div>
+      <div class="trend">45% do total</div>
+    </div>
+    
+   
+  </div>
+
+   
+  <section class="finance-graphic">
+    <canvas id="myChart"></canvas>
+  </section>
+
+   
+  <section class="filter-search-section">
+    {% include "partials/_search.html" with label="Novo Gasto" %}
+  </section>
+
+   
+  <section class="historic-section">
+    <div class="section-header">
+      <h3 class="section-title">Histórico de Gastos</h3>
+      <div class="date-filter" style="visibility: hidden;">
+        <button class="date-btn active">Hoje</button>
+        <button class="date-btn">Semana</button>
+        <button class="date-btn">Mês</button>
+        <button class="date-btn">Ano</button>
+      </div>
+    </div>
+
+    <div class="historic-items">
+       
+      {% for expense in expenses%}
+      <div class="historic-item" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+        <div class="historic-item-icon">
+          <span class="material-icons">shopping_cart</span>
+        </div>
+        <div class="historic-item-info" style="flex: 1;">
+          <p class="historic-item-title">{{ expense.description }}</p>
+          <p class="historic-item-description"></p>
+          <span class="category-badge category-insumos">
+            <span class="material-icons" style="font-size: 14px;">grass</span>
+            {{expense.category.name}}
+          </span>
+        </div>
+        <div class="historic-item-meta">
+          <div class="historic-item-amount">{{expense.amount}}</div>
+          <div class="historic-item-time">14:35</div>
+        </div>
+        <div class="actions">
+          <button type="button" style="background: none; border: none; padding: 0; margin: 0;" onclick="location.href='{% url 'expense_edit' expense.id %}'" title="Editar Gasto">
+        <svg xmlns="http://www.w3.org/2000/svg" style="fill: #071029;" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+ 
+<div id="filter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-panel" role="document">
+    <div class="modal-header">
+      <h3 class="modal-title">Filtrar Gastos</h3>
+    </div>
+    <form id="filter-form">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="filter-category">Categoria</label>
+          <select id="filter-category" name="category">
+            <option value="">Todas as categorias</option>
+            <option value="insumos">Insumos</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="energia">Energia</option>
+            <option value="agua">Água</option>
+            <option value="salarios">Salários</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="filter-period">Período</label>
+          <select id="filter-period" name="period">
+            <option value="today">Hoje</option>
+            <option value="week">Esta semana</option>
+            <option value="month" selected>Este mês</option>
+            <option value="year">Este ano</option>
+            <option value="custom">Personalizado</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-row" id="custom-dates" style="display: none;">
+        <div class="form-control">
+          <label for="filter-start">Data inicial</label>
+          <input type="date" id="filter-start" name="start_date">
+        </div>
+        <div class="form-control">
+          <label for="filter-end">Data final</label>
+          <input type="date" id="filter-end" name="end_date">
+        </div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="filter-amount">Valor mínimo</label>
+          <input type="number" id="filter-amount" name="min_amount" placeholder="R$ 0,00">
+        </div>
+        <div class="form-control">
+          <label for="filter-sort">Ordenar por</label>
+          <select id="filter-sort" name="sort">
+            <option value="date_desc">Data (mais recente)</option>
+            <option value="date_asc">Data (mais antiga)</option>
+            <option value="amount_desc">Valor (maior)</option>
+            <option value="amount_asc">Valor (menor)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" id="filter-cancel" class="btn">Cancelar</button>
+        <button type="button" id="filter-reset" class="btn">Limpar Filtros</button>
+        <button type="submit" class="btn primary">Aplicar Filtros</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+ 
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" integrity="sha512-Y51n9mtKTVBh3Jbx5pZSJNDDMyY+yGe77DGtBPzRlgsf/YLCh13kSZ3JmfHGzYFCmOndraf0sQgfM654b7dJ3w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock %}

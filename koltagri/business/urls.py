@@ -10,7 +10,11 @@ from .views import (
    SupplieDeleteView,
    ExpenseUpdateView,
    ExpenseDeleteView,
-   expense_data_view
+   expense_data_view,
+   AgriculturalInputPackCreateView,
+   AgriculturalInputPackDetailView,
+   AgriculturalInputPackUpdateView,
+   AgriculturalInputPackListView
 )
 urlpatterns = [
    path("",BusinessDashboardView.as_view(),name="business_board"),
@@ -23,5 +27,9 @@ urlpatterns = [
    path("insumo/deletar/<int:pk>/",SupplieDeleteView.as_view(),name="supplies_delete"),
    path("gastos/editar/<int:pk>/",ExpenseUpdateView.as_view(),name="expense_edit"),
    path("gastos/deletar/<int:pk>",ExpenseDeleteView.as_view(),name='expense_delete'),
-   path("expense-data/", expense_data_view, name="expense_data"),
+   path("api/expense-data/", expense_data_view, name="expense_data"),
+   path("insumos/insumo/<int:supplie_pk>/pacotes/", AgriculturalInputPackListView.as_view(), name="packs_list"),
+    path("insumos/insumo/<int:supplie_pk>/pacotes/add/", AgriculturalInputPackCreateView.as_view(), name="pack_add"),
+    path("pacotes/<int:pk>/edit/", AgriculturalInputPackUpdateView.as_view(), name="pack_edit"),
+    path("pacotes/<int:pk>/", AgriculturalInputPackDetailView.as_view(), name="pack_detail"),
 ]

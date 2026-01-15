@@ -712,7 +712,7 @@ html { font-size: var(--base-font); color: #071029; }
         <span class="material-icons">attach_file</span>
         Seus anexos
       </h3>
-      <button class="btn primary">
+      <button class="btn primary" onclick="location.href='{% url 'task_attachments' task_pk=task_id user_pk=user.id %}'">
         <span class="material-icons">arrow_outward </span>
         Todos os anexos
       </button>

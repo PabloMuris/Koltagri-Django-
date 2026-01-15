@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django_filters.views import FilterView
 # Create your views here.
-
+from django.contrib.auth.models import Group
 from .models import SiteInvite
 from django_filters.views import FilterView
 
@@ -20,6 +20,8 @@ from django.shortcuts import get_object_or_404,redirect
 from koltagri.tasks.models import Attachment
 
 from django.contrib import messages
+
+import json
 
 from django.utils import timezone
 from datetime import timedelta
@@ -43,7 +45,19 @@ class TeamView(LoginRequiredMixin, FilterView):
     template_name = 'team.html'
     model = SiteMembership
     context_object_name = "people"
+    paginate_by = 7
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        # Busca o membro ou retorna None
+        member = SiteMembership.objects.filter(user=user).first()
+        
+        # Atribui True se o member existir E o role for o correto, senão False
+        context['is_manager'] = member is not None and member.role == ROLE_SITE_MANAGER
+        
+        return context
 
 
     def get_queryset(self):
@@ -89,7 +103,9 @@ class SelectSiteView(LoginRequiredMixin,FilterView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Site.objects.filter(members=self.request.user)
+        query = super().get_queryset()
+        
+        return query.filter(members=self.request.user)
     
 
 class AddAttachmentView(LoginRequiredMixin, View):
@@ -105,33 +121,43 @@ class AcceptInviteView(LoginRequiredMixin, View):
             messages.error(request, "Convite inválido ou expirado.")
             return redirect("select_site")
 
-        # Já é membro?
+        # já é membro?
         if SiteMembership.objects.filter(
-            user=request.user,
-            site=invite.site
+            site=invite.site,
+            user=request.user
         ).exists():
             messages.info(request, "Você já faz parte desse site.")
             return redirect("select_site")
 
-        # Cria o vínculo
+        # ✅ cria vínculo com o Group do convite
         SiteMembership.objects.create(
-            user=request.user,
             site=invite.site,
-            role=ROLE_EMPLOYEE
+            user=request.user,
+            role=invite.role
         )
 
         invite.is_used = True
-        invite.save()
+        invite.save(update_fields=["is_used"])
 
-        # Seta o site na sessão
-        request.session["site_id"] = invite.site.id
+        # opcional: setar site na sessão
+        request.session["selected_site_location"] = invite.site.id
+        request.session["selected_site_name"] = invite.site.name
 
         messages.success(
             request,
-            f"Você entrou no site {invite.site.name} como funcionário."
+            f"Você entrou no site {invite.site.name} como {invite.role.name}."
         )
 
-        return redirect("dashboard")
+        return redirect("index")
+
+
+
+# core/views.py
+
+
+
+
+
 
 
 class CreateInviteView(LoginRequiredMixin, View):
@@ -139,21 +165,39 @@ class CreateInviteView(LoginRequiredMixin, View):
     def post(self, request, site_id):
         site = get_object_or_404(Site, id=site_id)
 
-        # Verifica se o usuário é dono / manager
-        if not site.memberships.filter(
+        # 🔐 permissão: só Site Manager pode convidar
+        manager_group = Group.objects.get(name="Site Manager")
+
+        if not SiteMembership.objects.filter(
+            site=site,
             user=request.user,
-            role=ROLE_SITE_MANAGER
+            role=manager_group
         ).exists():
             return JsonResponse({"error": "Sem permissão"}, status=403)
+
+        data = json.loads(request.body or "{}")
+
+        # 🎭 role do convite (nome do Group)
+        role_name = data.get("role", "Employee")
+        role = get_object_or_404(Group, name=role_name)
+
+        # ⏳ expiração
+        expires_days = int(data.get("expires", 7))
+        expires_at = (
+            timezone.now() + timedelta(days=expires_days)
+            if expires_days > 0
+            else None
+        )
 
         invite = SiteInvite.objects.create(
             site=site,
             invited_by=request.user,
-            expires_at=timezone.now() + timedelta(days=7)
+            role=role,
+            expires_at=expires_at
         )
 
         invite_link = request.build_absolute_uri(
-            reverse("sites:accept-invite", args=[invite.token])
+            reverse("accept-invite", args=[invite.token])
         )
 
         return JsonResponse({

@@ -28,8 +28,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from koltagri.person.mixins import SiteOwnerRequiredMixin,SiteManagerRequiredMixin
-
+from koltagri.person.mixins import SiteOwnerRequiredMixin,SiteManagerRequiredMixin,SiteTeamRequiredMixin
 from .models import Task,TaskCompletion,Attachment
 
 from django.contrib.auth import get_user_model
@@ -111,7 +110,15 @@ class TaskDetailTemplateView(DetailView):
         task_completion = TaskCompletion.objects.filter(task=self.object, user=self.request.user).first()
         is_completed = task_completion.is_completed if task_completion else False
         context["is_completed"] = is_completed
+        
+        task_owner = Task.objects.filter(user=self.request.user)
+        if task_owner: 
+            context['is_owner'] = True
+        else:
+            context['is_owner'] = False
 
+        context['user'] = self.request.user
+        
         return context
 
 class TaskboardTemplateView(ListView):
@@ -261,9 +268,25 @@ class TaskAttachmentsTemplateView(LoginRequiredMixin, FilterView):
         return queryset.filter(task=task, user=user, task__site=site)
 
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
+        site = request.session.get("selected_site_location")
 
+        if not site:
+            return HttpResponseForbidden()
+
+        is_task_owner = Task.objects.filter(
+            user=request.user,
+            site=site
+        ).exists()
+
+        is_site_member = SiteMembership.objects.filter(
+            user=request.user,
+            site=site
+        ).exists()
+
+        if is_task_owner or is_site_member:
+            return super().dispatch(request, *args, **kwargs)
+
+        return HttpResponseForbidden()
 @login_required
 async def fetch_plant_species(request):
     q = request.GET.get("q", "").strip()
@@ -373,16 +396,13 @@ def upload_task_attachment(request, task_id):
 
     file = request.FILES.get("file")
     if not file:
-        return JsonResponse(
-            {"error": "Nenhum arquivo enviado"},
-            status=400
-        )
+        return JsonResponse({"error": "Nenhum arquivo enviado"}, status=400)
 
-    # verifica se o usuário faz parte do site da tarefa (opcional, mas recomendado)
+    # 1. Usuário precisa fazer parte do site da tarefa
     if task.site and not request.user.sitemembership_set.filter(site=task.site).exists():
         return HttpResponseForbidden("Você não tem acesso a esta tarefa")
 
-    # regra do tipo do anexo
+    # 2. Define o tipo do anexo
     if task.user.filter(id=request.user.id).exists():
         attachment_type = Attachment.TASK
     else:
@@ -401,4 +421,10 @@ def upload_task_attachment(request, task_id):
         "name": attachment.name,
         "type": attachment.get_type_display(),
         "file_url": attachment.file.url,
-    })
+    }, status=201)
+
+
+class AttachmentForTasksView(SiteTeamRequiredMixin,FilterView):
+    model = Attachment
+    template_name = "tasks/task_attachments_task"
+    context_object_name = 'attachments'

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 from koltagri.core.models import BaseModelWithSoftDelete
 # Create your models here.
 
@@ -14,6 +15,12 @@ class ExpensesCategory(models.Model):
     
 
 class Expense(models.Model):
+    site = models.ForeignKey(
+        'landplots.site',
+        on_delete=models.CASCADE,
+        related_name='expenses',
+        null=True
+    )
     
     category = models.ForeignKey(
         ExpensesCategory,
@@ -53,25 +60,103 @@ class Income(models.Model):
 
 
 class AgriculturalInputs(BaseModelWithSoftDelete):
-
-
     UNIT_CHOICES = [
-        ("kg", "Kilogram"),
-        ("g", "Gram"),
-        ("l", "Liter"),
-        ("ml", "Milliliter"),
-        ("pcs", "Pieces"),
-        
-    ]
+            ("kg", "Kilogram"),
+            ("g", "Gram"),
+            ("l", "Liter"),
+            ("ml", "Milliliter"),
+            ("pcs", "Pieces"),
+            
+        ]
+
+    
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    
     unit = models.CharField(max_length=30, choices=UNIT_CHOICES)
-    purchase_date = models.DateField(default=timezone.now)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    
     image = models.ImageField(upload_to='agricultural_inputs/', null=True, blank=True)
     
+    site = models.ForeignKey(
+        "landplots.site",
+        on_delete=models.CASCADE,
+        related_name="supplies",
+        null=True
 
+    )
     def __str__(self):
         return self.name
     
+
+# models.py (trechos relevantes)
+
+class AgriculturalInputPack(BaseModelWithSoftDelete):
+    agricultural_input = models.ForeignKey(
+        AgriculturalInputs,
+        on_delete=models.CASCADE,
+        related_name="packs"
+    )
+
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    purchase_date = models.DateField(default=timezone.now)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    name = models.CharField(max_length=255, editable=False)
+
+    def save(self, *args, **kwargs):
+        # mantém sua escolha original de só gerar se name vazio,
+        # mas você pode trocar para sempre gerar (ver nota abaixo)
+        if not self.name:
+            self.name = self.generate_name()
+        super().save(*args, **kwargs)
+
+    def generate_name(self):
+        # usa a unidade do agricultural_input (corrigido)
+        unit = self.agricultural_input.get_unit_display()
+        return f"{self.agricultural_input.name} - {self.quantity} {unit}"
+
+    def total_used(self):
+        from django.db.models import Sum
+        total = self.usages.aggregate(total=Sum("quantity_used"))["total"]
+        return total or 0
+
+    def remaining_quantity(self):
+        return (self.quantity or 0) - self.total_used()
+
+    def is_depleted(self):
+        return self.remaining_quantity() <= 0
+
+    def __str__(self):
+        return self.name
+
+
+
+class AgriculturalInputUsage(BaseModelWithSoftDelete):
+    pack = models.ForeignKey(
+        AgriculturalInputPack,
+        on_delete=models.PROTECT,
+        related_name="usages"
+    )
+
+    cultivation_plant = models.ForeignKey(
+        "landplots.CultivationPlant",
+        on_delete=models.CASCADE,
+        related_name="input_usages"
+    )
+
+    quantity_used = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Quantidade usada do pack"
+    )
+
+    usage_date = models.DateField(default=timezone.now)
+
+
+    def __str__(self):
+        return (
+            f"{self.quantity_used} "
+            f"{self.pack.agricultural_input.unit} de "
+            f"{self.pack.agricultural_input.name} "
+            f"em {self.cultivation_plant}"
+        )

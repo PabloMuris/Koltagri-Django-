@@ -97,11 +97,7 @@ class UserInformation(BaseModelWithSoftDelete):
         blank=True,
         related_name="last_profile_of_user",
     )
-    city = models.CharField(
-        _("City"),
-        blank=True,
-        null=True,
-    )
+    city = models.ForeignKey("core.city", verbose_name=_(""), on_delete=models.CASCADE)
 
     country = models.ForeignKey(Country, verbose_name=_(""), on_delete=models.CASCADE)
     profile_picture = models.ImageField(
@@ -126,7 +122,7 @@ class UserInformation(BaseModelWithSoftDelete):
     def save(self, *args, **kwargs):
         if self.is_deleted and not self._state.adding:
             unique_suffix = uuid.uuid5().hex
-            self.email = f"{self.email}__deleted__{unique_suffix}"
+            self.user.email = f"{self.email}__deleted__{unique_suffix}"
         super().save(*args, **kwargs)
 
     @property

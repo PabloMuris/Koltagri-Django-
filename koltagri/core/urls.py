@@ -1,5 +1,17 @@
 from django.urls import path
-from .views import IndexView, LoginView,RegisterView,NotificationsView,ProfileView,TeamView,LandsView,PropertyView,select_site_location,SelectSiteView,AcceptInviteView
+from .views import (IndexView,
+                     LoginView,
+                     RegisterView
+                     ,NotificationsView,
+                     ProfileView,TeamView,
+                     LandsView,
+                     PropertyView,
+                     select_site_location,
+                     SelectSiteView,
+                     AcceptInviteView,
+                     CreateInviteView
+)
+
 urlpatterns = [
     path("",IndexView.as_view(),name='index'),
     path("login/",LoginView.as_view(),name='login'),
@@ -12,8 +24,13 @@ urlpatterns = [
     path("select-site/<int:site_id>/",select_site_location,name="select_site_location"),
     path("select-site/",SelectSiteView.as_view(),name="select_site"),
     path(
-        "invite/<uuid:token>/",
+        "sites/<int:site_id>/invite/",
+        CreateInviteView.as_view(),
+        name="create-invite"
+    ),
+    path(
+        "invites/accept/<uuid:token>/",
         AcceptInviteView.as_view(),
         name="accept-invite"
-    ),
+    )
 ]

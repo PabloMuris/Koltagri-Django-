@@ -95,3 +95,11 @@ class ManagerOrAboveRequiredMixin(RoleRequiredMixin):
         ROLE_SITE_OWNER,
         ROLE_SITE_MANAGER,
     ]
+
+class SiteTeamRequiredMixin(RoleRequiredMixin):
+    allowed_roles = [
+        ROLE_SITE_OWNER,
+        ROLE_SITE_MANAGER,
+        ROLE_TECNICAL_ASSISTANCE,
+        ROLE_EMPLOYEE
+    ]

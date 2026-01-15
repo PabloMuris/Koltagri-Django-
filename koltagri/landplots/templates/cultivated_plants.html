@@ -10,14 +10,6 @@
 
 {% block styles %}
 <style>
-
-#filter-open svg{
-  fill: black ;
-}
-main.standard--padding{
-  margin-inline: 22px !important;
-}
-
 :root {
   --primary-color: #2b8aef;
   --bg-color: #f7f9fb;
@@ -27,275 +19,697 @@ main.standard--padding{
   --transition: 0.18s ease;
 }
 
- 
-
- 
-.header-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
-.search-form{
-  display:flex;
-  align-items:center;
-  width:100%;
-  max-width:640px;
-  background:#fff;
-  border-radius:10px;
-  overflow:hidden;
-  border:1px solid rgba(0,0,0,0.06);
-}
-.search-form input{
-  flex:1;
-  padding:10px 14px;
-  border:0;
-  outline:0;
-  font-size:15px;
-  background:transparent;
-}
-.search-form button{
-  width:56px;
-  height:44px;
-  border:0;
-  background:var(--primary-color);
-  color:#fff;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+#filter-open svg {
+  fill: black;
 }
 
- 
-.action-buttons{ display:flex; gap:10px; flex-wrap:wrap; }
-.action-button{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid transparent;
-  background:var(--primary-color);
-  color:#fff;
-  cursor:pointer;
-  transition:var(--transition);
+main.standard--padding {
+  margin-inline: 22px !important;
 }
-.action-button:hover{ transform:translateY(-2px); }
 
-.plant-grid{
-  display:grid;
-  gap:var(--gap);
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  align-items:start;
+.header-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.search-form input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 0;
+  outline: 0;
+  font-size: 15px;
+  background: transparent;
+}
+
+.search-form button {
+  width: 56px;
+  height: 44px;
+  border: 0;
+  background: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+.plant-grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  align-items: start;
   width: 100%;
 }
 
-.plant-card{
-  display:flex;
-  flex-direction:column;
-  background:#fff;
-  border:1px solid var(--border-color);
-  border-radius:var(--card-radius);
-  overflow:hidden;
-  cursor:pointer;
+.plant-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  cursor: pointer;
   transition: transform 0.14s ease, border-color 0.14s ease;
+  min-height: 280px;
 }
 
- 
-.plant-card:hover{ transform: translateY(-4px); border-color: rgba(43,138,239,0.12); }
+.plant-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(43, 138, 239, 0.12);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
 
- 
-.card__image{
-  width:100%;
+.card__image {
+  width: 100%;
   aspect-ratio: 4 / 3;
-  overflow:hidden;
-  background:#f3f3f3;
-  display:block;
-}
-.card__image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: block;
 }
 
- 
-.card__description{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:10px 12px;
-  min-height:48px;
-  box-sizing:border-box;
-}
-.card__description .title{
-  font-size:15px;
-  font-weight:600;
-  color:#102734;
-  margin:0;
-}
-.card__description .meta{
-  font-size:13px;
-  color:#6b777a;
-  white-space:nowrap;
-  opacity:0.9;
+.card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-@media (max-width:880px){
-  .search-form{ max-width:100%; }
-  .action-buttons{ width:100%; justify-content:flex-start; }
-}
-@media (max-width:520px){
-  .card__description{ padding:10px; min-height:56px; }
-  .card__description .title{ font-size:14px; }
-}
-
-.plant-grid.grid-large{
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+.card__description {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
- 
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,0.32);
-  z-index:1200;
-  padding:20px;
+.card__description .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #102734;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
 }
-.modal-panel{
-  width:100%; max-width:520px; background:#fff; border-radius:12px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-.modal-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-.form-control{ flex:1; min-width:160px; }
-.form-control label{ display:block; margin-bottom:6px; font-weight:600; color:#6b777a; font-size:14px; }
-.form-control input, .form-control select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e9eef6; font-size:15px; background:#fff; }
 
- 
-.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 16px;
-  border-radius:8px;
-  border:1px solid #e9eef6;
-  background:#fff;
-  cursor:pointer;
-  font-size:14px;
-  transition: all 0.2s ease;
-  
+.card__description .meta {
+  font-size: 13px;
+  color: #6b777a;
+  line-height: 1.4;
 }
-.btn p {
+
+.meta__item {
+  margin-bottom: 4px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.meta__item strong {
+  color: #4a5568;
+  min-width: 70px;
+  display: inline-block;
+}
+
+.meta__item span {
+  color: #718096;
+  flex: 1;
+}
+
+.meta__climate {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.climate-tag {
+  background: #e8f4ff;
+  color: #2b8aef;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 500;
 }
-.btn.primary{
-  background:var(--primary-color);
-  color:#fff;
-  border-color:transparent;
-}
-.btn:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+.plant-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #48bb78;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 4px;
 }
 
-.hidden{ display:none !important; }
+.active-filters {
+  background: #e8f4ff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #2b8aef;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.active-filters strong {
+  font-weight: 600;
+}
+
+.active-filters span {
+  background: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.active-filters a {
+  margin-left: auto;
+  color: #666;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  padding: 20px 0;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #718096;
+}
+
+.pagination a.btn {
+  min-width: 80px;
+  text-align: center;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 1200;
+  padding: 20px;
+}
+
+.modal-panel {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.form-control {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #6b777a;
+  font-size: 14px;
+}
+
+.form-control input,
+.form-control select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e9eef6;
+  font-size: 15px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.form-control input:focus,
+.form-control select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #e9eef6;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: #4a5568;
+}
+
+.btn p {
+  font-weight: 500;
+  margin: 0;
+}
+
+.btn.primary {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 880px) {
+  .search-form {
+    max-width: 100%;
+  }
+  
+  .action-buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .plant-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .card__description {
+    padding: 12px;
+  }
+  
+  .card__description .title {
+    font-size: 15px;
+  }
+  
+  .modal-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .form-control {
+    min-width: 100%;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.no-plants {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #718096;
+  font-size: 16px;
+}
+
+.no-plants p {
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 20px;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  background: #f7f9fb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e0;
+}
+
+.filter-badge {
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-badge button {
+  background: none;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-badge button:hover {
+  color: #e53e3e;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-count {
+  background: var(--primary-color);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
 </style>
 {% endblock %}
- 
+
 {% block content %}
-
-  {% include "partials/_search.html" with label="Nova planta" %}
-
-  <section class="plant-grid">
-    {% for plant in object_list %}
-      <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail' pk=plant.pk%}'">
-        <div class="card__image">
-          <img src="{% static 'example_img/laranjeira.png' %}" alt="{{ plant.plant_species.name }}">
-        </div>
-        <div class="card__description">
-          <p class="title">{{ plant.plant_species.name }}</p>
-          <span class="meta">
-            {% if plant.plant_species.life_cycle %}
-              {{ plant.plant_species.get_life_cycle_display }}
-            {% else %}
-              {{ plant.plant_species.name }}
-            {% endif %}
-          </span>
-        </div>
-      </article>
-    {% empty %}
-      <p>Nenhuma planta cadastrada.</p>
-    {% endfor %}
-  </section>
-
-
-   
-  <div id="filter-modal-plants" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
-    <div class="modal-panel" role="document">
-      <h3 id="filter-title" style="margin:0 0 20px 0; color:#102734;">Filtrar Plantas</h3>
-      <form id="filter-form-plants">
-        <div class="modal-row">
-          <div class="form-control">
-            <label for="filtro_cultivo">Tipo de Cultivo</label>
-            <select id="filtro_cultivo" name="filtro_cultivo">
-              <option value="">Todos os Cultivos</option>
-              <option value="hortalica">Hortaliças</option>
-              <option value="frutifera">Frutíferas</option>
-              <option value="ornamental">Ornamentais</option>
-              <option value="graos">Grãos</option>
-              <option value="raizes">Raízes e Tubérculos</option>
-            </select>
-          </div>
-          
-        </div>
-
-        <div class="modal-row">
-          
-          <div class="form-control">
-            <label for="filtro_estacao">Clima</label>
-            <select id="filtro_estacao" name="filtro_estacao">
-              <option value="">Qualquer clima</option>
-              <option value="primavera">Tropical</option>
-              <option value="verao">Subtropical</option>
-              <option value="outono">Temperado</option>
-              <option value="inverno">Semiárido</option>
-            </select>
-          </div>
-        </div>
-
-        
-
-        <div class="modal-actions">
-          <button id="filter-cancel-plants" type="button" class="btn">Cancelar</button>
-          <button id="filter-reset-plants" type="button" class="btn">Limpar Filtros</button>
-          <button id="filter-apply-plants" type="submit" class="btn primary">Aplicar Filtros</button>
-        </div>
-      </form>
-    </div>
+<div class="header-bar">
+  <form class="search-form" method="get" action="{% url 'cultivated_plants' %}">
+    <input type="text" 
+           id="search-input" 
+           name="plant_species__name" 
+           placeholder="Buscar plantas..." 
+           value="{{ request.GET.plant_species__name|default:'' }}">
+    <button type="submit" aria-label="Buscar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+    </button>
+  </form>
+  
+  <div class="action-buttons">
+    <button id="filter-open" class="action-button" aria-label="Abrir filtros">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+      </svg>
+      Filtrar
+    </button>
+    <button id="add-open" class="action-button" aria-label="Nova planta">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      </svg>
+      Nova planta
+    </button>
   </div>
+</div>
 
+{% if request.GET %}
+<div class="active-filters">
+  <strong>Filtros ativos:</strong>
+  
+  {% if request.GET.plant_species__name %}
+  <span class="filter-badge">
+    Nome: "{{ request.GET.plant_species__name }}"
+    <button onclick="removeFilter('plant_species__name')" aria-label="Remover filtro de nome">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+  </span>
+  {% endif %}
+  
+  {% if request.GET.cultivation %}
+    {% for cultivation in cultivation_options %}
+      {% if request.GET.cultivation == cultivation.id|stringformat:"s" %}
+      <span class="filter-badge">
+        Área: {{ cultivation.name }}
+        <button onclick="removeFilter('cultivation')" aria-label="Remover filtro de área">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </span>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  
+  {% if request.GET.plant_species__climate_zones %}
+    {% for climate in climate_options %}
+      {% if request.GET.plant_species__climate_zones == climate.id|stringformat:"s" %}
+      <span class="filter-badge">
+        Clima: {{ climate.get_code_display }}
+        <button onclick="removeFilter('plant_species__climate_zones')" aria-label="Remover filtro de clima">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </span>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  
+  <a href="{% url 'cultivated_plants' %}">Limpar todos</a>
+</div>
+{% endif %}
+
+{% if cultivated_plants %}
+<section class="plant-grid">
+  {% for plant in cultivated_plants %}
+  <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail' pk=plant.pk %}'">
+    <div class="card__image">
+      <img src="{% static 'example_img/laranjeira.png' %}" alt="{{ plant.plant_species.name }}">
+    </div>
+    <div class="card__description">
+      <div>
+        <p class="title">{{ plant.plant_species.name }}</p>
+        <div class="meta">
+          <div class="meta__item">
+            <strong>Área:</strong>
+            <span>{{ plant.cultivation.name }}</span>
+          </div>
+          <div class="meta__item">
+            <strong>Quantidade:</strong>
+            <span>{{ plant.count }} unidade{{ plant.count|pluralize }}</span>
+          </div>
+          <div class="meta__item">
+            <strong>Clima:</strong>
+            <div class="meta__climate">
+              {% for zone in plant.plant_species.climate_zones.all %}
+                <span class="climate-tag">{{ zone.get_code_display }}</span>
+              {% empty %}
+                <span style="color: #a0aec0;">Não especificado</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="meta__item">
+            <strong>Ciclo:</strong>
+            <span>{{ plant.plant_species.get_life_cycle_display }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+{% if is_paginated %}
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="btn">Anterior</a>
+  {% endif %}
+  
+  <span class="pagination-info">
+    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+  </span>
+  
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="btn">Próxima</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="no-plants">
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+    </div>
+    <p>Nenhuma planta encontrada com os filtros atuais.</p>
+    {% if request.GET %}
+      <a href="{% url 'cultivated_plants' %}" class="btn primary">Limpar filtros</a>
+    {% else %}
+      <a href="{% url 'cultivation_form' %}" class="btn primary">Adicionar primeira planta</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div id="filter-modal-plants" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="filter-title">
+  <div class="modal-panel" role="document">
+    <div class="filter-header">
+      <h3 id="filter-title" style="margin:0; color:#102734;">Filtrar Plantas</h3>
+      {% if request.GET %}
+        <div class="filter-count">{{ request.GET.items|length }}</div>
+      {% endif %}
+    </div>
+    
+    <form id="filter-form-plants" method="get">
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="plant_species__name">Nome da planta</label>
+          <input type="text" 
+                 id="plant_species__name" 
+                 name="plant_species__name" 
+                 value="{{ request.GET.plant_species__name|default:'' }}"
+                 placeholder="Digite o nome da planta...">
+        </div>
+      </div>
+
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="cultivation">Área de cultivo</label>
+          <select id="cultivation" name="cultivation">
+            <option value="">Todas as áreas</option>
+            {% for cultivation in cultivation_options %}
+              <option value="{{ cultivation.id }}" 
+                      {% if request.GET.cultivation == cultivation.id|stringformat:"s" %}selected{% endif %}>
+                {{ cultivation.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label for="plant_species__climate_zones">Clima</label>
+          <select id="plant_species__climate_zones" name="plant_species__climate_zones">
+            <option value="">Todos os climas</option>
+            {% for climate in climate_options %}
+              <option value="{{ climate.id }}" 
+                      {% if request.GET.plant_species__climate_zones == climate.id|stringformat:"s" %}selected{% endif %}>
+                {{ climate.get_code_display }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="filter-cancel-plants" type="button" class="btn">Cancelar</button>
+        <button id="filter-reset-plants" type="button" class="btn">Limpar Filtros</button>
+        <button id="filter-apply-plants" type="submit" class="btn primary">Aplicar Filtros</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Elementos do modal de plantas
+  // Elementos do modal
   const filterModal = document.getElementById('filter-modal-plants');
   const filterOpenBtn = document.querySelector('#filter-open');
   const filterCancel = document.getElementById('filter-cancel-plants');
   const filterReset = document.getElementById('filter-reset-plants');
   const filterForm = document.getElementById('filter-form-plants');
-  
-  // Elementos para filtragem
-  const plantCards = document.querySelectorAll('.plant-card');
+  const searchForm = document.querySelector('.search-form');
   const searchInput = document.querySelector('#search-input');
-
+  const addButton = document.querySelector('#add-open');
+  
+  // URL atual e parâmetros
+  const currentUrl = new URL(window.location);
+  const urlParams = new URLSearchParams(currentUrl.search);
+  
+  // Preencher o campo de busca se houver valor na URL
+  const currentSearch = urlParams.get('plant_species__name') || '';
+  if (searchInput && currentSearch) {
+    searchInput.value = currentSearch;
+  }
+  
   // Funções para abrir/fechar modal
   function openModal(el) {
     if (!el) return;
@@ -303,14 +717,14 @@ document.addEventListener('DOMContentLoaded', function() {
     el.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
-
+  
   function closeModal(el) {
     if (!el) return;
     el.style.display = 'none';
     el.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
-
+  
   // Abrir modal de filtro
   if (filterOpenBtn) {
     filterOpenBtn.addEventListener('click', function(e) {
@@ -318,14 +732,14 @@ document.addEventListener('DOMContentLoaded', function() {
       openModal(filterModal);
     });
   }
-
+  
   // Fechar modal
   if (filterCancel) {
     filterCancel.addEventListener('click', function() {
       closeModal(filterModal);
     });
   }
-
+  
   // Fechar modal ao clicar fora
   if (filterModal) {
     filterModal.addEventListener('click', function(e) {
@@ -334,86 +748,121 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-
-  // Aplicar filtros
+  
+  // Submeter formulário de busca na barra
+  if (searchForm) {
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const searchValue = searchInput.value.trim();
+      
+      // Construir URL mantendo outros filtros
+      const newUrl = new URL("{% url 'cultivated_plants' %}", window.location.origin);
+      
+      // Adicionar todos os parâmetros atuais
+      urlParams.forEach((value, key) => {
+        if (key !== 'plant_species__name' && key !== 'page') {
+          newUrl.searchParams.set(key, value);
+        }
+      });
+      
+      // Adicionar busca se houver valor
+      if (searchValue) {
+        newUrl.searchParams.set('plant_species__name', searchValue);
+      } else {
+        newUrl.searchParams.delete('plant_species__name');
+      }
+      
+      // Redirecionar
+      window.location.href = newUrl.toString();
+    });
+  }
+  
+  // Limpar filtros - redireciona para a página sem parâmetros
+  if (filterReset) {
+    filterReset.addEventListener('click', function() {
+      window.location.href = "{% url 'cultivated_plants' %}";
+    });
+  }
+  
+  // Aplicar filtros do modal
   if (filterForm) {
     filterForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const cultivo = this.filtro_cultivo.value;
-      const decorativa = this.filtro_decorativa.value;
-      const categoria = this.filtro_categoria.value;
-      const estacao = this.filtro_estacao.value;
-      const dificuldade = this.filtro_dificuldade.value;
-      const manutencao = this.filtro_manutencao.value;
-
-      let visibleCount = 0;
-
-      plantCards.forEach(card => {
-        const cardCultivo = card.getAttribute('data-cultivo');
-        const cardDecorativa = card.getAttribute('data-decorativa');
-        const cardCategoria = card.getAttribute('data-categoria');
-        const cardEstacao = card.getAttribute('data-estacao');
-        const cardDificuldade = card.getAttribute('data-dificuldade');
-        const cardManutencao = card.getAttribute('data-manutencao');
-
-        let showCard = true;
-
-        // Aplicar filtros (apenas se o filtro foi selecionado)
-        if (cultivo && cardCultivo !== cultivo) showCard = false;
-        if (decorativa && cardDecorativa !== decorativa) showCard = false;
-        if (categoria && cardCategoria !== categoria) showCard = false;
-        if (estacao && cardEstacao !== estacao) showCard = false;
-        if (dificuldade && cardDificuldade !== dificuldade) showCard = false;
-        if (manutencao && cardManutencao !== manutencao) showCard = false;
-
-        card.style.display = showCard ? '' : 'none';
-        if (showCard) visibleCount++;
-      });
-
-      closeModal(filterModal);
-    });
-  }
-
-  // Limpar filtros
-  if (filterReset) {
-    filterReset.addEventListener('click', function() {
-      filterForm.reset();
-      plantCards.forEach(card => {
-        card.style.display = '';
-      });
-      closeModal(filterModal);
-    });
-  }
-
-  // Busca em tempo real
-  if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase().trim();
+      // Obter valores do formulário
+      const formData = new FormData(this);
+      const searchValue = formData.get('plant_species__name') || '';
       
-      plantCards.forEach(card => {
-        const title = card.querySelector('.title').textContent.toLowerCase();
-        const meta = card.querySelector('.meta').textContent.toLowerCase();
-        
-        const matches = title.includes(searchTerm) || meta.includes(searchTerm);
-        card.style.display = matches ? '' : 'none';
+      // Construir nova URL
+      const newUrl = new URL("{% url 'cultivated_plants' %}", window.location.origin);
+      
+      // Adicionar todos os parâmetros do formulário (exceto vazios)
+      formData.forEach((value, key) => {
+        if (value) {
+          newUrl.searchParams.set(key, value);
+        } else {
+          newUrl.searchParams.delete(key);
+        }
       });
+      
+      // Se houver busca no input principal, usar ela
+      if (!searchValue && searchInput && searchInput.value.trim()) {
+        newUrl.searchParams.set('plant_species__name', searchInput.value.trim());
+      }
+      
+      // Redirecionar
+      window.location.href = newUrl.toString();
     });
   }
-
-  // Fechar modal com Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeModal(filterModal);
+  
+  // Função para remover filtro individual
+  window.removeFilter = function(filterName) {
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.delete(filterName);
+    
+    // Se for o último filtro, redirecionar para URL limpa
+    if (Array.from(newUrl.searchParams.keys()).length === 0) {
+      window.location.href = "{% url 'cultivated_plants' %}";
+    } else {
+      window.location.href = newUrl.toString();
     }
-  });
-
-  // Redirecionar botão "Nova planta" para cultivation-form
-  const addButton = document.querySelector('#add-open');
+  };
+  
+  // Redirecionar botão "Nova planta"
   if (addButton) {
     addButton.addEventListener('click', function(e) {
       e.preventDefault();
       window.location.href = "{% url 'cultivation_form' %}";
+    });
+  }
+  
+  // Fechar modal com Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && filterModal && filterModal.style.display === 'flex') {
+      closeModal(filterModal);
+    }
+  });
+  
+  // Melhorar acessibilidade
+  if (filterModal) {
+    filterModal.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+        const focusableElements = filterModal.querySelectorAll('button, input, select, [href]');
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
     });
   }
 });
