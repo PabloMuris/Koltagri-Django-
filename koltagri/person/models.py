@@ -80,11 +80,21 @@ class UserInformation(BaseModelWithSoftDelete):
         verbose_name=_("Last name"),
 
     )
+
+    cpf = models.CharField(
+        verbose_name="CPF",
+        max_length=14,
+        unique=True,
+        blank=True,
+        null=True
+    )
     
+
     birth = models.DateField("Birth", blank=True, null=True)
     zip_code = models.CharField(
         verbose_name="Zip Code",
         blank=True,
+        null=True
     )
     phone = models.CharField(
         verbose_name="Phone Number",
@@ -97,7 +107,7 @@ class UserInformation(BaseModelWithSoftDelete):
         blank=True,
         related_name="last_profile_of_user",
     )
-    city = models.ForeignKey("core.city", verbose_name=_(""), on_delete=models.CASCADE)
+    city = models.ForeignKey("core.city", verbose_name=_(""), on_delete=models.CASCADE,null=True)
 
     country = models.ForeignKey(Country, verbose_name=_(""), on_delete=models.CASCADE)
     profile_picture = models.ImageField(
