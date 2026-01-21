@@ -9,7 +9,12 @@ from .views import (IndexView,
                      select_site_location,
                      SelectSiteView,
                      AcceptInviteView,
-                     CreateInviteView
+                     CreateInviteView,
+                     GetCitiesView, 
+                     GetStatesView,
+                     SiteCreateView,
+                     UpdateMemberRoleView,
+                     RemoveMemberView
 )
 
 urlpatterns = [
@@ -21,8 +26,10 @@ urlpatterns = [
     path("propriedade/participantes",TeamView.as_view(),name="team_participants"),
     path("propriedade/areas", LandsView.as_view(),name="lands"),
     path("propriedes/",PropertyView.as_view(),name= "property"),
-    path("select-site/<int:site_id>/",select_site_location,name="select_site_location"),
-    path("select-site/",SelectSiteView.as_view(),name="select_site"),
+    path("locais/<int:site_id>/",select_site_location,name="select_site_location"),
+    path("locais/",SelectSiteView.as_view(),name="select_site"),
+        path("locais/nova_propriedade", SiteCreateView.as_view(), name="create_site"),
+
     path(
         "sites/<int:site_id>/invite/",
         CreateInviteView.as_view(),
@@ -32,5 +39,17 @@ urlpatterns = [
         "invites/accept/<uuid:token>/",
         AcceptInviteView.as_view(),
         name="accept-invite"
-    )
+    ),
+    path('api/cities/', GetCitiesView.as_view(), name='get_cities'),
+    path('api/states/', GetStatesView.as_view(), name='get_states'),
+    path(
+        "team/update-role/",
+        UpdateMemberRoleView.as_view(),
+        name="update_member_role"
+    ),
+    path(
+        "team/remove-member/",
+        RemoveMemberView.as_view(),
+        name="remove_member"
+    ),
 ]

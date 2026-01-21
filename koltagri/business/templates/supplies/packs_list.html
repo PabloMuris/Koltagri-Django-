@@ -1,3 +1,4 @@
+<!-- business/templates/supplies/packs_list.html -->
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Packs{% endblock %}
@@ -12,8 +13,6 @@
 
 {% block styles %}
 <style>
-  #edit-button{ visibility: hidden; }
-
 :root{
   --bg:#f2f2f2;
   --muted:#66788f;
@@ -65,6 +64,12 @@
   font-size:14px;
 }
 
+.add-supply:hover {
+  background:#3a8a6a;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
 .indicators-grid{
   grid-column:1 / -1;
   display:grid;
@@ -109,7 +114,14 @@
   border-radius:8px;
   background:var(--card-bg);
   border:1px solid var(--border);
-  cursor:pointer;
+  position:relative;
+}
+
+.card__image{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--primary);
 }
 
 .card_description .class__title{
@@ -125,21 +137,255 @@
   color:var(--muted);
 }
 
+.card_description .remaining-quantity{
+  margin-top:4px;
+  font-size:12px;
+  color:#4CAF50;
+  font-weight:500;
+}
+
 .card__datetime{
   font-size:13px;
   color:var(--muted);
   text-align:right;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+/* Ações dos Packs */
+.card_actions{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:flex;
+  gap:6px;
+  opacity:0;
+  transition:opacity 0.2s ease;
+}
+
+.result_card:hover .card_actions{
+  opacity:1;
+}
+
+.action-btn{
+  width:32px;
+  height:32px;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  cursor:pointer;
+  text-decoration:none;
+  color:var(--muted);
+  transition:all 0.2s ease;
+}
+
+.action-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+.action-btn.edit:hover{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+.action-btn.use:hover{
+  background:#4CAF50;
+  color:white;
+  border-color:#4CAF50;
+}
+
+.action-btn.delete:hover{
+  background:#f44336;
+  color:white;
+  border-color:#f44336;
+}
+
+/* Modal de confirmação */
+.modal-overlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.5);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-content{
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  position:relative;
+  max-width:450px;
+  width:90%;
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.close-btn{
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:5px;
+  border-radius:4px;
+  transition:background 0.3s ease;
+}
+
+.close-btn:hover{
+  background:#f8f9fa;
+}
+
+.modal-title{
+  font-size:1.25rem;
+  font-weight:600;
+  color:var(--accent);
+  margin:0 0 16px 0;
+}
+
+.delete-message{
+  text-align:center;
+  margin-bottom:20px;
+  color:var(--text-color);
+}
+
+.warning-text{
+  color:#f44336;
+  font-weight:600;
+}
+
+.form-actions{
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+  margin-top:20px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--card-bg);
+  cursor:pointer;
+  font-size:0.95rem;
+  font-weight:500;
+  text-decoration:none;
+  color:inherit;
+  transition:all 0.2s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-danger{
+  background:#f44336;
+  color:#fff;
+  border-color:transparent;
+}
+
+.btn-secondary{
+  background:var(--bg);
+  color:var(--muted);
+  border-color:var(--border);
+}
+
+/* Estados */
+.low-quantity{
+  color:#ff9800;
+  font-weight:600;
+}
+
+.depleted{
+  color:#f44336;
+  font-weight:600;
+}
+
+/* Responsivo */
+@media (max-width:768px){
+  .card_actions{
+    opacity:1;
+    position:relative;
+    top:0;
+    right:0;
+    margin-top:12px;
+    justify-content:flex-end;
+  }
+  
+  .result_card{
+    grid-template-columns:1fr;
+  }
+  
+  .card__datetime{
+    text-align:left;
+  }
+}
+#add-open {
+  display: none;
+}
+
+.user-actions h3{
+  margin-inline: 10px
+}
+
+#filter-open{
+  font-family: "Outfit", sans-serif;
+}
+
+#search-input{
+  flex: 1;
+  padding-left: 6px;
+  
+}
+
+#search-button{
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  min-width: 44px;
+  background-color: var(--primary);
+  
+}
+
+.search{
+  padding-right: 0px;
+}
+
+#search-button svg{
+  fill: white;
 }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="user-actions">
-  <button type="button" id="back-button" onclick="location.href='{% url 'business_board'%}'">
+  <div class="flex-row" style="display: flex; flex-direction: row; align-items: center;">
+    <button type="button" id="back-button" onclick="location.href='{% url 'business_board'%}'">
     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e3e3e3">
       <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
     </svg>
   </button>
+  <h3>Pacotes de Insumos</h3>
+  </div>
+  <a href="{% url 'pack_add' supplie_pk=agricultural_input.id %}" class="add-supply hidden-on-mobile">
+      <span class="material-icons">add_circle_outline</span>
+      Novo Pacote
+    </a>
 </div>
 
 <div class="container-wide">
@@ -151,10 +397,7 @@
       <p>Controle de compras e disponibilidade por lote</p>
     </div>
 
-    <a href="" class="add-supply hidden-on-mobile">
-      <span class="material-icons">add_circle_outline</span>
-      Novo Pack
-    </a>
+    
 
     <div class="indicators-grid">
       <div class="supply-card">
@@ -183,11 +426,8 @@
   <!-- LISTAGEM -->
   <section class="tasks-result">
     <div class="results">
-
       {% for pack in packs %}
-      <div class="result_card"
-           onclick="location.href='{% url 'pack_detail' pack.id %}'">
-
+      <div class="result_card">
         <div class="card__image">
           <span class="material-icons">local_shipping</span>
         </div>
@@ -197,19 +437,129 @@
           <p class="task__author">
             {{ pack.agricultural_input.name }}
           </p>
+          <p class="remaining-quantity {% if pack.remaining_quantity <= 0 %}depleted{% elif pack.remaining_quantity < pack.quantity|divisibleby:2 %}low-quantity{% endif %}">
+            Restante: {{ pack.remaining_quantity }} {{ pack.agricultural_input.unit }}
+          </p>
         </div>
 
         <div class="card__datetime">
-          <p>{{ pack.quantity }} {{ pack.agricultural_input.unit }}</p>
-          <p>R$ {{ pack.price }}</p>
+          <p><strong>Quantidade:</strong> {{ pack.quantity }} {{ pack.agricultural_input.unit }}</p>
+          <p><strong>Preço:</strong> R$ {{ pack.price }}</p>
+          <p><strong>Compra:</strong> {{ pack.purchase_date|date:"d/m/Y" }}</p>
+        </div>
+
+        <!-- Ações -->
+        <div class="card_actions">
+          <a href="{% url 'pack_edit' supplie_pk=pack.agricultural_input.id pk=pack.id %}" 
+             class="action-btn edit" title="Editar">
+            <span class="material-icons">edit</span>
+          </a>
+          
+          <a href="{% url 'pack_usage' supplie_pk=pack.agricultural_input.id pk=pack.id %}" 
+             class="action-btn use" title="Usar">
+            <span class="material-icons">play_arrow</span>
+          </a>
+          
+          <button type="button" class="action-btn delete" title="Excluir"
+                  onclick="openDeleteModal('{{ pack.id }}', '{{ pack.name|escapejs }}')">
+            <span class="material-icons">delete</span>
+          </button>
         </div>
       </div>
       {% empty %}
-      <p style="color:var(--muted)">Nenhum pack cadastrado.</p>
+      <div style="text-align:center; padding:40px; color:var(--muted);">
+        <span class="material-icons" style="font-size:48px; opacity:0.5;">inventory_2</span>
+        <p style="margin-top:16px;">Nenhum pack cadastrado para este insumo.</p>
+        <a href="{% url 'pack_add' supplie_pk=agricultural_input.id %}" class="add-supply" style="margin-top:16px;">
+          <span class="material-icons">add_circle_outline</span>
+          Criar Primeiro Pack
+        </a>
+      </div>
       {% endfor %}
-
     </div>
   </section>
 
 </div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-content">
+    <button type="button" class="close-btn" onclick="closeDeleteModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+      </svg>
+    </button>
+    <h2 class="modal-title">Excluir Pack</h2>
+    
+    <div class="delete-message">
+      <p>Tem certeza que deseja excluir o pack <span class="warning-text" id="packName"></span>?</p>
+      <p>Esta ação não pode ser desfeita.</p>
+    </div>
+    
+    <form id="deleteForm" method="post" action="">
+      {% csrf_token %}
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-danger">
+          <span class="material-icons">delete</span>
+          Excluir
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Dados do insumo atual
+const SUPPLIE_PK = "{{ agricultural_input.id }}";
+
+// Funções do modal de exclusão
+function openDeleteModal(packId, packName) {
+    const modal = document.getElementById('deleteModal');
+    const packNameSpan = document.getElementById('packName');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    // Preenche o nome do pack
+    packNameSpan.textContent = packName;
+    
+    // Configura a ação do formulário
+    deleteForm.action = `/insumos/insumo/${SUPPLIE_PK}/pacotes/${packId}/excluir/`;
+    
+    // Exibe o modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Fecha modal ao clicar fora
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+
+// Fecha modal com a tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+
+// Confirmação antes de submeter o formulário
+document.getElementById('deleteForm').addEventListener('submit', function(e) {
+    if (!confirm('Tem certeza que deseja excluir este pack permanentemente?')) {
+        e.preventDefault();
+        closeDeleteModal();
+    }
+});
+</script>
 {% endblock %}

@@ -679,7 +679,7 @@
         {% for insumo in supplies %}
         <a class="insumo-card" href="{% url 'supplies_detail' insumo.id %}" id="insumo-{{ insumo.id }}">
             <div class="insumo-image">
-                <img src="{{ insumo.image_url }}"
+                <img src="{{ insumo.image.url }}"
                      alt="{{ insumo.name }}"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <span class="material-icons" style="display: none;">inventory_2</span>

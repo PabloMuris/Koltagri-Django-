@@ -17,9 +17,12 @@ from django.urls import reverse_lazy
 from .filters import CultivationPlantFilter
 from .models import Cultivation, ClimateZone
 
+from django.shortcuts import redirect
+from django.contrib import messages
+
 class CultivatedPlantsView(LoginRequiredMixin, FilterView):
     model = CultivationPlant
-    template_name = 'cultivated_plants.html'
+    template_name = 'landplots/cultivated_plants.html'
     filterset_class = CultivationPlantFilter
     context_object_name = 'cultivated_plants'
     paginate_by = 10
@@ -79,8 +82,43 @@ class CultivatedPlantsDetailView(LoginRequiredMixin, DetailView):
             )
         )
 
-class CultivationPlantCreateView(CreateView):
+class CultivationPlantCreateView(LoginRequiredMixin, CreateView):
     model = CultivationPlant
     form_class = CultivationPlantForm
     template_name = "landplots/cultivation_form.html"
     success_url = reverse_lazy("cultivated_plants")
+
+
+class CultivationPlantUpdateView(LoginRequiredMixin, UpdateView):
+    model = CultivationPlant
+    form_class = CultivationPlantForm
+    template_name = "landplots/cultivation_form.html"
+    success_url = reverse_lazy("cultivated_plants")
+    
+    def get_queryset(self):
+        site_id = self.request.session.get("selected_site_location")
+        if site_id:
+            return CultivationPlant.objects.filter(
+                cultivation__site_id=site_id
+            )
+        return CultivationPlant.objects.none()
+
+class CultivationPlantDeleteView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        # Recupera o objeto pelo ID (pk) vindo da URL
+        plant = get_object_or_404(CultivationPlant, id=kwargs.get("pk"))
+        
+        # Verificar se a planta pertence ao site atual do usuário
+        site_id = request.session.get("selected_site_location")
+        if site_id and plant.cultivation.site_id != int(site_id):
+            messages.error(request, "Você não tem permissão para excluir esta planta.")
+            return redirect("cultivated_plants")
+        
+        # Executa a exclusão
+        plant.delete()
+        
+        # Mensagem de sucesso
+        messages.success(request, "Planta excluída com sucesso!")
+        
+        # Redireciona para a página desejada (ex: lista de plantios)
+        return redirect("cultivated_plants")

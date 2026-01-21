@@ -4,7 +4,7 @@ from .views import (
    StatisticsView,
    SuppliesView,
    SuppliesDetailView,
-   SuppliesFormView,
+   SuppliesListView,
    ExpenseCreateUpdateView,
    AgriculturalInputCreateUpdateView,
    SupplieDeleteView,
@@ -14,12 +14,15 @@ from .views import (
    AgriculturalInputPackCreateView,
    AgriculturalInputPackDetailView,
    AgriculturalInputPackUpdateView,
-   AgriculturalInputPackListView
+   AgriculturalInputPackListView,
+   AgriculturalInputUsageCreateView,
+   AgriculturalInputPackDeleteView,
+   PackUsagesListView
 )
 urlpatterns = [
    path("",BusinessDashboardView.as_view(),name="business_board"),
    path("gastos/",StatisticsView.as_view(),name="statistics"),
-   path("insumos/",SuppliesFormView.as_view(),name="supplies"),
+   path("insumos/",SuppliesListView.as_view(),name="supplies"),
    path("insumos/insumo/<int:pk>/",SuppliesDetailView.as_view(),name="supplies_detail"),
    path("insumos/novo-insumo/",AgriculturalInputCreateUpdateView.as_view(),name="supplies_form"), 
    path("insumos/editar-insumo/<int:pk>/",AgriculturalInputCreateUpdateView.as_view(),name="supplies_form_edit"),
@@ -29,7 +32,16 @@ urlpatterns = [
    path("gastos/deletar/<int:pk>",ExpenseDeleteView.as_view(),name='expense_delete'),
    path("api/expense-data/", expense_data_view, name="expense_data"),
    path("insumos/insumo/<int:supplie_pk>/pacotes/", AgriculturalInputPackListView.as_view(), name="packs_list"),
-    path("insumos/insumo/<int:supplie_pk>/pacotes/add/", AgriculturalInputPackCreateView.as_view(), name="pack_add"),
-    path("pacotes/<int:pk>/edit/", AgriculturalInputPackUpdateView.as_view(), name="pack_edit"),
-    path("pacotes/<int:pk>/", AgriculturalInputPackDetailView.as_view(), name="pack_detail"),
+   path("insumos/insumo/<int:supplie_pk>/pacotes/add/", AgriculturalInputPackCreateView.as_view(), name="pack_add"),
+   path("insumos/insumo/<int:supplie_pk>/pacotes/<int:pk>/edit/", AgriculturalInputPackUpdateView.as_view(), name="pack_edit"),
+   path("pacotes/<int:pk>/", AgriculturalInputPackDetailView.as_view(), name="pack_detail"),
+   path("insumos/insumo/<int:supplie_pk>/pacotes/<int:pk>/usar",AgriculturalInputUsageCreateView.as_view(),name='pack_usage'),
+   path(
+        "insumos/insumo/<int:supplie_pk>/pacotes/<int:pk>/excluir/", 
+        AgriculturalInputPackDeleteView.as_view(), 
+        name="pack_delete"
+    ),
+       path("insumos/insumo/<int:supplie_pk>/pacotes/<int:pk>/usos",PackUsagesListView.as_view(),name='pack_uses'),
+
+   
 ]

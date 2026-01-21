@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Registrar Uso - {{ pack.name }}{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+{% endblock %}
+
+{% block styles %}
+<style>
+/* Estilos existentes... */
+.pack-header {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.pack-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: var(--text);
+}
+
+.pack-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.detail-item {
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.detail-item strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.detail-item span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.quantity-available {
+    background: #e8f5e8;
+    border-color: #4CAF50;
+}
+
+.quantity-available span {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.quantity-warning {
+    background: #fff3e0;
+    border-color: #ff9800;
+}
+
+.quantity-warning span {
+    color: #ef6c00;
+    font-weight: 600;
+}
+
+.quantity-depleted {
+    background: #ffebee;
+    border-color: #f44336;
+}
+
+.quantity-depleted span {
+    color: #c62828;
+    font-weight: 600;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+  <button type="button" id="back-button" 
+          onclick="window.location.href='{% url 'packs_list' supplie_pk=pack.agricultural_input.id %}'" 
+          title="Voltar para lista">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+      <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+    </svg>
+  </button>
+</div>
+
+<div class="form-shell">
+  <form method="post" class="form-panel">
+    {% csrf_token %}
+    
+    <!-- Cabeçalho com informações do pack -->
+    <div class="pack-header">
+      <h2>Registrar Uso do Pacote</h2>
+      <p>Insumo: {{ pack.agricultural_input.name }}</p>
+      
+      <div class="pack-details">
+        <div class="detail-item">
+          <strong>Nome do Pack</strong>
+          <span>{{ pack.name }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <strong>Quantidade Original</strong>
+          <span>{{ pack.quantity }} {{ unit }}</span>
+        </div>
+        
+        <div class="detail-item {% if available_quantity <= 0 %}quantity-depleted{% elif available_quantity < pack.quantity|divisibleby:2 %}quantity-warning{% else %}quantity-available{% endif %}">
+          <strong>Disponível para Uso</strong>
+          <span>{{ available_quantity|floatformat:2 }} {{ unit }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <strong>Data de Compra</strong>
+          <span>{{ pack.purchase_date|date:"d/m/Y" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campo oculto do pack -->
+    {{ form.pack }}
+    
+    <div class="stack">
+      <!-- Campo para quantidade usada -->
+      <div>
+        <label for="{{ form.quantity_used.id_for_label }}">
+          Quantidade a Usar {% if form.quantity_used.field.required %} *{% endif %}
+        </label>
+        
+        {{ form.quantity_used }}
+        
+        <div class="helper small-note">
+          {% if available_quantity > 0 %}
+            <strong>Disponível:</strong> {{ available_quantity|floatformat:2 }} {{ unit }}
+          {% else %}
+            <span style="color: #f44336;">⚠️ Este pacote está esgotado. Não é possível registrar uso.</span>
+          {% endif %}
+        </div>
+        
+        {% if form.quantity_used.errors %}
+          <div class="helper" style="color: #f44336;">
+            {{ form.quantity_used.errors }}
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Demais campos visíveis -->
+      {% for field in form.visible_fields %}
+        {% if field.name != 'quantity_used' %}
+          <div>
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}{% if field.field.required %} *{% endif %}
+            </label>
+            
+            {{ field }}
+            
+            {% if field.help_text %}
+              <div class="helper small-note">{{ field.help_text }}</div>
+            {% endif %}
+            
+            {% if field.errors %}
+              <div class="helper" style="color: #f44336;">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+    <div class="actions">
+      <button type="button" class="btn ghost" 
+              onclick="window.location.href='{% url 'packs_list' supplie_pk=pack.agricultural_input.id %}'">
+        Cancelar
+      </button>
+      <button type="submit" class="btn primary" 
+              {% if available_quantity <= 0 %}disabled title="Pacote esgotado"{% endif %}>
+        Registrar Uso
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('{{ form.quantity_used.id_for_label }}');
+    const availableQuantity = {{ available_quantity|default:0 }};
+    const submitBtn = document.querySelector('button[type="submit"].primary');
+    
+    if (quantityInput && submitBtn) {
+        // Validação em tempo real
+        function validateQuantity() {
+            const value = parseFloat(quantityInput.value) || 0;
+            const maxAllowed = availableQuantity;
+            
+            if (value <= 0) {
+                quantityInput.style.borderColor = '#f44336';
+                quantityInput.style.boxShadow = '0 0 0 4px rgba(244, 67, 54, 0.1)';
+                submitBtn.disabled = true;
+                submitBtn.title = "Quantidade deve ser maior que zero";
+            } else if (value > maxAllowed) {
+                quantityInput.style.borderColor = '#f44336';
+                quantityInput.style.boxShadow = '0 0 0 4px rgba(244, 67, 54, 0.1)';
+                submitBtn.disabled = true;
+                submitBtn.title = `Quantidade máxima permitida: ${maxAllowed}`;
+            } else {
+                quantityInput.style.borderColor = '#4CAF50';
+                quantityInput.style.boxShadow = '0 0 0 4px rgba(76, 175, 80, 0.1)';
+                submitBtn.disabled = false;
+                submitBtn.title = "";
+            }
+        }
+        
+        // Event listeners
+        quantityInput.addEventListener('input', validateQuantity);
+        quantityInput.addEventListener('change', validateQuantity);
+        
+        // Validação inicial
+        validateQuantity();
+        
+        // Sugere a quantidade máxima quando o campo ganha foco (opcional)
+        quantityInput.addEventListener('focus', function() {
+            if (!this.value && availableQuantity > 0) {
+                this.placeholder = `Máximo: ${availableQuantity}`;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

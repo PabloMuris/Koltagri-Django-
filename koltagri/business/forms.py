@@ -78,31 +78,76 @@ class AgriculturalInputUsageForm(forms.ModelForm):
             "quantity_used",
             "usage_date",
         ]
+        widgets = {
+            'pack': forms.HiddenInput(),  # Campo oculto, já que o pack é definido pela URL
+        }
 
-    def __init__(self, *args, only_available_packs=True, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # Extrai parâmetros específicos
+        self.pack = kwargs.pop('pack', None)
+        pack_queryset = kwargs.pop('pack_queryset', None)
+        
         super().__init__(*args, **kwargs)
-        # opcional: mostrar só packs que ainda têm saldo
-        if only_available_packs:
+        
+        # Se temos um pack específico
+        if self.pack:
+            # Configura o valor inicial
+            self.fields['pack'].initial = self.pack
+            
+            # Limita o queryset apenas a este pack
+            if pack_queryset is not None:
+                self.fields['pack'].queryset = pack_queryset
+            else:
+                self.fields['pack'].queryset = AgriculturalInputPack.objects.filter(pk=self.pack.pk)
+            
+            # Configuração para evitar tentativa de selecionar outro pack
+            self.fields['pack'].disabled = True
+        else:
+            # Se não houver pack, mostra apenas packs disponíveis
             packs = AgriculturalInputPack.objects.all()
             available_pks = [p.pk for p in packs if p.remaining_quantity() > 0]
             self.fields["pack"].queryset = AgriculturalInputPack.objects.filter(pk__in=available_pks)
 
     def clean_quantity_used(self):
+        """Valida a quantidade usada"""
         qty = self.cleaned_data.get("quantity_used")
         if qty is None:
             return qty
         if qty <= 0:
             raise ValidationError("Quantidade usada deve ser maior que zero.")
+        
+        # Se temos um pack, valida contra o estoque
+        if self.pack and qty:
+            remaining = self.pack.remaining_quantity()
+            if qty > remaining:
+                raise ValidationError(
+                    f"Quantidade indisponível. Restam apenas {remaining:.2f} "
+                    f"{self.pack.agricultural_input.unit}"
+                )
+        
         return qty
 
     def clean(self):
+        """Validação adicional"""
         cleaned = super().clean()
-        pack = cleaned.get("pack")
-        qty = cleaned.get("quantity_used")
-        if pack and qty is not None:
-            remaining = pack.remaining_quantity()
-            # Se for edição de um usage existente, é preciso permitir re-subtrair o próprio valor,
-            # mas como esse é o form de criação simples, bloqueamos excesso aqui.
-            if qty > remaining:
-                raise ValidationError(f"Quantidade indisponível no pack. Restam apenas {remaining}.")
+        
+        # Se não tivermos pack no __init__, tenta pegar do formulário
+        if not self.pack:
+            pack = cleaned.get("pack")
+            qty = cleaned.get("quantity_used")
+            
+            if pack and qty:
+                remaining = pack.remaining_quantity()
+                
+                # Se for edição, ajusta para considerar o valor anterior
+                if self.instance and self.instance.pk:
+                    old_qty = self.instance.quantity_used
+                    remaining = remaining + old_qty
+                
+                if qty > remaining:
+                    raise ValidationError(
+                        f"Quantidade indisponível. Restam apenas {remaining:.2f} "
+                        f"{pack.agricultural_input.unit}"
+                    )
+        
         return cleaned

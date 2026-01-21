@@ -125,6 +125,7 @@ class AgriculturalInputsAdmin(admin.ModelAdmin):
 @admin.register(AgriculturalInputPack)
 class AgriculturalInputPackAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "name",
         "agricultural_input",
         "quantity",

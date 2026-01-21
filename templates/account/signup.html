@@ -1,0 +1,276 @@
+<!-- templates/account/signup.html -->
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-image">
+        <h1>Koltagri</h1>
+        <p>{% trans "Join our agricultural community and manage your properties efficiently." %}</p>
+    </div>
+    
+    <div class="signup-form">
+        <div class="form-header">
+            <h2>{% trans "Create your account" %}</h2>
+            <p>{% trans "Fill in the information below to register" %}</p>
+        </div>
+        
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            
+            <!-- Mensagens de erro -->
+            {% if form.errors %}
+                <div class="alert alert-error">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error|escape }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error|escape }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Campos do formulário -->
+            <div class="form-row">
+                <div class="form-control {% if form.first_name.errors %}error{% endif %}">
+                    <label for="id_first_name">{% trans "First Name" %}</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                    <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-control {% if form.last_name.errors %}error{% endif %}">
+                    <label for="id_last_name">{% trans "Last Name" %}</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.cpf.errors %}error{% endif %}">
+                    <label for="id_cpf">CPF</label>
+                    {{ form.cpf }}
+                    {% if form.cpf.errors %}
+                    <div class="error-message">{{ form.cpf.errors.0 }}</div>
+                    {% endif %}
+                    <span class="helptext">{% trans "Enter numbers only" %}</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.birth.errors %}error{% endif %}">
+                    <label for="id_birth">{% trans "Birth Date" %}</label>
+                    {{ form.birth }}
+                    {% if form.birth.errors %}
+                    <div class="error-message">{{ form.birth.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.phone.errors %}error{% endif %}">
+                    <label for="id_phone">{% trans "Phone" %}</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <div class="error-message">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row-triple">
+                <div class="form-control {% if form.country.errors %}error{% endif %}">
+                    <label for="id_country">{% trans "Country" %}</label>
+                    {{ form.country }}
+                    {% if form.country.errors %}
+                    <div class="error-message">{{ form.country.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-control {% if form.state.errors %}error{% endif %}">
+                    <label for="id_state">{% trans "State" %}</label>
+                    {{ form.state }}
+                    {% if form.state.errors %}
+                    <div class="error-message">{{ form.state.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-control {% if form.city.errors %}error{% endif %}">
+                    <label for="id_city">{% trans "City" %}</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                    <div class="error-message">{{ form.city.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.email.errors %}error{% endif %}">
+                    <label for="id_email">{% trans "E-mail" %}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.password1.errors %}error{% endif %}">
+                    <label for="id_password1">{% trans "Password" %}</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                    <div class="error-message">{{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <span class="helptext">{% trans "Minimum 8 characters, including letters and numbers" %}</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-control {% if form.password2.errors %}error{% endif %}">
+                    <label for="id_password2">{% trans "Confirm Password" %}</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <div class="error-message">{{ form.password2.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            
+            <div class="form-actions">
+                <p>
+                    {% blocktrans %}Already have an account? <a href="{{ login_url }}">Sign in</a>.{% endblocktrans %}
+                </p>
+                <button type="submit" class="btn primary">
+                    {% trans "Create Account" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Inclua o CSS do seu register.html -->
+<style>
+    /* Copie todo o CSS do seu register.html aqui */
+    :root{
+        /* ... todo o CSS anterior ... */
+    }
+    /* ... resto do CSS ... */
+</style>
+
+<!-- JavaScript para carregamento dinâmico de estados e cidades -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos do DOM
+        const countrySelect = document.getElementById('id_country');
+        const stateSelect = document.getElementById('id_state');
+        const citySelect = document.getElementById('id_city');
+        const cpfInput = document.getElementById('id_cpf');
+        const phoneInput = document.getElementById('id_phone');
+        const passwordInput = document.getElementById('id_password1');
+        const passwordStrengthBar = document.getElementById('password-strength-bar');
+        
+        // Carregar estados dinamicamente
+        function loadStates(countryId) {
+            if (!countryId) {
+                stateSelect.innerHTML = '<option value="">Primeiro selecione um país</option>';
+                stateSelect.disabled = true;
+                stateSelect.value = '';
+                loadCities(null);
+                return;
+            }
+            
+            stateSelect.innerHTML = '<option value="">Carregando estados...</option>';
+            stateSelect.disabled = true;
+            
+            fetch(`/api/states/?country_id=${countryId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erro na resposta da API');
+                    return response.json();
+                })
+                .then(states => {
+                    stateSelect.innerHTML = '<option value="">Selecione um estado</option>';
+                    states.forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.id;
+                        option.textContent = state.name;
+                        stateSelect.appendChild(option);
+                    });
+                    stateSelect.disabled = false;
+                    
+                    // Limpa cidades
+                    citySelect.innerHTML = '<option value="">Primeiro selecione um estado</option>';
+                    citySelect.disabled = true;
+                    citySelect.value = '';
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar estados:', error);
+                    stateSelect.innerHTML = '<option value="">Erro ao carregar estados</option>';
+                    stateSelect.disabled = true;
+                });
+        }
+        
+        // Carregar cidades dinamicamente
+        function loadCities(stateId) {
+            if (!stateId) {
+                citySelect.innerHTML = '<option value="">Primeiro selecione um estado</option>';
+                citySelect.disabled = true;
+                citySelect.value = '';
+                return;
+            }
+            
+            citySelect.innerHTML = '<option value="">Carregando cidades...</option>';
+            citySelect.disabled = true;
+            
+            fetch(`/api/cities/?state_id=${stateId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Erro na resposta da API');
+                    return response.json();
+                })
+                .then(cities => {
+                    citySelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+                    cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar cidades:', error);
+                    citySelect.innerHTML = '<option value="">Erro ao carregar cidades</option>';
+                    citySelect.disabled = true;
+                });
+        }
+        
+        // Event listeners
+        if (countrySelect) {
+            countrySelect.addEventListener('change', function() {
+                loadStates(this.value);
+            });
+        }
+        
+        if (stateSelect) {
+            stateSelect.addEventListener('change', function() {
+                loadCities(this.value);
+            });
+        }
+        
+        // Máscaras e validações (igual ao anterior)
+        // ... copie as funções de máscara e validação do template anterior ...
+    });
+</script>
+{% endblock %}

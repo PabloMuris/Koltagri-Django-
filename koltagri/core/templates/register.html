@@ -19,6 +19,9 @@
             --radius: 12px;
             --gap: 16px;
             --base-font: 16px;
+            --error: #e74c3c;
+            --warning: #f39c12;
+            --success: #27ae60;
         }
         * { 
             box-sizing: border-box; 
@@ -39,7 +42,6 @@
             padding: 20px;
         }
 
-         
         .signup-container {
             display: flex;
             width: 100%;
@@ -51,7 +53,6 @@
             overflow: hidden;
         }
 
-         
         .signup-image {
             flex: 1;
             background: linear-gradient(rgba(74, 111, 165, 0.7), rgba(0, 32, 75, 0.7)), 
@@ -77,7 +78,6 @@
             opacity: 0.9;
         }
 
-         
         .signup-form {
             flex: 1;
             padding: 40px;
@@ -102,7 +102,6 @@
             margin: 0;
         }
 
-         
         .progress-steps {
             display: flex;
             margin-bottom: 30px;
@@ -168,7 +167,6 @@
             color: var(--accent);
         }
 
-         
         .form-step {
             display: none;
         }
@@ -181,6 +179,16 @@
             display: flex;
             gap: 12px;
             margin-bottom: 18px;
+        }
+
+        .form-row-triple {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .form-row-triple .form-control {
+            flex: 1;
         }
 
         .form-control {
@@ -196,25 +204,29 @@
             font-size: 0.95rem;
         }
 
-        .form-control input, .form-control select {
+        .form-control input, 
+        .form-control select {
             padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border);
             font-size: 1rem;
             transition: border-color 0.3s;
+            width: 100%;
         }
 
-        .form-control input:focus, .form-control select:focus {
+        .form-control input:focus, 
+        .form-control select:focus {
             outline: none;
             border-color: var(--primary);
         }
 
-        .form-control.error input, .form-control.error select {
-            border-color: #e74c3c;
+        .form-control.error input, 
+        .form-control.error select {
+            border-color: var(--error);
         }
 
         .error-message {
-            color: #e74c3c;
+            color: var(--error);
             font-size: 0.85rem;
             margin-top: 5px;
             display: none;
@@ -224,7 +236,12 @@
             display: block;
         }
 
-         
+        .form-control .helptext {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
         .password-strength {
             margin-top: 5px;
             height: 4px;
@@ -239,7 +256,6 @@
             transition: width 0.3s, background-color 0.3s;
         }
 
-         
         .form-actions {
             display: flex;
             justify-content: space-between;
@@ -271,7 +287,7 @@
         }
 
         .btn.primary:hover {
-            background: #3a5a85;
+            background: #168f28;
         }
 
         .btn:disabled {
@@ -279,7 +295,6 @@
             cursor: not-allowed;
         }
 
-         
         .success-message {
             text-align: center;
             padding: 20px;
@@ -292,11 +307,44 @@
 
         .success-icon {
             font-size: 4rem;
-            color: #27ae60;
+            color: var(--success);
             margin-bottom: 20px;
         }
 
-         
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             .signup-container {
                 flex-direction: column;
@@ -312,7 +360,8 @@
                 padding: 30px;
             }
             
-            .form-row {
+            .form-row,
+            .form-row-triple {
                 flex-direction: column;
                 gap: 15px;
             }
@@ -331,20 +380,28 @@
 </head>
 <body>
     <div class="signup-container">
-         
         <div class="signup-image">
             <h1>Koltagri</h1>
             <p>Junte-se à nossa comunidade agrícola e gerencie suas propriedades de forma eficiente.</p>
         </div>
 
-         
         <div class="signup-form">
             <div class="form-header">
                 <h2>Criar sua conta</h2>
                 <p>Preencha as informações abaixo para se cadastrar</p>
             </div>
 
-             
+            <!-- Mensagens do Django -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <div class="progress-steps">
                 <div class="step active" data-step="1">
                     <div class="step-number">1</div>
@@ -356,78 +413,148 @@
                 </div>
             </div>
 
-             
-            <form id="signup-form">
+            <form id="signup-form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Passo 1: Informações pessoais -->
                 <div class="form-step active" id="step-1">
                     <div class="form-row">
-                        <div class="form-control">
-                            <label for="firstName">Nome</label>
-                            <input type="text" id="firstName" name="firstName" required>
-                            <div class="error-message">Por favor, insira seu nome</div>
+                        <div class="form-control {% if form.first_name.errors %}error{% endif %}">
+                            <label for="id_first_name">Nome</label>
+                            <input type="text" id="id_first_name" name="first_name" 
+                                   value="{{ form.first_name.value|default:'' }}" 
+                                   placeholder="Seu nome" required>
+                            {% if form.first_name.errors %}
+                            <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
                         </div>
-                        <div class="form-control">
-                            <label for="lastName">Sobrenome</label>
-                            <input type="text" id="lastName" name="lastName" required>
-                            <div class="error-message">Por favor, insira seu sobrenome</div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-control">
-                            <label for="cpf">CPF</label>
-                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
-                            <div class="error-message">CPF inválido</div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-control">
-                            <label for="birthDate">Data de Nascimento</label>
-                            <input type="text" id="birthDate" name="birthDate" placeholder="DD/MM/AAAA" required>
-                            <div class="error-message">Data de nascimento inválida</div>
+                        <div class="form-control {% if form.last_name.errors %}error{% endif %}">
+                            <label for="id_last_name">Sobrenome</label>
+                            <input type="text" id="id_last_name" name="last_name" 
+                                   value="{{ form.last_name.value|default:'' }}" 
+                                   placeholder="Seu sobrenome" required>
+                            {% if form.last_name.errors %}
+                            <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="form-row">
-                        <div class="form-control">
-                            <label for="city">Cidade Atual</label>
-                            <input type="text" id="city" name="city" required>
-                            <div class="error-message">Por favor, insira sua cidade</div>
+                        <div class="form-control {% if user_info_form.cpf.errors %}error{% endif %}">
+                            <label for="id_cpf">CPF</label>
+                            <input type="text" id="id_cpf" name="cpf" 
+                                   value="{{ user_info_form.cpf.value|default:'' }}" 
+                                   placeholder="000.000.000-00" required>
+                            {% if user_info_form.cpf.errors %}
+                            <div class="error-message">{{ user_info_form.cpf.errors.0 }}</div>
+                            {% endif %}
+                            <span class="helptext">Digite apenas números</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control {% if user_info_form.birth.errors %}error{% endif %}">
+                            <label for="id_birth">Data de Nascimento</label>
+                            <input type="date" id="id_birth" name="birth" 
+                                   value="{{ user_info_form.birth.value|default:'' }}" 
+                                   max="{{ today|date:'Y-m-d' }}" required>
+                            {% if user_info_form.birth.errors %}
+                            <div class="error-message">{{ user_info_form.birth.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-control {% if user_info_form.phone.errors %}error{% endif %}">
+                            <label for="id_phone">Telefone</label>
+                            <input type="tel" id="id_phone" name="phone" 
+                                   value="{{ user_info_form.phone.value|default:'' }}" 
+                                   placeholder="(00) 00000-0000">
+                            {% if user_info_form.phone.errors %}
+                            <div class="error-message">{{ user_info_form.phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-row-triple">
+                        <div class="form-control {% if user_info_form.country.errors %}error{% endif %}">
+                            <label for="id_country">País</label>
+                            <select name="country" id="id_country" required>
+                                <option value="">Selecione um país</option>
+                                {% for country in countries %}
+                                <option value="{{ country.id }}" 
+                                        {% if user_info_form.country.value == country.id|stringformat:"i" %}selected{% endif %}>
+                                    {{ country.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% if user_info_form.country.errors %}
+                            <div class="error-message">{{ user_info_form.country.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-control {% if user_info_form.state.errors %}error{% endif %}">
+                            <label for="id_state">Estado</label>
+                            <select name="state" id="id_state" required disabled>
+                                <option value="">Primeiro selecione um país</option>
+                            </select>
+                            {% if user_info_form.state.errors %}
+                            <div class="error-message">{{ user_info_form.state.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-control {% if user_info_form.city.errors %}error{% endif %}">
+                            <label for="id_city">Cidade</label>
+                            <select name="city" id="id_city" required disabled>
+                                <option value="">Primeiro selecione um estado</option>
+                            </select>
+                            {% if user_info_form.city.errors %}
+                            <div class="error-message">{{ user_info_form.city.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <div></div>  
+                        <div></div>
                         <button type="button" class="btn primary" id="next-step-1">Próximo</button>
                     </div>
                 </div>
 
-                 
+                <!-- Passo 2: Dados de acesso -->
                 <div class="form-step" id="step-2">
                     <div class="form-row">
-                        <div class="form-control">
-                            <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" required>
-                            <div class="error-message">E-mail inválido</div>
+                        <div class="form-control {% if form.email.errors %}error{% endif %}">
+                            <label for="id_email">E-mail</label>
+                            <input type="email" id="id_email" name="email" 
+                                   value="{{ form.email.value|default:'' }}" 
+                                   placeholder="seu@email.com" required>
+                            {% if form.email.errors %}
+                            <div class="error-message">{{ form.email.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="form-row">
-                        <div class="form-control">
-                            <label for="password">Senha</label>
-                            <input type="password" id="password" name="password" required>
-                            <div class="error-message">A senha deve ter pelo menos 6 caracteres</div>
+                        <div class="form-control {% if form.password1.errors %}error{% endif %}">
+                            <label for="id_password1">Senha</label>
+                            <input type="password" id="id_password1" name="password1" required>
+                            {% if form.password1.errors %}
+                            <div class="error-message">{{ form.password1.errors.0 }}</div>
+                            {% endif %}
                             <div class="password-strength">
                                 <div class="password-strength-bar" id="password-strength-bar"></div>
                             </div>
+                            <span class="helptext">Mínimo de 8 caracteres, incluindo letras e números</span>
                         </div>
                     </div>
 
                     <div class="form-row">
-                        <div class="form-control">
-                            <label for="confirmPassword">Confirmar Senha</label>
-                            <input type="password" id="confirmPassword" name="confirmPassword" required>
-                            <div class="error-message">As senhas não coincidem</div>
+                        <div class="form-control {% if form.password2.errors %}error{% endif %}">
+                            <label for="id_password2">Confirmar Senha</label>
+                            <input type="password" id="id_password2" name="password2" required>
+                            {% if form.password2.errors %}
+                            <div class="error-message">{{ form.password2.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -438,83 +565,69 @@
                 </div>
             </form>
 
-             
             <div class="success-message" id="success-message">
                 <div class="success-icon">
                     <span class="material-icons">check_circle</span>
                 </div>
                 <h3>Cadastro realizado com sucesso!</h3>
-                <p>Bem-vindo à Koltagri. Em instantes você receberá um e-mail de confirmação.</p>
-                <button type="button" class="btn primary" id="go-to-login">Fazer Login</button>
+                <p>Bem-vindo à Koltagri. Você será redirecionado automaticamente.</p>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cleave.js@1.6.0/dist/cleave.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize flatpickr for date input
-            if (typeof flatpickr !== 'undefined') {
-                flatpickr('#birthDate', {
-                    disableMobile: true,
-                    dateFormat: "d/m/Y",
-                    maxDate: "today",
-                    locale: "pt"
-                });
-            }
-
-            // Initialize CPF mask
-            if (typeof Cleave !== 'undefined') {
-                new Cleave('#cpf', {
-                    blocks: [3, 3, 3, 2],
-                    delimiters: ['.', '.', '-'],
-                    numericOnly: true
-                });
-            }
-
-            // Step navigation
+            // Elementos do DOM
             const steps = document.querySelectorAll('.step');
             const formSteps = document.querySelectorAll('.form-step');
             const nextStep1Btn = document.getElementById('next-step-1');
             const prevStep2Btn = document.getElementById('prev-step-2');
             const submitBtn = document.getElementById('submit-form');
-            const form = document.getElementById('signup-form');
+            const form = document.querySelector('form');
             const successMessage = document.getElementById('success-message');
-            const goToLoginBtn = document.getElementById('go-to-login');
+            const countrySelect = document.getElementById('id_country');
+            const stateSelect = document.getElementById('id_state');
+            const citySelect = document.getElementById('id_city');
+            const cpfInput = document.getElementById('id_cpf');
+            const phoneInput = document.getElementById('id_phone');
+            const passwordInput = document.getElementById('id_password1');
+            const passwordStrengthBar = document.getElementById('password-strength-bar');
+            const confirmPasswordInput = document.getElementById('id_password2');
+            const birthInput = document.getElementById('id_birth');
 
-            // Move to step 2
+            // Configurar data máxima para nascimento (hoje)
+            if (birthInput) {
+                const today = new Date().toISOString().split('T')[0];
+                birthInput.max = today;
+            }
+
+            // Navegação entre passos
             nextStep1Btn.addEventListener('click', function() {
                 if (validateStep1()) {
                     setActiveStep(2);
                 }
             });
 
-            // Move back to step 1
             prevStep2Btn.addEventListener('click', function() {
                 setActiveStep(1);
             });
 
-            // Form submission
+            // Submissão do formulário
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
                 if (validateStep1() && validateStep2()) {
-                    // In a real application, you would submit the form data to a server here
-                    // For demonstration, we'll just show the success message
-                    form.style.display = 'none';
-                    successMessage.classList.add('active');
+                    // Se a validação passar, envia o formulário
+                    this.submit();
+                } else {
+                    // Se houver erros no passo 2, volta para ele
+                    setActiveStep(2);
                 }
             });
 
-            // Go to login button
-            goToLoginBtn.addEventListener('click', function() {
-                alert('Redirecionando para a página de login...');
-                // In a real application, you would redirect to the login page
-            });
-
-            // Set active step
+            // Função para mudar o passo ativo
             function setActiveStep(stepNumber) {
-                // Update step indicators
+                // Atualiza indicadores de passo
                 steps.forEach(step => {
                     const stepData = parseInt(step.getAttribute('data-step'));
                     step.classList.remove('active', 'completed');
@@ -526,60 +639,94 @@
                     }
                 });
 
-                // Update form steps
+                // Atualiza passos do formulário
                 formSteps.forEach(step => {
                     step.classList.remove('active');
                     if (step.id === `step-${stepNumber}`) {
                         step.classList.add('active');
                     }
                 });
+
+                // Rola para o topo do formulário
+                document.querySelector('.signup-form').scrollTop = 0;
             }
 
-            // Step 1 validation
+            // Validação do passo 1
             function validateStep1() {
                 let isValid = true;
-                const firstName = document.getElementById('firstName');
-                const lastName = document.getElementById('lastName');
-                const cpf = document.getElementById('cpf');
-                const birthDate = document.getElementById('birthDate');
-                const city = document.getElementById('city');
+                const firstName = document.getElementById('id_first_name');
+                const lastName = document.getElementById('id_last_name');
+                const cpf = document.getElementById('id_cpf');
+                const birth = document.getElementById('id_birth');
+                const country = document.getElementById('id_country');
+                const state = document.getElementById('id_state');
+                const city = document.getElementById('id_city');
 
-                // Validate first name
+                // Valida nome
                 if (!firstName.value.trim()) {
-                    markFieldInvalid(firstName);
+                    markFieldInvalid(firstName, 'Por favor, insira seu nome');
                     isValid = false;
                 } else {
                     markFieldValid(firstName);
                 }
 
-                // Validate last name
+                // Valida sobrenome
                 if (!lastName.value.trim()) {
-                    markFieldInvalid(lastName);
+                    markFieldInvalid(lastName, 'Por favor, insira seu sobrenome');
                     isValid = false;
                 } else {
                     markFieldValid(lastName);
                 }
 
-                // Validate CPF
+                // Valida CPF
                 const cpfValue = cpf.value.replace(/\D/g, '');
-                if (cpfValue.length !== 11 || !validateCPF(cpfValue)) {
-                    markFieldInvalid(cpf);
+                if (!validateCPF(cpfValue)) {
+                    markFieldInvalid(cpf, 'CPF inválido');
                     isValid = false;
                 } else {
                     markFieldValid(cpf);
                 }
 
-                // Validate birth date
-                if (!birthDate.value.trim()) {
-                    markFieldInvalid(birthDate);
+                // Valida data de nascimento
+                if (!birth.value) {
+                    markFieldInvalid(birth, 'Por favor, insira sua data de nascimento');
                     isValid = false;
                 } else {
-                    markFieldValid(birthDate);
+                    const birthDate = new Date(birth.value);
+                    const today = new Date();
+                    const minDate = new Date();
+                    minDate.setFullYear(today.getFullYear() - 120); // 120 anos atrás
+                    
+                    if (birthDate > today) {
+                        markFieldInvalid(birth, 'Data de nascimento não pode ser futura');
+                        isValid = false;
+                    } else if (birthDate < minDate) {
+                        markFieldInvalid(birth, 'Data de nascimento inválida');
+                        isValid = false;
+                    } else {
+                        markFieldValid(birth);
+                    }
                 }
 
-                // Validate city
-                if (!city.value.trim()) {
-                    markFieldInvalid(city);
+                // Valida país
+                if (!country.value) {
+                    markFieldInvalid(country, 'Por favor, selecione um país');
+                    isValid = false;
+                } else {
+                    markFieldValid(country);
+                }
+
+                // Valida estado
+                if (!state.value) {
+                    markFieldInvalid(state, 'Por favor, selecione um estado');
+                    isValid = false;
+                } else {
+                    markFieldValid(state);
+                }
+
+                // Valida cidade
+                if (!city.value) {
+                    markFieldInvalid(city, 'Por favor, selecione uma cidade');
                     isValid = false;
                 } else {
                     markFieldValid(city);
@@ -588,32 +735,32 @@
                 return isValid;
             }
 
-            // Step 2 validation
+            // Validação do passo 2
             function validateStep2() {
                 let isValid = true;
-                const email = document.getElementById('email');
-                const password = document.getElementById('password');
-                const confirmPassword = document.getElementById('confirmPassword');
+                const email = document.getElementById('id_email');
+                const password = document.getElementById('id_password1');
+                const confirmPassword = document.getElementById('id_password2');
 
-                // Validate email
+                // Valida email
                 if (!email.value.trim() || !isValidEmail(email.value)) {
-                    markFieldInvalid(email);
+                    markFieldInvalid(email, 'E-mail inválido');
                     isValid = false;
                 } else {
                     markFieldValid(email);
                 }
 
-                // Validate password
-                if (!password.value || password.value.length < 6) {
-                    markFieldInvalid(password);
+                // Valida senha
+                if (!password.value || !validatePassword(password.value)) {
+                    markFieldInvalid(password, 'A senha deve ter pelo menos 8 caracteres, incluindo letras e números');
                     isValid = false;
                 } else {
                     markFieldValid(password);
                 }
 
-                // Validate password confirmation
+                // Valida confirmação de senha
                 if (!confirmPassword.value || password.value !== confirmPassword.value) {
-                    markFieldInvalid(confirmPassword);
+                    markFieldInvalid(confirmPassword, 'As senhas não coincidem');
                     isValid = false;
                 } else {
                     markFieldValid(confirmPassword);
@@ -622,58 +769,360 @@
                 return isValid;
             }
 
-            // Mark field as invalid
-            function markFieldInvalid(field) {
-                field.parentElement.classList.add('error');
+            // Funções auxiliares de validação
+            function markFieldInvalid(field, message) {
+                const formControl = field.closest('.form-control');
+                formControl.classList.add('error');
+                const errorElement = formControl.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
             }
 
-            // Mark field as valid
             function markFieldValid(field) {
-                field.parentElement.classList.remove('error');
+                const formControl = field.closest('.form-control');
+                formControl.classList.remove('error');
+                const errorElement = formControl.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
             }
 
-            // Email validation
             function isValidEmail(email) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             }
 
-            // CPF validation (simplified)
+            function validatePassword(password) {
+                return password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password);
+            }
+
+            // Validação de CPF (algoritmo completo)
             function validateCPF(cpf) {
-                // This is a simplified CPF validation for demonstration
-                // In a real application, you would use a more robust validation
                 if (cpf.length !== 11) return false;
                 
-                // Check for known invalid CPFs (all same digits)
+                // Elimina CPFs com todos os dígitos iguais
                 if (/^(\d)\1+$/.test(cpf)) return false;
                 
-                // Simple digit validation (not the complete algorithm)
+                // Validação do primeiro dígito verificador
+                let soma = 0;
+                for (let i = 0; i < 9; i++) {
+                    soma += parseInt(cpf.charAt(i)) * (10 - i);
+                }
+                let resto = soma % 11;
+                let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
+                
+                if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+                    return false;
+                }
+                
+                // Validação do segundo dígito verificador
+                soma = 0;
+                for (let i = 0; i < 10; i++) {
+                    soma += parseInt(cpf.charAt(i)) * (11 - i);
+                }
+                resto = soma % 11;
+                let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
+                
+                if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+                    return false;
+                }
+                
                 return true;
             }
 
-            // Password strength indicator
-            const passwordInput = document.getElementById('password');
-            const strengthBar = document.getElementById('password-strength-bar');
-            
-            passwordInput.addEventListener('input', function() {
-                const password = this.value;
-                let strength = 0;
-                
-                if (password.length >= 6) strength += 25;
-                if (/[a-z]/.test(password)) strength += 25;
-                if (/[A-Z]/.test(password)) strength += 25;
-                if (/[0-9]/.test(password)) strength += 25;
-                
-                strengthBar.style.width = strength + '%';
-                
-                if (strength < 50) {
-                    strengthBar.style.backgroundColor = '#e74c3c';
-                } else if (strength < 75) {
-                    strengthBar.style.backgroundColor = '#f39c12';
-                } else {
-                    strengthBar.style.backgroundColor = '#27ae60';
+            // Carregar estados dinamicamente
+            function loadStates(countryId) {
+                if (!countryId) {
+                    stateSelect.innerHTML = '<option value="">Primeiro selecione um país</option>';
+                    stateSelect.disabled = true;
+                    loadCities(null); // Limpa cidades também
+                    return;
                 }
-            });
+                
+                stateSelect.innerHTML = '<option value="">Carregando estados...</option>';
+                stateSelect.disabled = true;
+                citySelect.innerHTML = '<option value="">Carregando cidades...</option>';
+                citySelect.disabled = true;
+                
+                fetch(`/api/states/?country_id=${countryId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro na resposta da API');
+                        return response.json();
+                    })
+                    .then(states => {
+                        stateSelect.innerHTML = '<option value="">Selecione um estado</option>';
+                        states.forEach(state => {
+                            const option = document.createElement('option');
+                            option.value = state.id;
+                            option.textContent = state.name;
+                            stateSelect.appendChild(option);
+                        });
+                        stateSelect.disabled = false;
+                        
+                        // Limpa cidades
+                        citySelect.innerHTML = '<option value="">Primeiro selecione um estado</option>';
+                        citySelect.disabled = true;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar estados:', error);
+                        stateSelect.innerHTML = '<option value="">Erro ao carregar estados</option>';
+                        stateSelect.disabled = true;
+                        citySelect.innerHTML = '<option value="">Erro ao carregar cidades</option>';
+                        citySelect.disabled = true;
+                    });
+            }
+
+            // Carregar cidades dinamicamente
+            function loadCities(stateId) {
+                if (!stateId) {
+                    citySelect.innerHTML = '<option value="">Primeiro selecione um estado</option>';
+                    citySelect.disabled = true;
+                    return;
+                }
+                
+                citySelect.innerHTML = '<option value="">Carregando cidades...</option>';
+                citySelect.disabled = true;
+                
+                fetch(`/api/cities/?state_id=${stateId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro na resposta da API');
+                        return response.json();
+                    })
+                    .then(cities => {
+                        citySelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+                        cities.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                        citySelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar cidades:', error);
+                        citySelect.innerHTML = '<option value="">Erro ao carregar cidades</option>';
+                        citySelect.disabled = true;
+                    });
+            }
+
+            // Event listeners para país e estado
+            if (countrySelect) {
+                countrySelect.addEventListener('change', function() {
+                    const countryId = this.value;
+                    loadStates(countryId);
+                });
+                
+                // Se já tiver um país selecionado (em caso de erro no formulário), carrega os estados
+                if (countrySelect.value) {
+                    loadStates(countrySelect.value);
+                }
+            }
+
+            if (stateSelect) {
+                stateSelect.addEventListener('change', function() {
+                    const stateId = this.value;
+                    loadCities(stateId);
+                });
+            }
+
+            // Máscaras de entrada
+            // Máscara para CPF
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Aplica máscara
+                    if (value.length <= 3) {
+                        value = value;
+                    } else if (value.length <= 6) {
+                        value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+                    } else if (value.length <= 9) {
+                        value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+                    } else {
+                        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
+                        // Limita a 14 caracteres (CPF com máscara)
+                        value = value.substring(0, 14);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+
+            // Máscara para telefone
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Aplica máscara baseada no tamanho
+                    if (value.length <= 2) {
+                        value = value;
+                    } else if (value.length <= 6) {
+                        value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+                    } else if (value.length <= 10) {
+                        value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+                    } else {
+                        value = value.replace(/(\d{2})(\d{5})(\d+)/, '($1) $2-$3');
+                        // Limita a 15 caracteres (telefone com máscara)
+                        value = value.substring(0, 15);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+
+            // Indicador de força da senha
+            if (passwordInput && passwordStrengthBar) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    let strength = 0;
+                    
+                    // Comprimento
+                    if (password.length >= 8) strength += 25;
+                    if (password.length >= 12) strength += 10;
+                    
+                    // Letras maiúsculas e minúsculas
+                    if (/[a-z]/.test(password)) strength += 25;
+                    if (/[A-Z]/.test(password)) strength += 10;
+                    
+                    // Números
+                    if (/[0-9]/.test(password)) strength += 25;
+                    
+                    // Caracteres especiais
+                    if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+                    
+                    // Atualiza barra de força
+                    strength = Math.min(strength, 100);
+                    passwordStrengthBar.style.width = strength + '%';
+                    
+                    // Define cor baseada na força
+                    if (strength < 40) {
+                        passwordStrengthBar.style.backgroundColor = 'var(--error)';
+                    } else if (strength < 70) {
+                        passwordStrengthBar.style.backgroundColor = 'var(--warning)';
+                    } else {
+                        passwordStrengthBar.style.backgroundColor = 'var(--success)';
+                    }
+                });
+            }
+
+            // Validação em tempo real
+            // Validação de email
+            const emailInput = document.getElementById('id_email');
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    if (this.value && !isValidEmail(this.value)) {
+                        markFieldInvalid(this, 'E-mail inválido');
+                    } else {
+                        markFieldValid(this);
+                    }
+                });
+            }
+
+            // Validação de confirmação de senha
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', function() {
+                    const password = passwordInput.value;
+                    if (this.value && password !== this.value) {
+                        markFieldInvalid(this, 'As senhas não coincidem');
+                    } else {
+                        markFieldValid(this);
+                    }
+                });
+                
+                // Também valida quando a senha principal muda
+                if (passwordInput) {
+                    passwordInput.addEventListener('input', function() {
+                        if (confirmPasswordInput.value && this.value !== confirmPasswordInput.value) {
+                            markFieldInvalid(confirmPasswordInput, 'As senhas não coincidem');
+                        } else {
+                            markFieldValid(confirmPasswordInput);
+                        }
+                    });
+                }
+            }
+
+            // Validação de CPF em tempo real
+            if (cpfInput) {
+                cpfInput.addEventListener('blur', function() {
+                    const cpfValue = this.value.replace(/\D/g, '');
+                    if (this.value && !validateCPF(cpfValue)) {
+                        markFieldInvalid(this, 'CPF inválido');
+                    } else {
+                        markFieldValid(this);
+                    }
+                });
+            }
+
+            // Verifica se há erros do servidor e foca no campo correspondente
+            function checkServerErrors() {
+                // Verifica se há erros no passo 1
+                const step1Errors = document.querySelectorAll('#step-1 .form-control.error');
+                if (step1Errors.length > 0) {
+                    setActiveStep(1);
+                    return;
+                }
+                
+                // Verifica se há erros no passo 2
+                const step2Errors = document.querySelectorAll('#step-2 .form-control.error');
+                if (step2Errors.length > 0) {
+                    setActiveStep(2);
+                    return;
+                }
+            }
+            
+            // Executa a verificação ao carregar a página
+            checkServerErrors();
+            
+            // Se houver valores pré-selecionados para estado ou cidade (em caso de erro no formulário)
+            // Precisamos carregar os dados correspondentes
+            function initLocationFields() {
+                const countryId = countrySelect.value;
+                const stateId = "{{ user_info_form.state.value|default:'' }}";
+                const cityId = "{{ user_info_form.city.value|default:'' }}";
+                
+                if (countryId) {
+                    // Carrega estados para o país selecionado
+                    fetch(`/api/states/?country_id=${countryId}`)
+                        .then(response => response.json())
+                        .then(states => {
+                            stateSelect.innerHTML = '<option value="">Selecione um estado</option>';
+                            states.forEach(state => {
+                                const option = document.createElement('option');
+                                option.value = state.id;
+                                option.textContent = state.name;
+                                if (stateId && state.id == stateId) {
+                                    option.selected = true;
+                                }
+                                stateSelect.appendChild(option);
+                            });
+                            stateSelect.disabled = false;
+                            
+                            // Se tiver um estado selecionado, carrega cidades
+                            if (stateId) {
+                                fetch(`/api/cities/?state_id=${stateId}`)
+                                    .then(response => response.json())
+                                    .then(cities => {
+                                        citySelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+                                        cities.forEach(city => {
+                                            const option = document.createElement('option');
+                                            option.value = city.id;
+                                            option.textContent = city.name;
+                                            if (cityId && city.id == cityId) {
+                                                option.selected = true;
+                                            }
+                                            citySelect.appendChild(option);
+                                        });
+                                        citySelect.disabled = false;
+                                    });
+                            }
+                        });
+                }
+            }
+            
+            // Inicializa os campos de localização se houver valores pré-selecionados
+            initLocationFields();
         });
     </script>
 </body>

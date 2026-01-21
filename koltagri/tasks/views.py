@@ -399,7 +399,7 @@ def upload_task_attachment(request, task_id):
         return JsonResponse({"error": "Nenhum arquivo enviado"}, status=400)
 
     # 1. Usuário precisa fazer parte do site da tarefa
-    if task.site and not request.user.sitemembership_set.filter(site=task.site).exists():
+    if task.site and not request.user.site_memberships.filter(site=task.site).exists():
         return HttpResponseForbidden("Você não tem acesso a esta tarefa")
 
     # 2. Define o tipo do anexo

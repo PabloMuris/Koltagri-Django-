@@ -1,0 +1,510 @@
+<!-- business/templates/supplies/usages_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Histórico de Usos{% endblock %}
+{% block header_title %}Koltagri{% endblock %}
+{% block header_text %}Histórico de usos do pack{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+{% endblock %}
+
+{% block styles %}
+<style>
+:root{
+  --bg:#f2f2f2;
+  --muted:#66788f;
+  --primary:#4aa58a;
+  --accent:#00204b;
+  --card-bg:#ffffff;
+  --border:#e8eef6;
+  --radius:10px;
+  --gap:16px;
+  --container-max:1200px;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto;
+}
+
+.container-wide{
+  width:100%;
+  margin:24px 0;
+}
+
+.supplies-indicators{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:var(--gap);
+  background:var(--bg);
+  padding:20px;
+  border-radius:var(--radius);
+}
+
+.supplies-header h1{
+  margin:0;
+  font-size:20px;
+  color:var(--accent);
+}
+
+.supplies-header p{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.back-button{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--card-bg);
+  color:var(--accent);
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:14px;
+  border:1px solid var(--border);
+  transition:all 0.2s ease;
+}
+
+.back-button:hover{
+  background:var(--primary);
+  color:white;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.add-usage{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--primary);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.add-usage:hover {
+  background:#3a8a6a;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.indicators-grid{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+.usage-card{
+  display:flex;
+  gap:12px;
+  padding:12px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+.icon-wrap{
+  width:48px;
+  height:48px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(74,165,138,.12);
+  color:var(--primary);
+}
+
+.filter-search-section{ margin-top:20px; }
+
+.results{
+  display:grid;
+  gap:12px;
+  margin-top:20px;
+}
+
+.usage_card{
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:12px;
+  padding:14px;
+  border-radius:8px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  position:relative;
+  transition:all 0.2s ease;
+}
+
+.usage_card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card__icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--primary);
+  background:rgba(74,165,138,.1);
+  border-radius:8px;
+  padding:8px;
+}
+
+.card_description .usage__title{
+  margin:0;
+  font-size:15px;
+  font-weight:600;
+  color:var(--accent);
+}
+
+.card_description .cultivation_info{
+  margin-top:6px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.card_description .cultivation_info strong{
+  color:var(--accent);
+}
+
+.card_description .quantity_info{
+  margin-top:4px;
+  font-size:13px;
+  color:#4CAF50;
+  font-weight:500;
+}
+
+.usage_details{
+  font-size:13px;
+  color:var(--muted);
+  text-align:right;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.usage_details strong{
+  color:var(--accent);
+}
+
+.no-usages{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--muted);
+}
+
+.no-usages .material-icons{
+  font-size:64px;
+  opacity:0.3;
+  margin-bottom:16px;
+}
+
+/* Paginação */
+.pagination-container{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:20px;
+}
+
+.pagination{
+  display:flex;
+  list-style:none;
+  padding:0;
+  margin:0;
+  gap:8px;
+}
+
+.page-item{
+  display:inline-block;
+}
+
+.page-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  border-radius:6px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+  transition:all 0.2s ease;
+}
+
+.page-link:hover{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+.page-item.active .page-link{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+.page-item.disabled .page-link{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+.pagination-info{
+  font-size:14px;
+  color:var(--muted);
+}
+
+/* Status colors */
+.status-completed{
+  color:#4CAF50;
+}
+
+.status-pending{
+  color:#FF9800;
+}
+
+.status-cancelled{
+  color:#F44336;
+}
+
+/* Responsivo */
+@media (max-width:768px){
+  .usage_card{
+    grid-template-columns:1fr;
+  }
+  
+  .usage_details{
+    text-align:left;
+  }
+  
+  .supplies-indicators{
+    grid-template-columns:1fr;
+  }
+  
+  .pagination-container{
+    flex-direction:column;
+    gap:12px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+  <div class="flex-row" style="display: flex; flex-direction: row; align-items: center; gap: 12px;">
+    <a href="" class="back-button">
+      <span class="material-icons">arrow_back</span>
+    </a>
+    <h3 style="margin: 0;">Histórico de Usos</h3>
+  </div>
+  
+  {% if pack %}
+  <a href="{% url 'pack_usage' supplie_pk=agricultural_input.id pk=pack.id %}" class="add-usage">
+    <span class="material-icons">add_circle_outline</span>
+    Novo Uso
+  </a>
+  {% endif %}
+</div>
+
+<div class="container-wide">
+
+  <!-- INDICADORES -->
+  <section class="supplies-indicators">
+    <div class="supplies-header">
+      <h1>Histórico de Usos do Pack</h1>
+      {% if pack %}
+      <p>Pack: {{ pack.name }} | Insumo: {{ agricultural_input.name }} | Quantidade inicial: {{ pack.quantity }} {{ agricultural_input.unit }}</p>
+      {% endif %}
+    </div>
+
+    <a href="" class="add-usage">
+      <span class="material-icons">local_shipping</span>
+      Ver todos os Packs
+    </a>
+
+    <div class="indicators-grid">
+      <div class="usage-card">
+        <div class="icon-wrap"><span class="material-icons">history</span></div>
+        <div>
+          <strong>Total de Usos</strong>
+          <p>{{ total_usages }}</p>
+        </div>
+      </div>
+
+      <div class="usage-card">
+        <div class="icon-wrap"><span class="material-icons">scale</span></div>
+        <div>
+          <strong>Quantidade Total Usada</strong>
+          <p>{{ total_quantity_used }} {{ agricultural_input.unit }}</p>
+        </div>
+      </div>
+
+      <div class="usage-card">
+        <div class="icon-wrap"><span class="material-icons">inventory</span></div>
+        <div>
+          <strong>Quantidade Restante</strong>
+          <p class="{% if remaining_quantity <= 0 %}status-cancelled{% elif remaining_quantity < pack.quantity|divisibleby:4 %}status-pending{% else %}status-completed{% endif %}">
+            {{ remaining_quantity }} {{ agricultural_input.unit }}
+          </p>
+        </div>
+      </div>
+
+      <div class="usage-card">
+        <div class="icon-wrap"><span class="material-icons">calendar_month</span></div>
+        <div>
+          <strong>Período</strong>
+          <p>
+            {% if usages %}
+              {{ usages.last.usage_date|date:"d/m/Y" }} - {{ usages.first.usage_date|date:"d/m/Y" }}
+            {% else %}
+              Nenhum uso registrado
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSCA -->
+  <section class="filter-search-section">
+    {% include "partials/_search.html"  %}
+  </section>
+
+  <!-- LISTAGEM DE USOS -->
+  <section class="tasks-result">
+    <div class="results">
+      {% for usage in usages %}
+      <div class="usage_card">
+        <div class="card__icon">
+          <span class="material-icons">
+            {% if usage.cultivation_plant %}grass{% else %}agriculture{% endif %}
+          </span>
+        </div>
+
+        <div class="card_description">
+          <p class="usage__title">
+            {% if usage.cultivation_plant %}
+              Uso em {{ usage.cultivation_plant }}
+            {% else %}
+              Uso registrado
+            {% endif %}
+          </p>
+          <p class="cultivation_info">
+            <strong>Pack:</strong> {{ usage.pack.name }}
+          </p>
+          <p class="quantity_info">
+            Quantidade usada: <strong>{{ usage.quantity_used }} {{ usage.pack.agricultural_input.unit }}</strong>
+          </p>
+        </div>
+
+        <div class="usage_details">
+          <p><strong>Data do uso:</strong> {{ usage.usage_date|date:"d/m/Y" }}</p>
+          <p><strong>Registrado em:</strong> {{ usage.created_at|date:"d/m/Y H:i" }}</p>
+          {% if usage.updated_at and usage.updated_at != usage.created_at %}
+          <p><strong>Atualizado em:</strong> {{ usage.updated_at|date:"d/m/Y H:i" }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-usages">
+        <span class="material-icons">inventory_2</span>
+        <p style="margin-top:16px; font-size:16px;">Nenhum uso registrado para este pack.</p>
+        {% if pack %}
+        <p style="margin-bottom:24px; font-size:14px;">Comece registrando o primeiro uso deste insumo.</p>
+        <a href="{% url 'pack_usage' supplie_pk=agricultural_input.id pk=pack.id %}" class="add-usage">
+          <span class="material-icons">add_circle_outline</span>
+          Registrar Primeiro Uso
+        </a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- PAGINAÇÃO -->
+  {% if is_paginated %}
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Mostrando {{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} usos
+    </div>
+    
+    <nav aria-label="Paginação">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+              <span class="material-icons">chevron_left</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              <span class="material-icons">chevron_left</span>
+            </span>
+          </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+              <span class="material-icons">chevron_right</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              <span class="material-icons">chevron_right</span>
+            </span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Filtro de busca
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[type="search"]');
+    const usageCards = document.querySelectorAll('.usage_card');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            usageCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -160,3 +160,7 @@ class AgriculturalInputUsage(BaseModelWithSoftDelete):
             f"{self.pack.agricultural_input.name} "
             f"em {self.cultivation_plant}"
         )
+    
+    def save(self, *args, **kwargs):
+        
+        return super().save(*args, **kwargs)

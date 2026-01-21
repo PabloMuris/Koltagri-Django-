@@ -121,6 +121,12 @@ main{
     border-color: transparent;
 }
 
+.btn.warning {
+    background: #f57c00;
+    color: #fff;
+    border-color: transparent;
+}
+
 .btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -334,7 +340,13 @@ main{
     z-index: 10;
 }
 
-.actions button{
+.actions .action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.actions button,
+.actions a {
     width: 44px;
     height: 44px;
     border-radius: 10px;
@@ -345,16 +357,47 @@ main{
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
 }
 
-.actions button:hover {
+.actions button:hover,
+.actions a:hover {
     border-color: var(--primary-color);
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.actions button svg{
-    fill: var(--text-color);
+/* Modal de Confirmação */
+.confirmation-modal {
+    display: none;
+}
+
+.confirmation-modal .content-layer {
+    max-width: 400px;
+}
+
+.confirmation-modal h2 {
+    margin: 0 0 20px 0;
+    color: var(--accent-color);
+    text-align: center;
+}
+
+.confirmation-modal p {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.confirmation-modal .confirmation-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.confirmation-modal .confirmation-buttons button {
+    flex: 1;
 }
 
 /* meu Modal */
@@ -392,6 +435,11 @@ main{
     background: #f8f9fa;
 }
 
+/* Formulário oculto para deleção */
+.hidden-delete-form {
+    display: none;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .status-section {
@@ -415,6 +463,10 @@ main{
     .plant-header img {
         width: 200px;
     }
+    
+    .confirmation-modal .confirmation-buttons {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 480px) {
@@ -430,51 +482,41 @@ main{
     .plant-header {
         padding-top: 50px;
     }
+    
+    .actions .action-buttons {
+        gap: 8px;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Modal de Edição -->
-<div class="modal-overlay climate-modal" id="modal-overlay" style="translate: 0 0;">
+<!-- Modal de Confirmação para Exclusão -->
+<div class="modal-overlay confirmation-modal" id="delete-confirmation-modal">
     <div class="content-layer">
-        <button type="button" class="close-btn" id="close-btn">
+        <button type="button" class="close-btn" id="close-delete-modal">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
                 <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
             </svg>
         </button>
 
-        <h2 style="margin: 0 0 20px 0; color: var(--accent-color);">Editar Planta</h2>
-
-        <form class="plant-detail-form">
-
-            <div class="form-group">
-                <label for="period">Safra</label>
-                <select name="period" id="period">
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="transplant_date">Data de Transplante</label>
-                <input type="date" name="transplant_date" id="transplant_date">
-            </div>
-
-            <div class="form-group">
-                <label for="harvest_date">Data de Colheita</label>
-                <input type="date" name="harvest_date" id="harvest_date">
-            </div>
-
-            <div class="buttons-area">
-                <button type="submit" class="btn primary">Confirmar edição</button>
-                <button type="button" class="btn danger">Apagar planta</button>
-            </div>
-
-        </form>
+        <h2>Confirmar Exclusão</h2>
+        
+        <p>Tem certeza que deseja excluir a planta <strong>{{ plant.plant_species.name }}</strong> do cultivo?</p>
+        <p>Esta ação não pode ser desfeita.</p>
+        
+        <div class="confirmation-buttons">
+            <button type="button" class="btn" id="cancel-delete">Cancelar</button>
+            <button type="button" class="btn danger" id="confirm-delete">Excluir</button>
+        </div>
     </div>
 </div>
+
+<!-- Formulário oculto para deleção -->
+<form id="delete-form" class="hidden-delete-form" method="post" action="{% url 'delete_cultivation_plant' plant.pk %}">
+    {% csrf_token %}
+</form>
 
 <!-- Conteúdo Principal -->
 <main>
@@ -484,11 +526,22 @@ main{
                 <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
             </svg>
         </button>
-        <button type="button" id="edit-button">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
-                <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
-            </svg>
-        </button>
+        
+        <div class="action-buttons">
+            <!-- Botão de Excluir -->
+            <button type="button" id="delete-button" title="Excluir planta">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+                </svg>
+            </button>
+            
+            <!-- Botão de Editar -->
+            <a href="{% url 'edit_cultivation_plant' plant.pk %}" id="edit-button" title="Editar planta">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                </svg>
+            </a>
+        </div>
     </section>
 
     <section class="plant-header">
@@ -591,7 +644,7 @@ main{
                 Observações
             </h3>
             <p>
-                
+                {{ plant.notes|default:"Nenhuma observação fornecida." }}
             </p>
         </div>
         
@@ -601,9 +654,8 @@ main{
                 Anexos
             </h3>
             <div class="attachments-container">
-                <div class="attachment-list">
-                    {# Se no futuro houver um relacionamento attachments, troque esse bloco por loop dinâmico.
-                       Por enquanto mantemos exemplos estáticos para preservar o layout. #}
+                <div class="attachment-list" style="width: 100%;">
+                    
 
                     <div class="attachment-item">
                         <div class="attachment-icon">
@@ -685,42 +737,69 @@ main{
 
 {% block scripts %}
 <script>
-    const modalOverlay = document.getElementById("modal-overlay");
-    const editButton = document.getElementById("edit-button");
-    const closeBtn = document.getElementById("close-btn");
+    // Elementos para o modal de confirmação de exclusão
+    const deleteConfirmationModal = document.getElementById("delete-confirmation-modal");
+    const deleteButton = document.getElementById("delete-button");
+    const closeDeleteModal = document.getElementById("close-delete-modal");
+    const cancelDelete = document.getElementById("cancel-delete");
+    const confirmDelete = document.getElementById("confirm-delete");
+    const deleteForm = document.getElementById("delete-form");
     
+    // Elementos para o modal de anexos
     const attachmentModal = document.getElementById("attachment-modal");
     const addAttachmentBtn = document.getElementById("add-attachment");
     const closeAttachmentModal = document.getElementById("close-attachment-modal");
     const cancelAttachment = document.getElementById("cancel-attachment");
     const attachmentForm = document.getElementById("attachment-form");
 
-    // safety: only add listeners if elements exist
-    if (editButton) {
-        editButton.addEventListener("click", (e) => {
-            modalOverlay.style.display = "flex";
+    // Abrir modal de confirmação de exclusão
+    if (deleteButton) {
+        deleteButton.addEventListener("click", (e) => {
+            deleteConfirmationModal.style.display = "flex";
         });
     }
-    if (closeBtn) {
-        closeBtn.addEventListener("click", (e) => {
-            modalOverlay.style.display = "none";
+    
+    // Fechar modal de confirmação de exclusão
+    if (closeDeleteModal) {
+        closeDeleteModal.addEventListener("click", (e) => {
+            deleteConfirmationModal.style.display = "none";
         });
     }
+    
+    // Cancelar exclusão
+    if (cancelDelete) {
+        cancelDelete.addEventListener("click", (e) => {
+            deleteConfirmationModal.style.display = "none";
+        });
+    }
+    
+    // Confirmar exclusão - submeter o formulário
+    if (confirmDelete) {
+        confirmDelete.addEventListener("click", (e) => {
+            // Submeter o formulário de deleção
+            deleteForm.submit();
+        });
+    }
+    
+    // Modal de anexos
     if (addAttachmentBtn) {
         addAttachmentBtn.addEventListener("click", (e) => {
             attachmentModal.style.display = "flex";
         });
     }
+    
     if (closeAttachmentModal) {
         closeAttachmentModal.addEventListener("click", (e) => {
             attachmentModal.style.display = "none";
         });
     }
+    
     if (cancelAttachment) {
         cancelAttachment.addEventListener("click", (e) => {
             attachmentModal.style.display = "none";
         });
     }
+    
     if (attachmentForm) {
         attachmentForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -733,8 +812,8 @@ main{
 
     // Fechar modais ao clicar fora do conteúdo
     window.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-            modalOverlay.style.display = 'none';
+        if (e.target === deleteConfirmationModal) {
+            deleteConfirmationModal.style.display = 'none';
         }
         if (e.target === attachmentModal) {
             attachmentModal.style.display = 'none';

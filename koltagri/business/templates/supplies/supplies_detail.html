@@ -10,6 +10,10 @@
 
 <style>
 
+    #add-open{
+        display: none !important;
+    }
+
     .user-actions button{
   background-color: transparent !important;
   
@@ -165,31 +169,173 @@ main {
 }
 
  
-.info-section {
-    background: white;
-    padding: 20px;
-    border-radius: 14px;
-    border: 2px solid #e8e8e8;
-    margin-bottom: 32px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* Nova seção de conteúdo */
+.content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 24px;
 }
 
-.info-block {
+/* Card de descrição */
+.description-card {
+    background: var(--panel-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.description-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.description-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f0f4f8;
+}
+
+.description-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.description-header svg {
+    color: var(--primary-color);
+}
+
+.description-content {
+    line-height: 1.8;
+}
+
+.description-content p {
+    font-size: 16px;
+    color: var(--text-color);
+    margin: 0;
+    text-align: justify;
+}
+
+/* Card de ações */
+.actions-card {
+    background: var(--panel-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+}
+
+.actions-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 24px;
 }
 
-.info-block h3 {
-    font-size: 18px;
-    margin-bottom: 6px;
+.actions-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin: 0;
+}
+
+.actions-header svg {
+    color: var(--primary-color);
+}
+
+/* Grid de ações */
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+/* Botões de ação */
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.action-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    flex-shrink: 0;
+}
+
+.secondary-action .action-icon {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+}
+
+.action-icon .material-icons,
+.action-icon svg {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.action-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.action-title {
+    font-size: 16px;
+    font-weight: 600;
     color: var(--accent-color);
 }
 
-.info-block p {
-    text-align: justify;
-    line-height: 1.5;
-    color: var(--text-color);
+.action-subtitle {
+    font-size: 14px;
+    color: var(--muted-color);
+    font-weight: 400;
 }
 
+.action-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: var(--muted-color);
+    transition: transform 0.3s ease;
+}
+
+.action-button:hover .action-arrow {
+    transform: translateX(4px);
+    color: var(--primary-color);
+}
  
 .renewable-yes {
     color: #4CAF50;
@@ -466,6 +612,7 @@ main {
 }
 
  
+/* Responsividade */
 @media (max-width: 768px) {
     .status-section {
         flex-direction: column;
@@ -479,6 +626,33 @@ main {
     
     .user-actions {
         padding: 0 10px;
+    }
+    
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .description-card,
+    .actions-card {
+        padding: 20px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-button {
+        padding: 16px;
+    }
+    
+    .action-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .action-icon .material-icons,
+    .action-icon svg {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
     }
 }
 </style>
@@ -611,26 +785,59 @@ main {
     
 </section>
 
-<section class="info-section" style="width: 100%;">
-    <div class="info-block" >
-        <h3>Descrição</h3>
-        <p>
-           {{insumo.description}}
-        </p>
+<!-- NOVA SEÇÃO DE CONTEÚDO (DESCRIÇÃO E AÇÕES) -->
+<section class="content-section">
+    <!-- Card de descrição com visual melhorado -->
+    <div class="description-card">
+        <div class="description-header">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="var(--accent-color)">
+                <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/>
+            </svg>
+            <h3>Descrição</h3>
+        </div>
+        <div class="description-content">
+            <p>{{ insumo.description|default:"Sem descrição disponível." }}</p>
+        </div>
     </div>
 
-    <div class="info-block">
-        <h3>Ações</h3>
-        <button class="add-attachment-btn" id="add-attachment-main">
-            <span class="material-icons">attach_file</span>
-            Pacotes
-        </button>
-        <button class="packages-btn" id="package-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-183v-274L200-596v274l240 139Zm80 0 240-139v-274L520-457v274Zm-80 92L160-252q-19-11-29.5-29T120-321v-318q0-22 10.5-40t29.5-29l280-161q19-11 40-11t40 11l280 161q19 11 29.5 29t10.5 40v318q0 22-10.5 40T800-252L520-91q-19 11-40 11t-40-11Zm200-528 77-44-237-137-78 45 238 136Zm-160 93 78-45-237-137-78 45 237 137Z"/></svg>
-            <p>Pacotes</p>
-        </button>
+    <!-- Card de ações com design moderno -->
+    <div class="actions-card">
+        <div class="actions-header">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="var(--accent-color)">
+                <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h120v-80q0-83 58.5-141.5T560-920q83 0 141.5 58.5T760-720v80h120q33 0 56.5 23.5T960-560v400q0 33-23.5 56.5T880-80H240Zm0-80h640v-400H240v400Zm280-120q33 0 56.5-23.5T600-360q0-33-23.5-56.5T520-440q-33 0-56.5 23.5T440-360q0 33 23.5 56.5T520-280ZM360-640h400v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80ZM240-160v-400 400Z"/>
+            </svg>
+            <h3>Ações</h3>
+        </div>
         
-        
+        <div class="actions-grid">
+            <button class="action-button primary-action" id="add-attachment-main">
+                <div class="action-icon">
+                    <span class="material-icons">attach_file</span>
+                </div>
+                <div class="action-text">
+                    <span class="action-title">Anexos</span>
+                    <span class="action-subtitle">Documentos relacionados</span>
+                </div>
+                <div class="action-arrow">
+                    <span class="material-icons">chevron_right</span>
+                </div>
+            </button>
+            
+            <button class="action-button secondary-action" id="package-btn">
+                <div class="action-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                        <path d="M440-183v-274L200-596v274l240 139Zm80 0 240-139v-274L520-457v274Zm-80 92L160-252q-19-11-29.5-29T120-321v-318q0-22 10.5-40t29.5-29l280-161q19-11 40-11t40 11l280 161q19 11 29.5 29t10.5 40v318q0 22-10.5 40T800-252L520-91q-19 11-40 11t-40-11Zm200-528 77-44-237-137-78 45 238 136Zm-160 93 78-45-237-137-78 45 237 137Z"/>
+                    </svg>
+                </div>
+                <div class="action-text" onclick="window.location.href='{% url 'packs_list' sup_pk %}'">
+                    <span class="action-title">Pacotes</span>
+                    <span class="action-subtitle">Opções de embalagem</span>
+                </div>
+                <div class="action-arrow">
+                    <span class="material-icons">chevron_right</span>
+                </div>
+            </button>
+        </div>
     </div>
 </section>
 

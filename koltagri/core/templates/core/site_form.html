@@ -1,0 +1,257 @@
+<!-- landplots/templates/landplots/site_form.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
+{% endblock %}
+
+{% block styles %}
+<style>
+:root{
+  --primary-color: #3b82a0;    
+  --primary-dark: #2d677f;
+  --bg: #f7f9fb;
+  --card-bg: #fff;
+  --border: #f2f2f2;
+  --radius: 12px;
+  --text: #102734;
+  --muted: #6b777a;
+  --gap: 16px;
+}
+
+*{ box-sizing: border-box; font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+
+.form-shell {
+  max-width: 800px;
+  margin: 18px auto;
+  padding: 0 16px;
+}
+
+.form-panel{
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  width: 100%;
+}
+
+.form-panel h1{
+  margin:0 0 6px 0;
+  font-size: 1.25rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.form-sub {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.row {
+  display:flex;
+  gap: 12px;
+}
+.col {
+  flex: 1;
+}
+
+.stack {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+label{
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 6px;
+  display:block;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width:100%;
+  height:44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border:1px solid var(--border);
+  background: #f7f8f8;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+}
+
+input:focus,
+select:focus{
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(59,130,112,0.06);
+}
+
+.helper {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.error-message {
+  font-size: 13px;
+  color: #dc3545;
+  margin-top: 4px;
+}
+
+.actions {
+  display:flex;
+  gap:16px;
+  margin-top: 18px;
+  justify-content: flex-end;
+}
+
+.btn {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary{
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.btn.ghost{
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--primary-color);
+}
+
+@media (max-width: 760px){
+  .row{ flex-direction: column; }
+  .actions{ flex-direction: column-reverse; gap: 10px; }
+  .actions .btn{ width: 100%; }
+}
+
+.small-note { 
+  font-size: 13px; 
+  color: var(--muted); 
+  margin-top: 6px; 
+}
+
+.user-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.user-actions button {
+  background: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'select_site' %}'">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+            <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+        </svg>
+    </button>
+</div>
+
+<div class="form-shell">
+    <form method="post" class="form-panel">
+        {% csrf_token %}
+        
+        <h1 id="form-title">{{ title }}</h1>
+        <div class="form-sub">
+            {{ subtitle }}
+        </div>
+
+        <div class="stack">
+            <!-- Nome do Site -->
+            <div>
+                <label for="{{ form.name.id_for_label }}">Nome do Site *</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors }}</div>
+                {% endif %}
+                <div class="helper">Nome único para identificar o site</div>
+            </div>
+
+            <!-- País -->
+            <div>
+                <label for="{{ form.country.id_for_label }}">País *</label>
+                {{ form.country }}
+                {% if form.country.errors %}
+                    <div class="error-message">{{ form.country.errors }}</div>
+                {% endif %}
+                <div class="helper">Selecione o país onde o site está localizado</div>
+            </div>
+
+            <!-- Fuso Horário -->
+            <div>
+                <label for="{{ form.timezone.id_for_label }}">Fuso Horário *</label>
+                {{ form.timezone }}
+                {% if form.timezone.errors %}
+                    <div class="error-message">{{ form.timezone.errors }}</div>
+                {% endif %}
+                <div class="helper">Fuso horário local para registros de tempo</div>
+            </div>
+        </div>
+
+        <div class="small-note">
+            <strong>Nota:</strong> Após criar o site, você será automaticamente adicionado como proprietário (Site Owner).
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'select_site' %}" class="btn ghost">Cancelar</a>
+            <button type="submit" class="btn primary">Salvar Site</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Script para melhorar a experiência do usuário
+document.addEventListener('DOMContentLoaded', function() {
+    // Foco no primeiro campo
+    const firstInput = document.querySelector('input[type="text"]');
+    if (firstInput) {
+        firstInput.focus();
+    }
+    
+    // Validação em tempo real para o campo de nome
+    const nameInput = document.getElementById('{{ form.name.id_for_label }}');
+    if (nameInput) {
+        nameInput.addEventListener('input', function() {
+            if (this.value.length > 100) {
+                this.value = this.value.substring(0, 100);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

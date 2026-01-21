@@ -6,475 +6,65 @@
 
 {% block rels %}
 <link rel="stylesheet" href="{% static 'css/partials/_search.css'%}">
+<link rel="stylesheet" href="{% static 'landplots/css/cultivated_plants.css'%}">
+
+
 {% endblock %}
 
 {% block styles %}
 <style>
-:root {
-  --primary-color: #2b8aef;
-  --bg-color: #f7f9fb;
-  --card-radius: 12px;
-  --border-color: #f2f2f2;
-  --gap: 18px;
-  --transition: 0.18s ease;
-}
+  #filter-open{
+    min-height: 44px;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  }
 
-#filter-open svg {
-  fill: black;
-}
+  #filter-open svg{
+    fill: white;
+  }
+  .header{
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #add-open{
+    display: none;
+  }
 
-main.standard--padding {
-  margin-inline: 22px !important;
-}
+  .header-bar{
+    width: 100%;
+  }
 
-.header-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  .header a{
+    display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.search-form {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 640px;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.search-form input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 0;
-  outline: 0;
-  font-size: 15px;
-  background: transparent;
-}
-
-.search-form button {
-  width: 56px;
-  height: 44px;
-  border: 0;
-  background: var(--primary-color);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.action-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: var(--primary-color);
-  color: #fff;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.action-button:hover {
-  transform: translateY(-2px);
-}
-
-.plant-grid {
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  align-items: start;
-  width: 100%;
-}
-
-.plant-card {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--border-color);
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.14s ease, border-color 0.14s ease;
-  min-height: 280px;
-}
-
-.plant-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(43, 138, 239, 0.12);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-}
-
-.card__image {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  display: block;
-}
-
-.card__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.card__description {
-  padding: 16px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card__description .title {
+  justify-content: space-around;
   font-size: 16px;
-  font-weight: 600;
-  color: #102734;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
-}
 
-.card__description .meta {
-  font-size: 13px;
-  color: #6b777a;
-  line-height: 1.4;
-}
-
-.meta__item {
-  margin-bottom: 4px;
-  display: flex;
-  align-items: flex-start;
-}
-
-.meta__item strong {
-  color: #4a5568;
-  min-width: 70px;
-  display: inline-block;
-}
-
-.meta__item span {
-  color: #718096;
-  flex: 1;
-}
-
-.meta__climate {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.climate-tag {
-  background: #e8f4ff;
-  color: #2b8aef;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.plant-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #48bb78;
-  color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 600;
-  margin-left: 4px;
-}
-
-.active-filters {
-  background: #e8f4ff;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #2b8aef;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.active-filters strong {
-  font-weight: 600;
-}
-
-.active-filters span {
-  background: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 13px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.active-filters a {
-  margin-left: auto;
-  color: #666;
-  text-decoration: underline;
-  font-size: 13px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-  padding: 20px 0;
-}
-
-.pagination-info {
-  font-size: 14px;
-  color: #718096;
-}
-
-.pagination a.btn {
-  min-width: 80px;
-  text-align: center;
-}
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.32);
-  z-index: 1200;
-  padding: 20px;
-}
-
-.modal-panel {
-  width: 100%;
-  max-width: 520px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.modal-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.form-control {
-  flex: 1;
-  min-width: 200px;
-}
-
-.form-control label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #6b777a;
-  font-size: 14px;
-}
-
-.form-control input,
-.form-control select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #e9eef6;
-  font-size: 15px;
-  background: #fff;
-  transition: border-color 0.2s;
-}
-
-.form-control input:focus,
-.form-control select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 24px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
+  background-color: var(--primary-color);
+  border-radius: 8px;
   padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid #e9eef6;
-  background: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  color: #4a5568;
-}
-
-.btn p {
-  font-weight: 500;
-  margin: 0;
-}
-
-.btn.primary {
-  background: var(--primary-color);
-  color: #fff;
-  border-color: transparent;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.hidden {
-  display: none !important;
-}
-
-@media (max-width: 880px) {
-  .search-form {
-    max-width: 100%;
-  }
-  
-  .action-buttons {
-    width: 100%;
-    justify-content: flex-start;
-  }
-  
-  .plant-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 520px) {
-  .card__description {
-    padding: 12px;
-  }
-  
-  .card__description .title {
-    font-size: 15px;
-  }
-  
-  .modal-row {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .form-control {
-    min-width: 100%;
-  }
-  
-  .modal-actions {
-    flex-direction: column;
-  }
-  
-  .modal-actions .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-.no-plants {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: #718096;
-  font-size: 16px;
-}
-
-.no-plants p {
-  margin-bottom: 20px;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 40px 20px;
-}
-
-.empty-state-icon {
-  width: 80px;
-  height: 80px;
-  background: #f7f9fb;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cbd5e0;
-}
-
-.filter-badge {
-  background: #fff;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.filter-badge button {
-  background: none;
-  border: none;
-  color: #718096;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-
-.filter-badge button:hover {
-  color: #e53e3e;
-}
-
-.filter-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.filter-count {
-  background: var(--primary-color);
   color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-}
+  font-weight: 500;
+  border: 1px solid white;
+    
+  }
 </style>
+
 {% endblock %}
 
 {% block content %}
+<div class="header">
+  <h2> Cultivos </h2>
+  <a type="button" href="{% url 'cultivation_form'%}">
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>    
+<p>Novo cultivo</p>
+  </a>
+</div>
 <div class="header-bar">
   <form class="search-form" method="get" action="{% url 'cultivated_plants' %}">
     <input type="text" 
