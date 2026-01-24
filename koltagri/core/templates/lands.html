@@ -6,9 +6,7 @@
 {% block header_text %}Da propriedade{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/partials/modal.css'%}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
 <style>
 :root {
     --primary-color: #4aa582da;
@@ -38,7 +36,6 @@
     gap: var(--gap);
 }
 
- 
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -55,11 +52,9 @@
 
 .page-actions {
     display: flex;
-    visibility: hidden;
     gap: 12px;
 }
 
- 
 .filter-section {
     background: var(--panel-bg);
     border: 1px solid var(--border-color);
@@ -87,6 +82,13 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
 }
 
 .search-icon {
@@ -102,7 +104,6 @@
     gap: 10px;
 }
 
- 
 .areas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -144,12 +145,6 @@
     gap: 8px;
 }
 
-.area-coordinates {
-    color: var(--muted-color);
-    font-size: 0.9rem;
-    margin-bottom: 12px;
-}
-
 .area-description {
     color: var(--text-color);
     font-size: 0.95rem;
@@ -157,7 +152,6 @@
     margin: 0;
 }
 
- 
 .btn {
     display: inline-flex;
     align-items: center;
@@ -194,7 +188,44 @@
     padding: 8px;
 }
 
- 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.pagination .btn {
+    padding: 8px 16px;
+}
+
+.pagination .current {
+    padding: 8px 16px;
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-color);
+    grid-column: 1 / -1;
+}
+
+.empty-state .material-icons {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* Modal Styles */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -206,7 +237,7 @@
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    translate: 0 0 ;
+    padding: 20px;
 }
 
 .modal-content {
@@ -216,7 +247,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     position: relative;
     max-width: 500px;
-    width: 90%;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
 }
@@ -244,40 +275,37 @@
     margin: 0 0 20px 0;
 }
 
- 
+/* Form Styles */
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     margin-bottom: 20px;
 }
 
-.form-group label {
-    font-weight: 600;
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
     color: var(--text-color);
     font-size: 14px;
 }
 
-.form-group input,
-.form-group textarea {
+.form-control {
     width: 100%;
     padding: 12px 16px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-control:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(74, 165, 130, 0.1);
 }
 
-.form-group textarea {
+textarea.form-control {
+    min-height: 120px;
     resize: vertical;
-    min-height: 100px;
     font-family: inherit;
     line-height: 1.5;
 }
@@ -286,17 +314,82 @@
     display: flex;
     gap: 12px;
     justify-content: flex-end;
-    margin-top: 20px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
-.delete-modal .modal-content {
+.error-message {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.has-error .form-control {
+    border-color: #d32f2f;
+}
+
+/* Messages */
+.messages-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1100;
     max-width: 400px;
 }
 
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Delete Modal */
 .delete-message {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     color: var(--text-color);
+    line-height: 1.6;
 }
 
 .warning-text {
@@ -304,25 +397,12 @@
     font-weight: 600;
 }
 
- 
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted-color);
+.btn-danger {
+    background-color: #d32f2f !important;
+    color: white;
+    border-color: transparent;
 }
 
-.empty-state .material-icons {
-    font-size: 64px;
-    margin-bottom: 16px;
-    opacity: 0.5;
-}
-
-.empty-state p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-}
-
- 
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
@@ -342,20 +422,45 @@
     .areas-grid {
         grid-template-columns: 1fr;
     }
+    
+    .pagination {
+        flex-wrap: wrap;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+    
+    .messages-container {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-container">
-     
+    <!-- Messages -->
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <span class="material-icons">
+                    {% if message.tags == 'success' %}check_circle{% endif %}
+                    {% if message.tags == 'error' %}error{% endif %}
+                    {% if message.tags == 'warning' %}warning{% endif %}
+                    {% if message.tags == 'info' %}info{% endif %}
+                </span>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Page Header -->
     <div class="page-header">
         <h1 class="page-title">Áreas do Local</h1>
         <div class="page-actions">
-            <button class="btn" id="filter-toggle">
-                <span class="material-icons">filter_list</span>
-                Filtrar
-            </button>
             <button class="btn primary" id="add-area-btn">
                 <span class="material-icons">add</span>
                 Nova Área
@@ -363,43 +468,107 @@
         </div>
     </div>
 
-     
-    <div class="filter-section" id="filter-section">
-        <div class="filter-row">
-            <div class="search-box">
-                <span class="material-icons search-icon">search</span>
-                <input type="text" id="search-input" placeholder="Buscar por nome...">
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="get" id="filter-form">
+            <div class="filter-row">
+                <div class="search-box">
+                    <span class="material-icons search-icon">search</span>
+                    <input type="text" name="name__icontains" 
+                           value="{{ request.GET.name__icontains }}" 
+                           placeholder="Buscar por nome..."
+                           id="search-input">
+                </div>
+                <div class="filter-actions">
+                    <a href="{% url 'lands' %}" class="btn" type="button">
+                        <span class="material-icons">clear</span>
+                        Limpar
+                    </a>
+                    <button class="btn primary" type="submit">
+                        <span class="material-icons">check</span>
+                        Aplicar
+                    </button>
+                </div>
             </div>
-            <div class="filter-actions">
-                <button class="btn" id="clear-filters">
-                    <span class="material-icons">clear</span>
-                    Limpar
-                </button>
-                <button class="btn primary" id="apply-filters">
-                    <span class="material-icons">check</span>
-                    Aplicar
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
 
-     
+    <!-- Areas Grid -->
     <div class="areas-grid" id="areas-container">
-         
+        {% if cultivations %}
+            {% for cultivation in cultivations %}
+                <div class="area-card" data-id="{{ cultivation.id }}">
+                    <div class="area-header">
+                        <h3 class="area-name">{{ cultivation.name }}</h3>
+                        <div class="area-actions">
+                            <button class="btn small icon-only edit-area" 
+                                    data-id="{{ cultivation.id }}"
+                                    data-name="{{ cultivation.name }}"
+                                    data-description="{{ cultivation.description|default:'' }}"
+                                    title="Editar">
+                                <span class="material-icons">edit</span>
+                            </button>
+                            <button class="btn small icon-only delete-area" 
+                                    data-id="{{ cultivation.id }}"
+                                    data-name="{{ cultivation.name }}"
+                                    title="Excluir">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                    {% if cultivation.description %}
+                        <p class="area-description">{{ cultivation.description }}</p>
+                    {% endif %}
+                    <div class="area-meta" style="margin-top: 10px; font-size: 0.85rem; color: var(--muted-color);">
+                        <span>Atualizada em: {{ cultivation.updated_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <span class="material-icons">explore</span>
+                <p>Nenhuma área encontrada</p>
+                <button class="btn primary" id="add-first-area">
+                    <span class="material-icons">add</span>
+                    Criar Primeira Área
+                </button>
+            </div>
+        {% endif %}
     </div>
 
-     
-    <div class="empty-state" id="empty-state" style="display: none;">
-        <span class="material-icons">explore</span>
-        <p>Nenhuma área encontrada</p>
-        <button class="btn primary" id="add-first-area">
-            <span class="material-icons">add</span>
-            Criar Primeira Área
-        </button>
-    </div>
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="btn">
+                    <span class="material-icons">first_page</span>
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="btn">
+                    <span class="material-icons">chevron_left</span>
+                </a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="btn">
+                    <span class="material-icons">chevron_right</span>
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                   class="btn">
+                    <span class="material-icons">last_page</span>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 
- 
+<!-- Modal para criação/edição de áreas -->
 <div class="modal-overlay" id="area-modal">
     <div class="modal-content">
         <button type="button" class="close-btn" id="close-area-modal">
@@ -408,30 +577,35 @@
             </svg>
         </button>
         <h2 class="modal-title" id="area-modal-title">Nova Área</h2>
-        <form id="area-form">
-            <input type="hidden" id="area-id">
+        
+        <form method="post" id="cultivation-form" action="{% url 'cultivation_create' %}">
+            {% csrf_token %}
+            <input type="hidden" id="cultivation-id" name="cultivation_id">
+            
             <div class="form-group">
-                <label for="area-name">Nome da Área *</label>
-                <input type="text" id="area-name" required>
+                <label for="name" class="form-label">Nome da Área *</label>
+                <input type="text" id="name" name="name" class="form-control" 
+                       placeholder="Ex: Estufa Principal" required>
+                <div class="error-message" id="name-error"></div>
             </div>
+            
             <div class="form-group">
-                <label for="area-coordinates">Coordenadas</label>
-                <input type="text" id="area-coordinates" placeholder="Ex: -23.5505, -46.6333">
+                <label for="description" class="form-label">Descrição</label>
+                <textarea id="description" name="description" class="form-control" 
+                          placeholder="Descreva esta área..." rows="4"></textarea>
+                <div class="error-message" id="description-error"></div>
             </div>
-            <div class="form-group">
-                <label for="area-description">Descrição</label>
-                <textarea id="area-description" placeholder="Descreva esta área..."></textarea>
-            </div>
+            
             <div class="form-actions">
                 <button type="button" class="btn" id="cancel-area">Cancelar</button>
-                <button type="submit" class="btn primary">Salvar</button>
+                <button type="submit" class="btn primary" id="save-area">Salvar</button>
             </div>
         </form>
     </div>
 </div>
 
- 
-<div class="modal-overlay delete-modal" id="delete-modal">
+<!-- Modal para exclusão de áreas -->
+<div class="modal-overlay" id="delete-modal">
     <div class="modal-content">
         <button type="button" class="close-btn" id="close-delete-modal">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
@@ -439,18 +613,273 @@
             </svg>
         </button>
         <h2 class="modal-title">Excluir Área</h2>
+        
         <div class="delete-message">
             <p>Tem certeza que deseja excluir a área <span class="warning-text" id="delete-area-name"></span>?</p>
             <p>Esta ação não pode ser desfeita.</p>
         </div>
-        <div class="form-actions">
-            <button type="button" class="btn" id="cancel-delete">Cancelar</button>
-            <button type="button" class="btn primary" id="confirm-delete" style="background: #d32f2f;">Excluir</button>
-        </div>
+        
+        <form method="post" id="delete-form" action="">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="button" class="btn" id="cancel-delete">Cancelar</button>
+                <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/lands.js'%}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos DOM
+    const areaModal = document.getElementById('area-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    const areaForm = document.getElementById('cultivation-form');
+    const deleteForm = document.getElementById('delete-form');
+    const modalTitle = document.getElementById('area-modal-title');
+    const cultivationIdInput = document.getElementById('cultivation-id');
+    const nameInput = document.getElementById('name');
+    const descriptionInput = document.getElementById('description');
+    const deleteAreaName = document.getElementById('delete-area-name');
+    
+    // URLs
+    const createUrl = "{% url 'cultivation_create' %}";
+    let currentEditUrl = '';
+    let currentDeleteUrl = '';
+    
+    // Event Listeners para abrir/fechar modais
+    document.getElementById('add-area-btn').addEventListener('click', openCreateModal);
+    
+    const addFirstAreaBtn = document.getElementById('add-first-area');
+    if (addFirstAreaBtn) {
+        addFirstAreaBtn.addEventListener('click', openCreateModal);
+    }
+    
+    document.getElementById('close-area-modal').addEventListener('click', closeAreaModal);
+    document.getElementById('close-delete-modal').addEventListener('click', closeDeleteModal);
+    document.getElementById('cancel-area').addEventListener('click', closeAreaModal);
+    document.getElementById('cancel-delete').addEventListener('click', closeDeleteModal);
+    
+    // Fechar modais ao clicar fora
+    window.addEventListener('click', function(e) {
+        if (e.target === areaModal) closeAreaModal();
+        if (e.target === deleteModal) closeDeleteModal();
+    });
+    
+    // Botões de edição
+    document.querySelectorAll('.edit-area').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            const description = this.dataset.description;
+            openEditModal(id, name, description);
+        });
+    });
+    
+    // Botões de exclusão
+    document.querySelectorAll('.delete-area').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            openDeleteModal(id, name);
+        });
+    });
+    
+    // Submissão do formulário de criação/edição
+    areaForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Limpar erros anteriores
+        clearErrors();
+        
+        // Validação básica
+        if (!nameInput.value.trim()) {
+            showError('name', 'O nome da área é obrigatório.');
+            return;
+        }
+        
+        // Criar FormData
+        const formData = new FormData(this);
+        
+        // Determinar URL (criação ou edição)
+        const url = currentEditUrl || createUrl;
+        
+        // Enviar requisição
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.redirected) {
+                // Redirecionar para a página (com mensagens)
+                window.location.href = response.url;
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data && data.success === false) {
+                // Mostrar erros no formulário
+                if (data.errors) {
+                    for (const [field, errors] of Object.entries(data.errors)) {
+                        showError(field, errors.join(', '));
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao processar a requisição.');
+        });
+    });
+    
+    // Submissão do formulário de exclusão
+    deleteForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        fetch(currentDeleteUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao excluir a área.');
+        });
+    });
+    
+    // Funções auxiliares
+    function openCreateModal() {
+        modalTitle.textContent = 'Nova Área';
+        cultivationIdInput.value = '';
+        nameInput.value = '';
+        descriptionInput.value = '';
+        areaForm.action = createUrl;
+        currentEditUrl = '';
+        clearErrors();
+        areaModal.style.display = 'flex';
+        nameInput.focus();
+    }
+    
+    function openEditModal(id, name, description) {
+        modalTitle.textContent = 'Editar Área';
+        cultivationIdInput.value = id;
+        nameInput.value = name || '';
+        descriptionInput.value = description || '';
+        currentEditUrl = `/areas/${id}/editar/`;
+        areaForm.action = currentEditUrl;
+        clearErrors();
+        areaModal.style.display = 'flex';
+        nameInput.focus();
+    }
+    
+    function openDeleteModal(id, name) {
+        deleteAreaName.textContent = `"${name}"`;
+        currentDeleteUrl = `/areas/${id}/excluir/`;
+        deleteForm.action = currentDeleteUrl;
+        deleteModal.style.display = 'flex';
+    }
+    
+    function closeAreaModal() {
+        areaModal.style.display = 'none';
+        clearErrors();
+    }
+    
+    function closeDeleteModal() {
+        deleteModal.style.display = 'none';
+    }
+    
+    function showError(field, message) {
+        const errorElement = document.getElementById(`${field}-error`);
+        if (errorElement) {
+            errorElement.textContent = message;
+            const inputElement = document.getElementById(field);
+            if (inputElement) {
+                inputElement.classList.add('has-error');
+            }
+        }
+    }
+    
+    function clearErrors() {
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+        });
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.classList.remove('has-error');
+        });
+    }
+    
+    // Auto-fechar mensagens após 5 segundos
+    setTimeout(function() {
+        document.querySelectorAll('.alert').forEach(alert => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);
+        });
+    }, 5000);
+    
+    // Filtro em tempo real
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const areaCards = document.querySelectorAll('.area-card');
+            let visibleCount = 0;
+            
+            areaCards.forEach(card => {
+                const areaName = card.querySelector('.area-name').textContent.toLowerCase();
+                if (areaName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Mostrar estado vazio se nenhum resultado
+            const emptyState = document.querySelector('.empty-state');
+            if (visibleCount === 0 && searchTerm) {
+                if (!emptyState) {
+                    const areasContainer = document.getElementById('areas-container');
+                    const emptyStateDiv = document.createElement('div');
+                    emptyStateDiv.className = 'empty-state';
+                    emptyStateDiv.innerHTML = `
+                        <span class="material-icons">search_off</span>
+                        <p>Nenhuma área encontrada com esse nome</p>
+                        <button class="btn" onclick="document.getElementById('search-input').value=''; document.getElementById('filter-form').submit();">
+                            <span class="material-icons">refresh</span>
+                            Limpar busca
+                        </button>
+                    `;
+                    areasContainer.appendChild(emptyStateDiv);
+                }
+            } else if (emptyState && emptyState.parentNode === document.getElementById('areas-container')) {
+                emptyState.remove();
+            }
+        });
+    }
+    
+    // Permitir fechar modais com ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAreaModal();
+            closeDeleteModal();
+        }
+    });
+});
+</script>
 {% endblock %}

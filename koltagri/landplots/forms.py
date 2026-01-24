@@ -1,7 +1,7 @@
 # forms.py
 from django import forms
-from .models import CultivationPlant
-
+from .models import CultivationPlant, Cultivation,HarvestCultivationPlant
+from django.utils.translation import gettext_lazy as _
 class CultivationPlantForm(forms.ModelForm):
     class Meta:
         model = CultivationPlant
@@ -15,3 +15,14 @@ class CultivationPlantForm(forms.ModelForm):
             "placeholder": "Ex: 120",
             "min": 1
         })
+
+class CultivationForm(forms.ModelForm):
+    class Meta:
+        model = Cultivation
+        fields = ["name", "description"]
+
+class HarvestCultivationPlantForm(forms.ModelForm):
+    class Meta:
+        model = HarvestCultivationPlant
+        fields = ['harvest_date', 'quantity', 'unity']
+        

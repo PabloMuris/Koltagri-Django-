@@ -541,6 +541,12 @@ main{
                     <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
                 </svg>
             </a>
+
+            <a  id="harvest" href="{% url 'harvest_list' cultivation_plant_pk %}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                    <path d="M120-120v-80h720v80H120Zm120-160v-400h480v400H240Zm-80 80h640v-560H160v560Zm320-320 160-160 57 57-217 217-130-130 57-57 73 73Z"/>
+                </svg>
+            </a>
         </div>
     </section>
 
@@ -623,7 +629,7 @@ main{
         </div>
     </section>
 
-    <section class="info-section">
+    <section class="info-section" style="width: 100%;">
         <div class="info-block">
             <h3>
                 <span class="material-icons">description</span>
@@ -648,58 +654,7 @@ main{
             </p>
         </div>
         
-        <div class="info-block">
-            <h3>
-                <span class="material-icons">attach_file</span>
-                Anexos
-            </h3>
-            <div class="attachments-container">
-                <div class="attachment-list" style="width: 100%;">
-                    
-
-                    <div class="attachment-item">
-                        <div class="attachment-icon">
-                            <span class="material-icons">image</span>
-                        </div>
-                        <div class="attachment-info">
-                            <p class="attachment-name">crescimento_fase1.jpg</p>
-                            <p class="attachment-meta">Adicionado em 15/03/2024 • 2.4 MB</p>
-                        </div>
-                        <div class="attachment-actions">
-                            <button class="btn small icon-only" title="Visualizar">
-                                <span class="material-icons">visibility</span>
-                            </button>
-                            <button class="btn small icon-only" title="Download">
-                                <span class="material-icons">download</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="attachment-item">
-                        <div class="attachment-icon">
-                            <span class="material-icons">description</span>
-                        </div>
-                        <div class="attachment-info">
-                            <p class="attachment-name">relatorio_solo.pdf</p>
-                            <p class="attachment-meta">Adicionado em 10/03/2024 • 1.8 MB</p>
-                        </div>
-                        <div class="attachment-actions">
-                            <button class="btn small icon-only" title="Visualizar">
-                                <span class="material-icons">visibility</span>
-                            </button>
-                            <button class="btn small icon-only" title="Download">
-                                <span class="material-icons">download</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="add-attachment-btn" id="add-attachment">
-                    <span class="material-icons">add</span>
-                    Adicionar Anexo
-                </button>
-            </div>
-        </div>
+        
     </section>
 </main>
 

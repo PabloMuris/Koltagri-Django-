@@ -14,6 +14,21 @@
 {% block styles %}
 <style>
 
+/* Estilos para o modal de relatório */
+#report-modal .modal-panel {
+  max-width: 600px;
+}
+
+.form-control label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.form-control label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
 
 /*sidevar*/
 
@@ -24,6 +39,7 @@
 
   .search{
     background: white;
+    padding-right: 0px;
   }
 
   #edit-button{
@@ -464,6 +480,14 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  #search-button{
+  width:44px;
+}
+
+#search-input{
+  flex: 1;
+}
 </style>
 {% endblock %}
 
@@ -690,6 +714,96 @@
       <div class="modal-actions">
         <button type="button" id="add-cancel" class="btn">Cancelar</button>
         <button type="submit" class="btn primary">Salvar Gasto</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Adicione este modal após o modal de adicionar gasto -->
+<!-- Modal de Relatório Expandido -->
+<div id="report-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-panel" role="document" style="max-width: 600px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Gerar Relatório Detalhado</h3>
+    </div>
+    <form id="report-form" method="POST" action="{% url 'generate_expense_report' %}">
+      {% csrf_token %}
+      
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="report-period">Tipo de Período</label>
+          <select id="report-period" name="period" required>
+            <option value="month">Por Mês</option>
+            <option value="year">Por Ano</option>
+            <option value="custom">Período Personalizado</option>
+          </select>
+        </div>
+        
+        <div class="form-control" id="month-field">
+          <label for="report-month">Mês</label>
+          <input type="month" id="report-month" name="month">
+        </div>
+        
+        <div class="form-control" id="year-field" style="display: none;">
+          <label for="report-year">Ano</label>
+          <input type="number" id="report-year" name="year" min="2000" max="2100" value="{% now 'Y' %}">
+        </div>
+      </div>
+      
+      <div class="modal-row" id="custom-dates-field" style="display: none;">
+        <div class="form-control">
+          <label for="report-start">Data Inicial</label>
+          <input type="date" id="report-start" name="start_date">
+        </div>
+        <div class="form-control">
+          <label for="report-end">Data Final</label>
+          <input type="date" id="report-end" name="end_date">
+        </div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="form-control">
+          <label>
+            <input type="checkbox" name="include_plant_data" checked>
+            Incluir dados por espécie de planta
+          </label>
+        </div>
+        <div class="form-control">
+          <label>
+            <input type="checkbox" name="include_cultivation_data" checked>
+            Incluir dados por área cultivada
+          </label>
+        </div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="form-control">
+          <label>
+            <input type="checkbox" name="include_production_data" checked>
+            Incluir dados de produção
+          </label>
+        </div>
+        <div class="form-control">
+          <label>
+            <input type="checkbox" name="include_break_even" checked>
+            Calcular ponto de equilíbrio (break-even)
+          </label>
+        </div>
+      </div>
+      
+      <div class="modal-row">
+        <div class="form-control">
+          <label for="report-format">Formato do Relatório</label>
+          <select id="report-format" name="format">
+            <option value="pdf">PDF</option>
+            <option value="excel">Excel</option>
+            <option value="csv">CSV</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" id="report-cancel" class="btn">Cancelar</button>
+        <button type="submit" class="btn primary">Gerar Relatório</button>
       </div>
     </form>
   </div>
@@ -1098,6 +1212,154 @@ document.addEventListener('DOMContentLoaded', function() {
       // In a real app, this would open a detail view or modal
     });
   });
+
+  // ========== CÓDIGO DO RELATÓRIO ==========
+  
+  // Modal de Relatório Expandido
+  const reportModal = document.getElementById('report-modal');
+  const reportCancel = document.getElementById('report-cancel');
+  const reportForm = document.getElementById('report-form');
+  const reportPeriodSelect = document.getElementById('report-period');
+  const monthField = document.getElementById('month-field');
+  const yearField = document.getElementById('year-field');
+  const customDatesField = document.getElementById('custom-dates-field');
+
+  // Abrir modal de relatório ao clicar no botão expand
+  const expandButton = document.getElementById('expand-button');
+  if (expandButton) {
+    expandButton.addEventListener('click', function() {
+      openModal(reportModal);
+      
+      // Configurar datas padrão
+      const today = new Date();
+      const monthInput = document.getElementById('report-month');
+      const yearInput = document.getElementById('report-year');
+      const startInput = document.getElementById('report-start');
+      const endInput = document.getElementById('report-end');
+      
+      if (monthInput) {
+        monthInput.value = today.toISOString().slice(0, 7);
+      }
+      if (yearInput) {
+        yearInput.value = today.getFullYear();
+      }
+      if (startInput) {
+        startInput.value = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+      }
+      if (endInput) {
+        endInput.value = today.toISOString().slice(0, 10);
+      }
+    });
+  }
+
+  // Fechar modal de relatório
+  if (reportCancel) {
+    reportCancel.addEventListener('click', function() {
+      closeModal(reportModal);
+    });
+  }
+
+  // Mostrar/ocultar campos baseados no tipo de período
+  if (reportPeriodSelect) {
+    reportPeriodSelect.addEventListener('change', function() {
+      const period = this.value;
+      
+      if (period === 'month') {
+        monthField.style.display = 'flex';
+        yearField.style.display = 'none';
+        customDatesField.style.display = 'none';
+      } else if (period === 'year') {
+        monthField.style.display = 'none';
+        yearField.style.display = 'flex';
+        customDatesField.style.display = 'none';
+      } else if (period === 'custom') {
+        monthField.style.display = 'none';
+        yearField.style.display = 'none';
+        customDatesField.style.display = 'flex';
+      }
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  if (reportModal) {
+    reportModal.addEventListener('click', function(e) {
+      if (e.target === reportModal) {
+        closeModal(reportModal);
+      }
+    });
+  }
+
+  // Fechar com Escape (também para o modal de relatório)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal(filterModal);
+      closeModal(addModal);
+      closeModal(reportModal);
+    }
+  });
+
+  // Submissão do formulário de relatório
+  if (reportForm) {
+    reportForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const format = formData.get('format');
+      
+      // Mostrar indicador de carregamento
+      const submitBtn = this.querySelector('.btn.primary');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Gerando...';
+      submitBtn.disabled = true;
+      
+      // Enviar requisição AJAX
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erro ao gerar relatório');
+        }
+        
+        // Obter o nome do arquivo do cabeçalho
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'relatorio_gastos';
+        
+        if (contentDisposition) {
+          const matches = contentDisposition.match(/filename="(.+)"/);
+          if (matches && matches[1]) {
+            filename = matches[1];
+          }
+        }
+        
+        // Baixar o arquivo
+        return response.blob().then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          closeModal(reportModal);
+        });
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao gerar relatório. Tente novamente.');
+      })
+      .finally(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+    });
+  }
 });
 </script>
 

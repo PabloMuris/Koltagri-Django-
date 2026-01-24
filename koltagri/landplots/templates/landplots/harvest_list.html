@@ -1,0 +1,611 @@
+<!-- landplots/templates/landplots/harvest_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Colheitas - {{ cultivation_plant.plant_species.name }}{% endblock %}
+{% block header_title %}Koltagri{% endblock %}
+{% block header_text %}Registro de Colheitas{% endblock %}
+
+{% block rels %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/partials/_search.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css' %}">
+{% endblock %}
+
+{% block styles %}
+<style>
+:root {
+    --bg: #f2f2f2;
+    --muted: #66788f;
+    --primary: #4aa58a;
+    --accent: #00204b;
+    --card-bg: #ffffff;
+    --border: #e8eef6;
+    --radius: 10px;
+    --gap: 16px;
+    --container-max: 1200px;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto;
+}
+
+.container-wide {
+    width: 100%;
+    margin: 24px 0;
+}
+
+.harvest-indicators {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--gap);
+    background: var(--bg);
+    padding: 20px;
+    border-radius: var(--radius);
+}
+
+.harvest-header h1 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--accent);
+}
+
+.harvest-header p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.add-harvest {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.add-harvest:hover {
+    background: #3a8a6a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.indicators-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.harvest-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(74,165,138,.12);
+    color: var(--primary);
+}
+
+.filter-search-section { 
+    margin-top: 20px; 
+}
+
+.results {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.result_card {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.card__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.card_description .class__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.card_description .harvest__plant {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.card_description .harvest-quantity {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #4CAF50;
+    font-weight: 500;
+}
+
+.card__datetime {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Ações */
+.card_actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.result_card:hover .card_actions {
+    opacity: 1;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--muted);
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.action-btn.edit:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.action-btn.delete:hover {
+    background: #f44336;
+    color: white;
+    border-color: #f44336;
+}
+
+/* Modal de confirmação */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    max-width: 450px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f8f9fa;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 16px 0;
+}
+
+.delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.warning-text {
+    color: #f44336;
+    font-weight: 600;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-danger {
+    background: #f44336;
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn-secondary {
+    background: var(--bg);
+    color: var(--muted);
+    border-color: var(--border);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .card_actions {
+        opacity: 1;
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 12px;
+        justify-content: flex-end;
+    }
+    
+    .result_card {
+        grid-template-columns: 1fr;
+    }
+    
+    .card__datetime {
+        text-align: left;
+    }
+}
+
+.user-actions h3 {
+    margin-inline: 10px;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-button:hover {
+    background: var(--bg);
+}
+
+/* Paginação */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 20px 0;
+}
+
+.pagination-link {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.pagination-link:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pagination-current {
+    padding: 8px 12px;
+    background: var(--primary);
+    color: white;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.pagination-disabled {
+    padding: 8px 12px;
+    color: #ccc;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: not-allowed;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-actions">
+    <div class="flex-row" style="display: flex; flex-direction: row; align-items: center;">
+        <button type="button" class="back-button" onclick="location.href='{% url 'cultivated_plants_detail' pk=cultivation_plant.pk %}'">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#e3e3e3">
+                <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+            </svg>
+        </button>
+        <h3>Colheitas - {{ cultivation_plant.plant_species.name }}</h3>
+    </div>
+    <a href="{% url 'harvest_create' cultivation_plant_pk=cultivation_plant_pk %}" class="add-harvest hidden-on-mobile">
+        <span class="material-icons">add_circle_outline</span>
+        Nova Colheita
+    </a>
+</div>
+
+<div class="container-wide">
+    <!-- INDICADORES -->
+    <section class="harvest-indicators">
+        <div class="harvest-header">
+            <h1>Registro de Colheitas</h1>
+            <p>Plantio: {{ cultivation_plant.plant_species.name }} - {{ cultivation_plant.cultivation.name }}</p>
+        </div>
+
+        
+
+        <div class="indicators-grid">
+            <div class="harvest-card">
+                <div class="icon-wrap"><span class="material-icons">agriculture</span></div>
+                <div>
+                    <strong>Total de Colheitas</strong>
+                    <p>{{ total_harvests }}</p>
+                </div>
+            </div>
+
+            
+
+            <div class="harvest-card">
+                <div class="icon-wrap"><span class="material-icons">local_florist</span></div>
+                <div>
+                    <strong>Plantio</strong>
+                    <p>{{ cultivation_plant.count }} x {{ cultivation_plant.plant_species.name }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTAGEM -->
+    <section class="tasks-result">
+        <div class="results">
+            {% for harvest in harvests %}
+            <div class="result_card">
+                <div class="card__image">
+                    <span class="material-icons">grass</span>
+                </div>
+
+                <div class="card_description">
+                    <p class="class__title">Colheita #{{ harvest.id }}</p>
+                    <p class="harvest__plant">
+                        {{ harvest.cultivation_plant.plant_species.name }}
+                    </p>
+                    <p class="harvest-quantity">
+                        {{ harvest.quantity }} {{ harvest.get_unity_display }}
+                    </p>
+                </div>
+
+                <div class="card__datetime">
+                    <p><strong>Data:</strong> {{ harvest.harvest_date|date:"d/m/Y" }}</p>
+                    {% if harvest.notes %}
+                    <p><strong>Notas:</strong> {{ harvest.notes|truncatechars:30 }}</p>
+                    {% endif %}
+                    <p><strong>Criado em:</strong> {{ harvest.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+
+                <!-- Ações -->
+                <div class="card_actions">
+                    <a href="{% url 'harvest_edit' cultivation_plant_pk=cultivation_plant_pk pk=harvest.pk %}" 
+                       class="action-btn edit" title="Editar">
+                        <span class="material-icons">edit</span>
+                    </a>
+                    
+                    <button type="button" class="action-btn delete" title="Excluir"
+                            onclick="openDeleteModal('{{ harvest.pk }}', '{{ harvest.harvest_date|date:"d/m/Y"|escapejs }}')">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div style="text-align:center; padding:40px; color:var(--muted);">
+                <span class="material-icons" style="font-size:48px; opacity:0.5;">agriculture</span>
+                <p style="margin-top:16px;">Nenhuma colheita registrada para este plantio.</p>
+                <a href="{% url 'harvest_create' cultivation_plant_pk=cultivation_plant_pk %}" class="add-harvest" style="margin-top:16px;">
+                    <span class="material-icons">add_circle_outline</span>
+                    Registrar Primeira Colheita
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginação -->
+        {% if harvests.has_other_pages %}
+        <div class="pagination">
+            {% if harvests.has_previous %}
+                <a href="?page={{ harvests.previous_page_number }}" class="pagination-link">
+                    <span class="material-icons">chevron_left</span>
+                </a>
+            {% else %}
+                <span class="pagination-disabled">
+                    <span class="material-icons">chevron_left</span>
+                </span>
+            {% endif %}
+
+            {% for num in harvests.paginator.page_range %}
+                {% if harvests.number == num %}
+                    <span class="pagination-current">{{ num }}</span>
+                {% elif num > harvests.number|add:'-3' and num < harvests.number|add:'3' %}
+                    <a href="?page={{ num }}" class="pagination-link">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if harvests.has_next %}
+                <a href="?page={{ harvests.next_page_number }}" class="pagination-link">
+                    <span class="material-icons">chevron_right</span>
+                </a>
+            {% else %}
+                <span class="pagination-disabled">
+                    <span class="material-icons">chevron_right</span>
+                </span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+        <button type="button" class="close-btn" onclick="closeDeleteModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        <h2 class="modal-title">Excluir Colheita</h2>
+        
+        <div class="delete-message">
+            <p>Tem certeza que deseja excluir a colheita de <span class="warning-text" id="harvestDate"></span>?</p>
+            <p>Esta ação não pode ser desfeita.</p>
+        </div>
+        
+        <form id="deleteForm" method="post" action="">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    <span class="material-icons">delete</span>
+                    Excluir
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Funções do modal de exclusão
+const modal = document.getElementById('deleteModal');
+    const harvestDateSpan = document.getElementById('harvestDate');
+    const deleteForm = document.getElementById('deleteForm');
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Fecha modal ao clicar fora
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+
+// Fecha modal com a tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+
+
+function openDeleteModal(harvestId, harvestDate) {
+    console.log('DEBUG: Função chamada');
+    
+    // Elementos
+    const modal = document.getElementById('deleteModal');
+    const harvestDateSpan = document.getElementById('harvestDate');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    if (!modal || !harvestDateSpan || !deleteForm) {
+        console.error('Elementos não encontrados!');
+        return;
+    }
+    
+    // Preenche a data
+    harvestDateSpan.textContent = harvestDate;
+    
+    // Monta URL
+    const baseUrl = window.location.origin;
+    const url = `${baseUrl}/plantio/{{ cultivation_plant_pk }}/colheitas/${harvestId}/excluir/`;
+    
+    console.log('URL completa:', url);
+    
+    // Configura formulário
+    deleteForm.action = url;
+    
+    // Mostra modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+</script>
+{% endblock %}

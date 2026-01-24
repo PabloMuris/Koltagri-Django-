@@ -46,9 +46,9 @@ from datetime import timedelta
 from django.http import HttpResponseNotAllowed
 # Create your views here.
 
-from koltagri.core.mixins import IsManagerMixin, IsStaffMixin,IsManagerOrTechnicalAssistanceMixin 
+from koltagri.core.mixins import IsManagerMixin, IsStaffMixin,IsManagerOrTechnicalAssistanceMixin,SiteRequiredMixin
 
-class TaskTemplateView(LoginRequiredMixin, FilterView):
+class TaskTemplateView(SiteRequiredMixin, FilterView):
     template_name = "tasks/tasks.html"
     context_object_name = "tasks"
     model = Task
@@ -352,7 +352,7 @@ from django.db.models import Min, Max
 from .filters import TaskFilter
 from django.views.generic.list import ListView
 
-class SimpleFilteringTasksView(LoginRequiredMixin, FilterView):
+class SimpleFilteringTasksView(SiteRequiredMixin, FilterView):
     template_name = "tasks/tasks_expanded.html"
     context_object_name = "tasks"
     model = Task

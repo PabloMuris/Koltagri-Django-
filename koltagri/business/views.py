@@ -21,15 +21,19 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from koltagri.landplots.permissions import IsInGroupPermissionMixin
 
+from koltagri.core.mixins import IsManagerMixin
 from django.contrib.auth.decorators import login_required
 
-class BusinessDashboardView(LoginRequiredMixin, TemplateView):
+
+from koltagri.core.mixins import SiteRequiredMixin
+
+class BusinessDashboardView(SiteRequiredMixin, TemplateView):
     template_name = 'business.html'
 
 class PlanningView(LoginRequiredMixin, TemplateView):
     template_name = 'planning_form.html'
 
-class StatisticsView(LoginRequiredMixin, FilterView):
+class StatisticsView(IsManagerMixin, FilterView):
     template_name = 'financial/statistics.html'
     model = Expense
     context_object_name = 'expenses'
@@ -74,7 +78,7 @@ class SuppliesDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class SuppliesListView(LoginRequiredMixin, ListView):
+class SuppliesListView(SiteRequiredMixin, ListView):
     template_name = 'supplies_form.html'
     model = AgriculturalInputs
     context_object_name = 'supplies'
@@ -86,7 +90,7 @@ class SuppliesListView(LoginRequiredMixin, ListView):
         return queryset
 
 class ExpenseCreateUpdateView(LoginRequiredMixin,FormView):
-    template_name = "statistics.html"
+    template_name = "financial/statistics.html"
     form_class = ExpenseForm
 
     def get_success_url(self):
@@ -286,7 +290,7 @@ class ExpenseDeleteView(LoginRequiredMixin, View):
 
 
 
-# business/views.py
+
 class AgriculturalInputPackListView(LoginRequiredMixin, ListView):
     model = AgriculturalInputPack
     template_name = "supplies/packs_list.html"
@@ -309,7 +313,7 @@ class AgriculturalInputPackListView(LoginRequiredMixin, ListView):
         except AgriculturalInputs.DoesNotExist:
             return AgriculturalInputPack.objects.none()
         
-        # Retorna apenas packs deste insumo
+        
         return AgriculturalInputPack.objects.filter(
             agricultural_input=agricultural_input
         ).order_by("-purchase_date")
@@ -320,19 +324,20 @@ class AgriculturalInputPackListView(LoginRequiredMixin, ListView):
         supplie_pk = self.kwargs.get('supplie_pk')
         
         try:
-            # Obtém o insumo para o contexto
+            
             context['agricultural_input'] = AgriculturalInputs.objects.get(
                 id=supplie_pk,
                 site_id=site_id
             )
         except AgriculturalInputs.DoesNotExist:
-            # Se não encontrar, passa None e lidaremos no template
+            
             context['agricultural_input'] = None
         
         # Calcula totais
         queryset = self.get_queryset()
         context['total_packs'] = queryset.count()
-        
+        context['supplie_pk'] = supplie_pk
+
         # Calcula o valor total
         total_value = queryset.aggregate(total=Sum('price'))['total']
         context['total_value'] = total_value if total_value else 0
@@ -345,6 +350,8 @@ class AgriculturalInputPackListView(LoginRequiredMixin, ListView):
             messages.error(request, "Site não selecionado.")
             return redirect('business_board')
         return super().dispatch(request, *args, **kwargs)
+    
+
 
 class AgriculturalInputPackDetailView(LoginRequiredMixin, DetailView):
     model = AgriculturalInputPack
@@ -798,3 +805,484 @@ class PackUsagesListView(LoginRequiredMixin, ListView):
             messages.error(request, "Site não selecionado.")
             return redirect('business_board')
         return super().dispatch(request, *args, **kwargs)
+    
+
+from django.http import HttpResponse, JsonResponse
+from django.views import View
+from django.utils import timezone
+from datetime import datetime, timedelta
+from decimal import Decimal
+import json
+from django.db.models import Sum, Count, F, Q
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+import io
+import csv
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image as ExcelImage
+import matplotlib.pyplot as plt
+import numpy as np
+
+class GenerateExpenseReportView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        site_id = request.session.get("selected_site_location")
+        if not site_id:
+            return JsonResponse({"error": "Site não selecionado"}, status=400)
+        
+        site = get_object_or_404(Site, id=site_id)
+        
+        # Obter parâmetros do formulário
+        period_type = request.POST.get('period', 'month')
+        month = request.POST.get('month')
+        year = request.POST.get('year')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        report_format = request.POST.get('format', 'pdf')
+        
+        include_plant_data = request.POST.get('include_plant_data') == 'on'
+        include_cultivation_data = request.POST.get('include_cultivation_data') == 'on'
+        include_production_data = request.POST.get('include_production_data') == 'on'
+        include_break_even = request.POST.get('include_break_even') == 'on'
+        
+        # Definir período baseado nos parâmetros
+        today = timezone.now().date()
+        
+        if period_type == 'month' and month:
+            year_month = month.split('-')
+            year = int(year_month[0])
+            month = int(year_month[1])
+            start_date = datetime(year, month, 1).date()
+            if month == 12:
+                end_date = datetime(year + 1, 1, 1).date() - timedelta(days=1)
+            else:
+                end_date = datetime(year, month + 1, 1).date() - timedelta(days=1)
+        elif period_type == 'year' and year:
+            start_date = datetime(int(year), 1, 1).date()
+            end_date = datetime(int(year), 12, 31).date()
+        elif period_type == 'custom' and start_date and end_date:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        else:
+            # Padrão: mês atual
+            start_date = today.replace(day=1)
+            if today.month == 12:
+                end_date = today.replace(year=today.year + 1, month=1, day=1) - timedelta(days=1)
+            else:
+                end_date = today.replace(month=today.month + 1, day=1) - timedelta(days=1)
+        
+        # Coletar dados para o relatório
+        report_data = self.collect_report_data(
+            site, start_date, end_date, 
+            include_plant_data, include_cultivation_data, 
+            include_production_data, include_break_even
+        )
+        
+        # Gerar relatório no formato solicitado
+        if report_format == 'pdf':
+            return self.generate_pdf_report(report_data, start_date, end_date, site.name)
+        elif report_format == 'excel':
+            return self.generate_excel_report(report_data, start_date, end_date, site.name)
+        elif report_format == 'csv':
+            return self.generate_csv_report(report_data, start_date, end_date, site.name)
+        else:
+            return JsonResponse({"error": "Formato não suportado"}, status=400)
+    
+    def collect_report_data(self, site, start_date, end_date, 
+                           include_plant_data, include_cultivation_data,
+                           include_production_data, include_break_even):
+        """
+        Coleta todos os dados necessários para o relatório
+        """
+        data = {
+            'site_name': site.name,
+            'period': f"{start_date.strftime('%d/%m/%Y')} a {end_date.strftime('%d/%m/%Y')}",
+            'start_date': start_date,
+            'end_date': end_date,
+        }
+        
+        # 1. Gastos por categoria
+        expenses_by_category = (
+            Expense.objects.filter(
+                site=site,
+                date__range=[start_date, end_date]
+            )
+            .values('category__name')
+            .annotate(
+                total=Sum('amount'),
+                count=Count('id')
+            )
+            .order_by('-total')
+        )
+        data['expenses_by_category'] = list(expenses_by_category)
+        
+        # 2. Total de gastos
+        total_expenses = (
+            Expense.objects.filter(
+                site=site,
+                date__range=[start_date, end_date]
+            ).aggregate(total=Sum('amount'))['total'] or 0
+        )
+        data['total_expenses'] = total_expenses
+        
+        # 3. Gastos por espécie de planta (se solicitado)
+        if include_plant_data:
+            # Gastos relacionados a insumos usados por espécie
+            from koltagri.landplots.models import CultivationPlant, PlantSpecies
+            
+            plant_expenses = (
+                AgriculturalInputUsage.objects.filter(
+                    pack__agricultural_input__site=site,
+                    usage_date__range=[start_date, end_date]
+                )
+                .values(
+                    'cultivation_plant__plant_species__name'
+                )
+                .annotate(
+                    total_cost=Sum(F('quantity_used') * F('pack__price') / F('pack__quantity')),
+                    total_used=Sum('quantity_used')
+                )
+                .order_by('-total_cost')
+            )
+            data['expenses_by_plant_species'] = list(plant_expenses)
+        
+        # 4. Gastos por área cultivada (se solicitado)
+        if include_cultivation_data:
+            cultivation_expenses = (
+                AgriculturalInputUsage.objects.filter(
+                    pack__agricultural_input__site=site,
+                    usage_date__range=[start_date, end_date]
+                )
+                .values(
+                    'cultivation_plant__cultivation__name',
+                    'cultivation_plant__plant_species__name'
+                )
+                .annotate(
+                    total_cost=Sum(F('quantity_used') * F('pack__price') / F('pack__quantity')),
+                    area_size=Count('cultivation_plant', distinct=True)
+                )
+                .order_by('-total_cost')
+            )
+            data['expenses_by_cultivation_area'] = list(cultivation_expenses)
+        
+        # 5. Dados de produção (se solicitado)
+        if include_production_data:
+            from koltagri.landplots.models import HarvestCultivationPlant
+            
+            production_data = (
+                HarvestCultivationPlant.objects.filter(
+                    cultivation_plant__cultivation__site=site,
+                    harvest_date__range=[start_date, end_date]
+                )
+                .values(
+                    'cultivation_plant__plant_species__name',
+                    'unity'
+                )
+                .annotate(
+                    total_quantity=Sum('quantity'),
+                    total_harvests=Count('id')
+                )
+                .order_by('-total_quantity')
+            )
+            data['production_data'] = list(production_data)
+            
+            # Total de produção
+            total_production = (
+                HarvestCultivationPlant.objects.filter(
+                    cultivation_plant__cultivation__site=site,
+                    harvest_date__range=[start_date, end_date]
+                ).aggregate(total=Sum('quantity'))['total'] or 0
+            )
+            data['total_production'] = total_production
+        
+        # 6. Cálculo de ponto de equilíbrio (se solicitado)
+        if include_break_even:
+            # Gastos com insumos
+            input_expenses = (
+                AgriculturalInputPack.objects.filter(
+                    agricultural_input__site=site,
+                    purchase_date__range=[start_date, end_date]
+                ).aggregate(total=Sum('price'))['total'] or 0
+            )
+            
+            # Outros gastos (não insumos)
+            other_expenses = (
+                Expense.objects.filter(
+                    site=site,
+                    date__range=[start_date, end_date]
+                ).exclude(
+                    category__name__icontains='insumo'
+                ).aggregate(total=Sum('amount'))['total'] or 0
+            )
+            
+            # Cálculo simplificado do ponto de equilíbrio
+            # Assumindo um preço de venda médio (você pode ajustar isso)
+            avg_selling_price = Decimal('10.00')  # Preço médio por unidade
+            
+            if avg_selling_price > 0 and data.get('total_production', 0) > 0:
+                total_costs = input_expenses + other_expenses
+                break_even_units = total_costs / avg_selling_price
+                actual_units = data.get('total_production', 0)
+                profitability = (actual_units * avg_selling_price) - total_costs
+                
+                data['break_even_analysis'] = {
+                    'input_expenses': input_expenses,
+                    'other_expenses': other_expenses,
+                    'total_costs': total_costs,
+                    'avg_selling_price': avg_selling_price,
+                    'break_even_units': break_even_units,
+                    'actual_units': actual_units,
+                    'profitability': profitability,
+                    'is_profitable': profitability > 0
+                }
+        
+        return data
+    
+    def generate_pdf_report(self, data, start_date, end_date, site_name):
+        """
+        Gera um relatório em PDF usando ReportLab
+        """
+        buffer = io.BytesIO()
+        
+        # Criar documento PDF
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=landscape(letter),
+            rightMargin=72,
+            leftMargin=72,
+            topMargin=72,
+            bottomMargin=18
+        )
+        
+        story = []
+        styles = getSampleStyleSheet()
+        
+        # Título
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Title'],
+            fontSize=24,
+            spaceAfter=30,
+            alignment=1  # Center
+        )
+        
+        story.append(Paragraph(f"Relatório Financeiro - {site_name}", title_style))
+        story.append(Paragraph(f"Período: {data['period']}", styles['Heading2']))
+        story.append(Spacer(1, 20))
+        
+        # 1. Resumo Executivo
+        story.append(Paragraph("1. Resumo Executivo", styles['Heading2']))
+        
+        summary_data = [
+            ['Total de Gastos', f"R$ {data['total_expenses']:.2f}"],
+            ['Período Analisado', data['period']],
+            ['Site/Fazenda', site_name],
+        ]
+        
+        if 'total_production' in data:
+            summary_data.append(['Total Produzido', f"{data['total_production']} unidades"])
+        
+        if 'break_even_analysis' in data:
+            profitability_status = "Lucrativo" if data['break_even_analysis']['is_profitable'] else "Prejuízo"
+            summary_data.append(['Situação Financeira', profitability_status])
+            summary_data.append(['Lucro/Prejuízo', f"R$ {data['break_even_analysis']['profitability']:.2f}"])
+        
+        summary_table = Table(summary_data, colWidths=[200, 200])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#4a6fa5')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,0), 14),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12),
+            ('BACKGROUND', (0,1), (-1,-1), colors.beige),
+            ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ]))
+        
+        story.append(summary_table)
+        story.append(Spacer(1, 30))
+        
+        # 2. Gastos por Categoria
+        story.append(Paragraph("2. Gastos por Categoria", styles['Heading2']))
+        
+        if data['expenses_by_category']:
+            category_data = [['Categoria', 'Total (R$)', 'Nº de Gastos']]
+            for item in data['expenses_by_category']:
+                category_data.append([
+                    item['category__name'],
+                    f"{item['total']:.2f}",
+                    str(item['count'])
+                ])
+            
+            category_table = Table(category_data, colWidths=[250, 150, 100])
+            category_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2c3e50')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 12),
+                ('BACKGROUND', (0,1), (-1,-1), colors.whitesmoke),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ]))
+            
+            story.append(category_table)
+        else:
+            story.append(Paragraph("Nenhum gasto registrado neste período.", styles['Normal']))
+        
+        story.append(Spacer(1, 30))
+        
+        # 3. Dados por Espécie de Planta (se disponível)
+        if 'expenses_by_plant_species' in data and data['expenses_by_plant_species']:
+            story.append(Paragraph("3. Gastos por Espécie de Planta", styles['Heading2']))
+            
+            plant_data = [['Espécie', 'Custo Total (R$)', 'Quantidade Usada']]
+            for item in data['expenses_by_plant_species']:
+                plant_data.append([
+                    item['cultivation_plant__plant_species__name'] or 'Não especificado',
+                    f"{item['total_cost']:.2f}" if item['total_cost'] else '0.00',
+                    f"{item['total_used']:.2f}" if item['total_used'] else '0.00'
+                ])
+            
+            plant_table = Table(plant_data, colWidths=[250, 150, 150])
+            plant_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#27ae60')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 12),
+                ('BACKGROUND', (0,1), (-1,-1), colors.whitesmoke),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ]))
+            
+            story.append(plant_table)
+            story.append(Spacer(1, 30))
+        
+        # 4. Dados de Produção (se disponível)
+        if 'production_data' in data and data['production_data']:
+            story.append(Paragraph("4. Produção por Espécie", styles['Heading2']))
+            
+            production_data_table = [['Espécie', 'Quantidade Total', 'Unidade', 'Nº de Colheitas']]
+            for item in data['production_data']:
+                production_data_table.append([
+                    item['cultivation_plant__plant_species__name'] or 'Não especificado',
+                    str(item['total_quantity']),
+                    item['unity'],
+                    str(item['total_harvests'])
+                ])
+            
+            production_table = Table(production_data_table, colWidths=[200, 120, 80, 100])
+            production_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#e74c3c')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 12),
+                ('BACKGROUND', (0,1), (-1,-1), colors.whitesmoke),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ]))
+            
+            story.append(production_table)
+            story.append(Spacer(1, 30))
+        
+        # 5. Análise de Ponto de Equilíbrio (se disponível)
+        if 'break_even_analysis' in data:
+            story.append(Paragraph("5. Análise de Ponto de Equilíbrio", styles['Heading2']))
+            
+            be_data = data['break_even_analysis']
+            be_table_data = [
+                ['Item', 'Valor'],
+                ['Gastos com Insumos', f"R$ {be_data['input_expenses']:.2f}"],
+                ['Outros Gastos', f"R$ {be_data['other_expenses']:.2f}"],
+                ['Custo Total', f"R$ {be_data['total_costs']:.2f}"],
+                ['Preço Médio de Venda', f"R$ {be_data['avg_selling_price']:.2f}"],
+                ['Unidades para Break-even', f"{be_data['break_even_units']:.0f}"],
+                ['Unidades Produzidas', f"{be_data['actual_units']:.0f}"],
+                ['Resultado Financeiro', f"R$ {be_data['profitability']:.2f}"],
+                ['Situação', 'Lucrativo' if be_data['is_profitable'] else 'Prejuízo']
+            ]
+            
+            be_table = Table(be_table_data, colWidths=[250, 150])
+            be_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#f39c12')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (1,0), (-1,-1), 'RIGHT'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 12),
+                ('BACKGROUND', (0,1), (-1,-1), colors.whitesmoke),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+            ]))
+            
+            story.append(be_table)
+        
+        # Rodapé
+        story.append(Spacer(1, 40))
+        story.append(Paragraph(f"Relatório gerado em {timezone.now().strftime('%d/%m/%Y %H:%M')}", 
+                             styles['Normal']))
+        
+        # Construir PDF
+        doc.build(story)
+        
+        buffer.seek(0)
+        
+        # Criar resposta
+        response = HttpResponse(buffer, content_type='application/pdf')
+        filename = f"relatorio_{site_name}_{start_date.strftime('%Y%m')}_{end_date.strftime('%Y%m')}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    
+    def generate_excel_report(self, data, start_date, end_date, site_name):
+        """
+        Gera um relatório em Excel
+        """
+        wb = Workbook()
+        
+        # Sheet 1: Resumo
+        ws1 = wb.active
+        ws1.title = "Resumo"
+        
+        ws1['A1'] = f"Relatório Financeiro - {site_name}"
+        ws1['A2'] = f"Período: {data['period']}"
+        
+        # Adicionar dados ao Excel...
+        # (implementação similar ao PDF, mas formatada para Excel)
+        
+        # Salvar para buffer
+        buffer = io.BytesIO()
+        wb.save(buffer)
+        buffer.seek(0)
+        
+        response = HttpResponse(
+            buffer,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        filename = f"relatorio_{site_name}_{start_date.strftime('%Y%m')}_{end_date.strftime('%Y%m')}.xlsx"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    
+    def generate_csv_report(self, data, start_date, end_date, site_name):
+        """
+        Gera um relatório em CSV
+        """
+        response = HttpResponse(content_type='text/csv')
+        filename = f"relatorio_{site_name}_{start_date.strftime('%Y%m')}_{end_date.strftime('%Y%m')}.csv"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        writer = csv.writer(response, delimiter=';')
+        
+        # Escrever cabeçalhos e dados...
+        writer.writerow(['Relatório Financeiro', site_name])
+        writer.writerow(['Período', data['period']])
+        writer.writerow([])
+        
+        # Gastos por categoria
+        writer.writerow(['Gastos por Categoria'])
+        writer.writerow(['Categoria', 'Total (R$)', 'Nº de Gastos'])
+        for item in data['expenses_by_category']:
+            writer.writerow([item['category__name'], item['total'], item['count']])
+        
+        return response

@@ -68,6 +68,7 @@ class PlantSpecies(BaseModelWithSoftDelete):
         choices=LuminosityNeeds.choices,
         default=LuminosityNeeds.PARTIAL_SHADE,
     )
+    image = models.ImageField(upload_to='plant_species/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -120,6 +121,7 @@ class Cultivation(BaseModelWithSoftDelete):
         on_delete=models.CASCADE,
         related_name="cultivations"
     )
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.site.name})"
@@ -233,3 +235,25 @@ class SiteMembership(BaseModel):
         ]
 
 
+class HarvestCultivationPlant(BaseModelWithSoftDelete):
+    class UnityChoices(models.TextChoices):
+        KILOGRAM = "kg", _("Quilograma")
+        GRAM = "g", _("Grama")
+        TONNE = "tonne", _("Tonelada")
+        LITER = "l", _("Litro")
+        UNIT = "unit", _("Unidade")
+    cultivation_plant = models.ForeignKey(
+        CultivationPlant,
+        on_delete=models.CASCADE,
+        related_name="harvests"
+    )
+    harvest_date = models.DateField()
+    quantity = models.PositiveIntegerField()
+    unity = models.CharField(
+        max_length=10,
+        choices=UnityChoices.choices,
+        default=UnityChoices.KILOGRAM
+    )
+
+    def __str__(self):
+        return f"Colheita de {self.cultivation_plant} em {self.harvest_date}"

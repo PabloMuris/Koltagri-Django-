@@ -11,6 +11,8 @@ from koltagri.core.models import Country, City,State
 from koltagri.landplots.models import Site
 import zoneinfo
 
+from koltagri.landplots.models import Cultivation
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     
@@ -121,3 +123,86 @@ class SiteForm(forms.ModelForm):
         if timezone not in zoneinfo.available_timezones():
             raise forms.ValidationError("Fuso horário inválido")
         return timezone
+
+class CultivationForm(forms.ModelForm):
+    class Meta:
+        model = Cultivation
+        fields = ['name', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Descreva esta área...'
+            }),
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Ex: Estufa Principal'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Adicionar classes CSS
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
+    
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name or not name.strip():
+            raise ValidationError('O nome da área é obrigatório.')
+        return name.strip()
+    
+# Adicione esta classe ao forms.py
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        required=True,
+        label="E-mail",
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'seu@email.com',
+            'class': 'form-control'
+        })
+    )
+    
+    password = forms.CharField(
+        required=True,
+        label="Senha",
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Sua senha',
+            'class': 'form-control'
+        })
+    )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        password = cleaned_data.get('password')
+        
+        if email and password:
+            try:
+                # Primeiro, tenta encontrar o usuário pelo email
+                user = User.objects.get(email=email)
+                
+                # Verifica se a senha está correta
+                if not user.check_password(password):
+                    # Erro genérico para não revelar qual campo está errado
+                    raise ValidationError(
+                        "E-mail e/ou senha incorretos. Verifique suas credenciais."
+                    )
+                
+                # Verifica se o usuário está ativo
+                if not user.is_active:
+                    raise ValidationError(
+                        "Esta conta está desativada. Entre em contato com o suporte."
+                    )
+                
+                # Se tudo estiver ok, adiciona o usuário aos dados limpos
+                cleaned_data['user'] = user
+                
+            except User.DoesNotExist:
+                # Erro genérico mesmo quando o usuário não existe
+                raise ValidationError(
+                    "E-mail e/ou senha incorretos. Verifique suas credenciais."
+                )
+        
+        return cleaned_data

@@ -13,6 +13,19 @@
 
 {% block styles %}
 <style>
+
+.search{
+  padding-right: 0px;
+}
+
+#add-open{
+  display: none;
+}
+
+#search-input{
+  flex: 1;
+
+}
 :root{
   --bg:#f2f2f2;
   --muted:#66788f;
@@ -293,10 +306,54 @@
     gap:12px;
   }
 }
+/* Estilos básicos para a paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  margin: 1rem 0;
+}
+
+.pagination a {
+  color: var(--primary-color, #2e7d32);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: var(--primary-color, #2e7d32);
+  color: white;
+  border-color: var(--primary-color, #2e7d32);
+}
+
+.pagination span {
+  color: var(--text-muted, #666);
+  font-size: 0.9rem;
+}
+
+/* Estilo para quando não há link disponível */
+.pagination a:disabled,
+.pagination a[aria-disabled="true"] {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pagination a:disabled:hover,
+.pagination a[aria-disabled="true"]:hover {
+  background-color: transparent;
+  color: #ccc;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+
 <div class="user-actions">
   <div class="flex-row" style="display: flex; flex-direction: row; align-items: center; gap: 12px;">
     <a href="" class="back-button">
@@ -356,19 +413,7 @@
         </div>
       </div>
 
-      <div class="usage-card">
-        <div class="icon-wrap"><span class="material-icons">calendar_month</span></div>
-        <div>
-          <strong>Período</strong>
-          <p>
-            {% if usages %}
-              {{ usages.last.usage_date|date:"d/m/Y" }} - {{ usages.first.usage_date|date:"d/m/Y" }}
-            {% else %}
-              Nenhum uso registrado
-            {% endif %}
-          </p>
-        </div>
-      </div>
+      
     </div>
   </section>
 
@@ -376,6 +421,18 @@
   <section class="filter-search-section">
     {% include "partials/_search.html"  %}
   </section>
+
+  <div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+  {% endif %}
+</div>
 
   <!-- LISTAGEM DE USOS -->
   <section class="tasks-result">

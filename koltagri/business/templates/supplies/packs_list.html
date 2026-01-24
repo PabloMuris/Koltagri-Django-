@@ -427,7 +427,7 @@
   <section class="tasks-result">
     <div class="results">
       {% for pack in packs %}
-      <div class="result_card">
+      <a class="result_card" href="{% url 'pack_uses' supplie_pk=supplie_pk pk=pack.id %}">
         <div class="card__image">
           <span class="material-icons">local_shipping</span>
         </div>
@@ -465,7 +465,7 @@
             <span class="material-icons">delete</span>
           </button>
         </div>
-      </div>
+      </a>
       {% empty %}
       <div style="text-align:center; padding:40px; color:var(--muted);">
         <span class="material-icons" style="font-size:48px; opacity:0.5;">inventory_2</span>

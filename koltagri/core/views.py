@@ -13,7 +13,7 @@ from .models import SiteInvite
 from django_filters.views import FilterView
 
 from koltagri.core.constants import ROLE_EMPLOYEE,ROLE_SITE_MANAGER
-from koltagri.landplots.models import Site,SiteMembership
+from koltagri.landplots.models import Site,SiteMembership,Cultivation
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404,redirect
@@ -31,16 +31,59 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.db import transaction
 from django.http import JsonResponse
-from .forms import CustomUserCreationForm, UserInformationForm,SiteForm
+from .forms import CustomUserCreationForm, UserInformationForm,SiteForm,CultivationForm
 from koltagri.person.models import UserInformation
 from .models import Country
 
-class IndexView(LoginRequiredMixin,TemplateView):
+from .mixins import SiteRequiredMixin
+class IndexView(SiteRequiredMixin,TemplateView):
     template_name = "index.html"
 
-class LoginView(TemplateView):
-    template_name = "login.html"
+from django.contrib.auth import authenticate, login
+from .forms import LoginForm  # Importe o novo formulário
 
+from django.contrib.auth import logout
+class LoginView(View):
+    template_name = "core/login.html"
+    
+    def get(self, request, *args, **kwargs):
+        # Se já estiver autenticado, redireciona
+        if request.user.is_authenticated:
+            return redirect('index')
+        
+        form = LoginForm()
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request, *args, **kwargs):
+        form = LoginForm(request.POST)
+        
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            
+            # Faz login do usuário
+            login(request, user)
+            
+            # Verifica se o usuário tem algum site para selecionar
+            user_sites = Site.objects.filter(members=user)
+            
+            if user_sites.count() == 1:
+                # Se tiver apenas um site, seleciona automaticamente
+                site = user_sites.first()
+                request.session['selected_site_location'] = site.id
+                request.session['selected_site_name'] = site.name
+                messages.success(request, f"Bem-vindo, {user.first_name}!")
+                return redirect('index')
+            elif user_sites.exists():
+                # Se tiver múltiplos sites, redireciona para seleção
+                messages.success(request, f"Bem-vindo de volta, {user.first_name}!")
+                return redirect('select_site')
+            else:
+                # Se não tiver sites, redireciona para criar um
+                messages.info(request, "Você não possui propriedades. Cadastre sua primeira propriedade.")
+                return redirect('create_site')
+        
+        # Se o formulário for inválido, retorna para a página de login com erros
+        return render(request, self.template_name, {'form': form})
 
 class NotificationsView(TemplateView):
     template_name = 'notifications.html'
@@ -84,8 +127,18 @@ class TeamView(LoginRequiredMixin, FilterView):
         )
         return query
 
-class LandsView(TemplateView):
+class LandsView(LoginRequiredMixin,FilterView):
     template_name = 'lands.html'
+    model = Cultivation
+    context_object_name = 'cultivations'
+    paginate_by = 7
+
+    def get_queryset(self):
+        original_query = super().get_queryset()
+        query = original_query.filter(
+            site=self.request.session["selected_site_location"]
+        )
+        return query
 
 class PropertyView(TemplateView):
     template_name = 'property.html'
@@ -593,3 +646,77 @@ class RemoveMemberView(LoginRequiredMixin, View):
             'message': f'{member_name} removido do site',
             'removed_member_id': member_id
         })
+
+from koltagri.landplots.models import Cultivation
+from .forms import CultivationForm
+from django.contrib import messages
+from django.views.generic.edit import UpdateView, DeleteView
+from django.urls import reverse
+from django.shortcuts import redirect
+from django.http import JsonResponse
+
+# Adicionar estas views ao final do arquivo
+
+class CultivationCreateView(LoginRequiredMixin, View):
+    def post(self, request):
+        site_id = request.session.get('selected_site_location')
+        if not site_id:
+            messages.error(request, 'Nenhum site selecionado.')
+            return redirect('lands')
+        
+        form = CultivationForm(request.POST)
+        if form.is_valid():
+            cultivation = form.save(commit=False)
+            cultivation.site_id = site_id
+            cultivation.save()
+            messages.success(request, 'Área criada com sucesso!')
+        else:
+            # Em caso de erro, adiciona as mensagens de erro
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+        
+        return redirect('lands')
+
+
+class CultivationUpdateView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        site_id = request.session.get('selected_site_location')
+        
+        try:
+            cultivation = Cultivation.objects.get(pk=pk, site_id=site_id)
+        except Cultivation.DoesNotExist:
+            messages.error(request, 'Área não encontrada.')
+            return redirect('lands')
+        
+        form = CultivationForm(request.POST, instance=cultivation)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Área atualizada com sucesso!')
+        else:
+            # Em caso de erro, adiciona as mensagens de erro
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+        
+        return redirect('lands')
+
+
+class CultivationDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        site_id = request.session.get('selected_site_location')
+        
+        try:
+            cultivation = Cultivation.objects.get(pk=pk, site_id=site_id)
+            cultivation.delete()
+            messages.success(request, 'Área excluída com sucesso!')
+        except Cultivation.DoesNotExist:
+            messages.error(request, 'Área não encontrada.')
+        
+        return redirect('lands')
+    
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')

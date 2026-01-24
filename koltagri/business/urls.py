@@ -17,7 +17,8 @@ from .views import (
    AgriculturalInputPackListView,
    AgriculturalInputUsageCreateView,
    AgriculturalInputPackDeleteView,
-   PackUsagesListView
+   PackUsagesListView,
+   GenerateExpenseReportView
 )
 urlpatterns = [
    path("",BusinessDashboardView.as_view(),name="business_board"),
@@ -42,6 +43,7 @@ urlpatterns = [
         name="pack_delete"
     ),
        path("insumos/insumo/<int:supplie_pk>/pacotes/<int:pk>/usos",PackUsagesListView.as_view(),name='pack_uses'),
+       path("relatorio-gastos/", GenerateExpenseReportView.as_view(), name="generate_expense_report"),
 
    
 ]

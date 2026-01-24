@@ -14,7 +14,11 @@ from .views import (IndexView,
                      GetStatesView,
                      SiteCreateView,
                      UpdateMemberRoleView,
-                     RemoveMemberView
+                     RemoveMemberView,
+                     CultivationCreateView,
+                     CultivationUpdateView,
+                     CultivationDeleteView,
+                     
 )
 
 urlpatterns = [
@@ -52,4 +56,7 @@ urlpatterns = [
         RemoveMemberView.as_view(),
         name="remove_member"
     ),
+    path("areas/nova/", CultivationCreateView.as_view(), name="cultivation_create"),
+path("areas/<int:pk>/editar/", CultivationUpdateView.as_view(), name="cultivation_update"),
+path("areas/<int:pk>/excluir/", CultivationDeleteView.as_view(), name="cultivation_delete"),
 ]
