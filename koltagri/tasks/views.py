@@ -118,6 +118,9 @@ class TaskDetailTemplateView(DetailView):
             context['is_owner'] = False
 
         context['user'] = self.request.user
+
+        
+
         
         return context
 

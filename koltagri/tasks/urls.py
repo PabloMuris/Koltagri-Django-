@@ -20,7 +20,7 @@ urlpatterns = [
     
     path("tarefa/<int:pk>/",TaskDetailTemplateView.as_view(),name= "task_detail"),
     path("nova-tarefa",TaskCreateUpdateView.as_view(),name='task_form'),
-    path("tarefa/<int:pk>/editar",TaskCreateUpdateView.as_view(),name='task_form'),
+    path("tarefa/<int:pk>/editar",TaskCreateUpdateView.as_view(),name='task_form_edit'),
     path("tarefa/<int:pk>/participantes",TaskParticipantTemplateView.as_view(),name="task_participant"),
     path("plantas-especies/",fetch_plant_species,name="fetch_plant_species"),
     path("tarefa/<int:task_pk>/participante/<int:user_pk>/anexos", TaskAttachmentsTemplateView.as_view(),name="task_attachments"),

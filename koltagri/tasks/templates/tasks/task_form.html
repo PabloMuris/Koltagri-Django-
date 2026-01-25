@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-<form class="task-form-container" method="post" id="taskForm"  action="{% if task_id %}{% url 'task_form' pk=task_id %}{% else %}{% url 'task_form' %}{% endif %}">
+<form class="task-form-container" method="post" id="taskForm"  action="{% if task_id %}{% url 'task_form_edit' pk=task_id %}{% else %}{% url 'task_form' %}{% endif %}">
   {% csrf_token %}
   <div class="progress-container">
     <div class="progress"></div>

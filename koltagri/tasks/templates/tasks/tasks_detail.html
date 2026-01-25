@@ -626,7 +626,7 @@ html { font-size: var(--base-font); color: #071029; }
       <p class="task-meta">Espécie(s): Adenium · Local: Estufa Principal</p>
     </div>
     <div class="task-actions">
-      <button class="btn" onclick="location.href='{% url 'task_form'%}'">
+      <button class="btn" onclick="location.href='{% url 'task_form_edit' task_id%}'">
         <span class="material-icons">edit</span>
         <p id="edit">Editar</p>
       </button>
@@ -655,10 +655,12 @@ html { font-size: var(--base-font); color: #071029; }
   border-top-right-radius: 0px;
   border-right: transparent;
 ">
-      <button class="btn" onclick="location.href='{% url 'task_participant' pk=task_id %}'">
-        <span class="material-icons">person</span>
-        <p>Participantes</p>
-      </button>
+      {% if is_owner %}
+        <button class="btn" onclick="location.href='{% url 'task_participant' pk=task_id %}'">
+          <span class="material-icons">person</span>
+          <p>Participantes</p>
+        </button>
+      {% endif %}
     </div>
   </section>
 

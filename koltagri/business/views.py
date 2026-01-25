@@ -33,7 +33,7 @@ class BusinessDashboardView(SiteRequiredMixin, TemplateView):
 class PlanningView(LoginRequiredMixin, TemplateView):
     template_name = 'planning_form.html'
 
-class StatisticsView(IsManagerMixin, FilterView):
+class StatisticsView(SiteRequiredMixin, FilterView):
     template_name = 'financial/statistics.html'
     model = Expense
     context_object_name = 'expenses'
@@ -44,6 +44,16 @@ class StatisticsView(IsManagerMixin, FilterView):
         context = super().get_context_data(**kwargs)
         
         context['form'] = ExpenseForm()
+
+        user = self.request.user
+        site = self.request.session['selected_site_location']
+
+        memberships = site.memberships.filter(user=user)
+
+        if memberships.exists() and memberships.first().role.name == 'Manager':
+            context['is_manager'] = True
+        else:
+            context['is_manager'] = False
 
         return context
     
@@ -57,7 +67,7 @@ class StatisticsView(IsManagerMixin, FilterView):
 
 
 class SuppliesView(LoginRequiredMixin, TemplateView):
-    template_name = 'supplies.html'
+    template_name = 'supplies/supplies.html'
 
 class SuppliesDetailView(LoginRequiredMixin, DetailView):
     template_name = 'supplies/supplies_detail.html'
