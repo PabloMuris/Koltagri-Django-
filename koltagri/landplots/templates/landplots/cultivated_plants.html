@@ -151,7 +151,7 @@
   {% for plant in cultivated_plants %}
   <article class="plant-card" onclick="location.href='{% url 'cultivated_plants_detail' pk=plant.pk %}'">
     <div class="card__image">
-      <img src="{% static 'example_img/laranjeira.png' %}" alt="{{ plant.plant_species.name }}">
+      <img src="{{ plant.plant_species.image.url }}" alt="{{ plant.plant_species.name }}">
     </div>
     <div class="card__description">
       <div>

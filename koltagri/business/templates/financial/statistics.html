@@ -14,6 +14,49 @@
 {% block styles %}
 <style>
 
+  .filter-section {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.filter-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--accent);
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.filter-info {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 /* Estilos para o modal de relatório */
 #report-modal .modal-panel {
   max-width: 600px;
@@ -551,9 +594,96 @@
   </section>
 
   <!-- Seção de Busca/Filtro -->
-  <section class="filter-search-section">
-    {% include "partials/_search.html" with label="Novo Gasto" %}
-  </section>
+  <!-- Adicione este código após a seção do gráfico -->
+
+<!-- Formulário de Filtro -->
+<section class="filter-section" style="background: var(--panel-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px;">
+    <h3 style="margin-top: 0; color: var(--accent);">Filtrar Gastos</h3>
+    
+    <form method="GET" id="filter-form-visible">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <!-- Categoria -->
+            <div class="form-control">
+                <label for="id_category">Categoria</label>
+                <select name="category" id="id_category" class="form-control">
+                    <option value="">Todas as categorias</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" 
+                            {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Data específica -->
+            <div class="form-control">
+                <label for="id_date">Data específica</label>
+                <input type="date" name="date" id="id_date" class="form-control"
+                       value="{{ request.GET.date }}">
+            </div>
+            
+            <!-- Descrição -->
+            <div class="form-control">
+                <label for="id_description">Descrição</label>
+                <input type="text" name="description" id="id_description" class="form-control"
+                       placeholder="Buscar na descrição..." value="{{ request.GET.description }}">
+            </div>
+            
+            <!-- Valor mínimo -->
+            <div class="form-control">
+                <label for="id_amount_min">Valor mínimo</label>
+                <input type="number" name="amount_min" id="id_amount_min" class="form-control" 
+                       step="0.01" placeholder="0.00" value="{{ request.GET.amount_min }}">
+            </div>
+            
+            <!-- Valor máximo -->
+            <div class="form-control">
+                <label for="id_amount_max">Valor máximo</label>
+                <input type="number" name="amount_max" id="id_amount_max" class="form-control" 
+                       step="0.01" placeholder="0.00" value="{{ request.GET.amount_max }}">
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="color: var(--muted); font-size: 0.9rem;">
+                    {{ expenses.paginator.count }} gastos encontrados
+                    {% if request.GET %}
+                    (filtrados)
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                {% if request.GET %}
+                <a href="{% url 'statistics' %}" class="btn" style="text-decoration: none;">
+                    Limpar Filtros
+                </a>
+                {% endif %}
+                <button type="submit" class="btn primary">Aplicar Filtros</button>
+            </div>
+        </div>
+    </form>
+</section>
+<!-- Adicione esta seção após o histórico de gastos -->
+{% if expenses.has_other_pages %}
+<div class="pagination" style="display: flex; justify-content: center; gap: 8px; margin-top: 20px;">
+    {% if expenses.has_previous %}
+    <a href="?page={{ expenses.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+       class="btn" style="text-decoration: none;">&laquo; Anterior</a>
+    {% endif %}
+    
+    <span style="align-self: center; color: var(--muted);">
+        Página {{ expenses.number }} de {{ expenses.paginator.num_pages }}
+    </span>
+    
+    {% if expenses.has_next %}
+    <a href="?page={{ expenses.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+       class="btn" style="text-decoration: none;">Próxima &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
 
   <!-- Histórico de Gastos -->
   <section class="historic-section">
@@ -1361,6 +1491,92 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// Função para aplicar filtros via AJAX (opcional)
+function applyFilters(filters) {
+    // Criar URL com parâmetros
+    let url = new URL(window.location.href);
+    let params = new URLSearchParams(url.search);
+    
+    // Limpar parâmetros existentes
+    for (let key of params.keys()) {
+        params.delete(key);
+    }
+    
+    // Adicionar novos filtros
+    for (let key in filters) {
+        if (filters[key]) {
+            params.set(key, filters[key]);
+        }
+    }
+    
+    // Atualizar URL e recarregar
+    window.location.search = params.toString();
+}
+
+// Configurar o formulário de filtro visível
+const visibleFilterForm = document.getElementById('filter-form-visible');
+if (visibleFilterForm) {
+    visibleFilterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const filters = {};
+        
+        formData.forEach((value, key) => {
+            if (value) filters[key] = value;
+        });
+        
+        applyFilters(filters);
+    });
+}
+
+// Se quiser filtro por intervalo de datas, adicione:
+const dateRangeToggle = document.getElementById('filter-period');
+if (dateRangeToggle) {
+    dateRangeToggle.addEventListener('change', function() {
+        const customDates = document.getElementById('custom-dates');
+        if (this.value === 'custom') {
+            customDates.style.display = 'flex';
+        } else {
+            customDates.style.display = 'none';
+            // Aplicar filtro automático para períodos pré-definidos
+            const today = new Date();
+            let startDate, endDate;
+            
+            switch(this.value) {
+                case 'today':
+                    startDate = today.toISOString().split('T')[0];
+                    endDate = startDate;
+                    break;
+                case 'week':
+                    const firstDay = new Date(today.setDate(today.getDate() - today.getDay()));
+                    startDate = firstDay.toISOString().split('T')[0];
+                    endDate = new Date().toISOString().split('T')[0];
+                    break;
+                case 'month':
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1)
+                        .toISOString().split('T')[0];
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+                        .toISOString().split('T')[0];
+                    break;
+                case 'year':
+                    startDate = new Date(today.getFullYear(), 0, 1)
+                        .toISOString().split('T')[0];
+                    endDate = new Date(today.getFullYear(), 11, 31)
+                        .toISOString().split('T')[0];
+                    break;
+            }
+            
+            if (startDate && endDate) {
+                applyFilters({
+                    date_range_0: startDate,
+                    date_range_1: endDate
+                });
+            }
+        }
+    });
+}
 </script>
 
 <script src="{% static 'business/js/filter_expenses.js'%}"></script>

@@ -18,6 +18,7 @@ from .views import (IndexView,
                      CultivationCreateView,
                      CultivationUpdateView,
                      CultivationDeleteView,
+                     LogoutView
                      
 )
 
@@ -59,4 +60,5 @@ urlpatterns = [
     path("areas/nova/", CultivationCreateView.as_view(), name="cultivation_create"),
 path("areas/<int:pk>/editar/", CultivationUpdateView.as_view(), name="cultivation_update"),
 path("areas/<int:pk>/excluir/", CultivationDeleteView.as_view(), name="cultivation_delete"),
+path('logout/', LogoutView.as_view(), name='logout')
 ]

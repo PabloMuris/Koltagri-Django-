@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Pack de Insumo{% endblock %}
+{% block title %}Pacote de Insumo{% endblock %}
 {% block header_title %}Koltagri{% endblock %}
-{% block header_text %}packs de insumo{% endblock %}
+{% block header_text %}Pacotes de insumo{% endblock %}
 
 {% block rels %}
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -182,7 +182,7 @@ input:focus, select:focus {
         {% csrf_token %}
 
         <h1>
-            {% if form.instance.pk %}Editar Pack{% else %}Novo Pack{% endif %}
+            {% if form.instance.pk %}Editar Pacote{% else %}Novo Pacote{% endif %}
         </h1>
         <div class="form-sub">
             Preencha os detalhes do lote de insumo adquirido.
@@ -233,7 +233,7 @@ input:focus, select:focus {
 
             <button type="submit" class="btn primary">
                 <span class="material-icons" style="font-size: 18px;">save</span>
-                Salvar Pack
+                Salvar Pacote
             </button>
         </div>
     </form>

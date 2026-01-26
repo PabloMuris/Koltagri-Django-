@@ -520,19 +520,17 @@ html { font-size: var(--base-font); color: #071029; }
     <div class="property-sidebar" aria-label="Seleção de propriedades">
       <div class="sidebar-header">
         <h3 class="sidebar-title">Propriedades</h3>
-        <button class="btn icon" id="btn-logout" title="Sair">
+        <button class="btn icon" id="btn-logout" title="Sair" onclick="location.href='{% url 'logout' %}'">
           <span class="material-icons">logout</span>
         </button>
       </div>
 
-      <div id="prop-list" class="property-list" role="list" aria-label="Lista de propriedades">
-         
-      </div>
+      
 
       <div class="sidebar-actions" >
-        <button class="btn" id="btn-manage-prop" onclick="location.href='{% url 'property' %}'">
+        <button class="btn" id="btn-manage-prop" onclick="location.href='{% url 'select_site' %}'">
           <span class="material-icons">tune</span>
-          Gerenciar
+          Ver todas
         </button>
       </div>
     </div>

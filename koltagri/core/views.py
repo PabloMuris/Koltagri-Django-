@@ -88,8 +88,59 @@ class LoginView(View):
 class NotificationsView(TemplateView):
     template_name = 'notifications.html'
 
-class ProfileView(TemplateView):
+# Em core/views.py, substitua a view ProfileView atual por esta:
+
+from django.views.generic import FormView
+from django.contrib import messages
+from django.urls import reverse_lazy
+from koltagri.person.forms import UserProfileForm
+from koltagri.person.models import UserInformation
+from koltagri.core.models import Country
+
+class ProfileView( SiteRequiredMixin, FormView):
     template_name = 'profile.html'
+    form_class = UserProfileForm
+    success_url = reverse_lazy('profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Obtém ou cria o UserInformation para o usuário atual
+        user_info, created = UserInformation.objects.get_or_create(
+            user=self.request.user,
+            defaults={
+                'first_name': self.request.user.first_name,
+                'last_name': self.request.user.last_name,
+                'country': Country.objects.first() if Country.objects.exists() else None
+            }
+        )
+        kwargs['user'] = self.request.user
+        kwargs['instance'] = user_info
+        return kwargs
+
+    def form_valid(self, form):
+        try:
+            form.save()
+            messages.success(self.request, 'Perfil atualizado com sucesso!')
+        except Exception as e:
+            messages.error(self.request, f'Erro ao atualizar perfil: {str(e)}')
+            return self.form_invalid(form)
+        
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Adiciona o user_info ao contexto para o template
+        user_info, created = UserInformation.objects.get_or_create(
+            user=self.request.user,
+            defaults={
+                'first_name': self.request.user.first_name,
+                'last_name': self.request.user.last_name,
+                'country': Country.objects.first() if Country.objects.exists() else None
+            }
+        )
+        context['user_info'] = user_info
+        context['has_profile_picture'] = bool(user_info.profile_picture)
+        return context
 
 class TeamView(LoginRequiredMixin, FilterView):
     template_name = 'team.html'
@@ -716,7 +767,16 @@ class CultivationDeleteView(LoginRequiredMixin, View):
         return redirect('lands')
     
 
-class LogoutView(LoginRequiredMixin, View):
-    def get(self, request):
+
+    
+class LogoutView(View):
+    def post(self, request):
         logout(request)
+        messages.success(request, "Você saiu com sucesso.")
+        return redirect('login')  # Assumindo que você tem uma URL nomeada 'login'
+    
+    def get(self, request):
+        # Também permite logout via GET para conveniência
+        logout(request)
+        messages.success(request, "Você saiu com sucesso.")
         return redirect('login')

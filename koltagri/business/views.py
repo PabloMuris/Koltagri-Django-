@@ -7,6 +7,7 @@ from .forms import ExpenseForm,AgriculturalInputPackForm,AgriculturalInputUsageF
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 
+from .filters import ExpenseFilter
 from koltagri.landplots.models import Site
 from django.http import HttpResponseForbidden
 from .forms import AgriculturalInputValidationForm
@@ -37,34 +38,55 @@ class StatisticsView(SiteRequiredMixin, FilterView):
     template_name = 'financial/statistics.html'
     model = Expense
     context_object_name = 'expenses'
-    filterset_fields = ['category', 'date','description']
-    paginate_by = 5
+    filterset_class = ExpenseFilter  # Usar o filtro personalizado
+    paginate_by = 10
+
+    def get_queryset(self):
+        site = self.request.session['selected_site_location']
+        queryset = super().get_queryset()
+        queryset = queryset.filter(site=site).order_by('-date')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        # Adicionar formulário de criação
         context['form'] = ExpenseForm()
-
-        user = self.request.user
-        site = self.request.session['selected_site_location']
-
-        memberships = site.memberships.filter(user=user)
-
-        if memberships.exists() and memberships.first().role.name == 'Manager':
-            context['is_manager'] = True
-        else:
-            context['is_manager'] = False
-
+        
+        # Adicionar todas as categorias para o filtro
+        context['categories'] = ExpensesCategory.objects.all()
+        
+        # Obter dados filtrados para os cards
+        filtered_queryset = self.filterset.qs
+        
+        # Total de gastos
+        total_expenses = filtered_queryset.aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+        
+        # Gastos do mês atual
+        today = timezone.now()
+        first_day_of_month = today.replace(day=1)
+        expenses_this_month = filtered_queryset.filter(
+            date__gte=first_day_of_month
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        
+        # Categoria principal
+        expenses_by_category = (
+            filtered_queryset
+            .values('category__name')
+            .annotate(total=Sum('amount'))
+            .order_by('-total')
+        )
+        
+        main_category = expenses_by_category.first() if expenses_by_category else None
+        
+        # Adicionar dados para os cards
+        context['total_expenses_filtered'] = total_expenses
+        context['month_expenses_filtered'] = expenses_this_month
+        context['main_category_filtered'] = main_category
+        
         return context
-    
-    def get_queryset(self):
-
-        site = self.request.session['selected_site_location']
-
-        q = super().get_queryset()
-        queryset = q.filter(site=site)
-        return queryset
-
 
 class SuppliesView(LoginRequiredMixin, TemplateView):
     template_name = 'supplies/supplies.html'
@@ -89,7 +111,7 @@ class SuppliesDetailView(LoginRequiredMixin, DetailView):
 
 
 class SuppliesListView(SiteRequiredMixin, ListView):
-    template_name = 'supplies_form.html'
+    template_name = 'extra/supplies_form.html'
     model = AgriculturalInputs
     context_object_name = 'supplies'
 
@@ -292,6 +314,7 @@ def expense_data_view(request):
         "main_category": main_category["category__name"] if main_category else None,
         "main_category_total": main_category["total"] if main_category else 0
     })
+
 class ExpenseDeleteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         expense = get_object_or_404(Expense, id=kwargs.get("pk"))

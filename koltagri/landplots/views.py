@@ -71,7 +71,7 @@ class CultivatedPlantsView(SiteRequiredMixin, FilterView):
 
 class CultivatedPlantsDetailView(LoginRequiredMixin, DetailView):
     model = CultivationPlant
-    template_name = 'plant_detail.html'
+    template_name = 'landplots/plant_detail.html'
     context_object_name = 'plant'
 
     def get_queryset(self):
