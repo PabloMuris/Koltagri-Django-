@@ -409,8 +409,6 @@
             <p>Plantio: {{ cultivation_plant.plant_species.name }} - {{ cultivation_plant.cultivation.name }}</p>
         </div>
 
-        
-
         <div class="indicators-grid">
             <div class="harvest-card">
                 <div class="icon-wrap"><span class="material-icons">agriculture</span></div>
@@ -420,7 +418,13 @@
                 </div>
             </div>
 
-            
+            <div class="harvest-card">
+                <div class="icon-wrap"><span class="material-icons">scale</span></div>
+                <div>
+                    <strong>Produção Total</strong>
+                    <p>{{ total_quantity }} kg</p>
+                </div>
+            </div>
 
             <div class="harvest-card">
                 <div class="icon-wrap"><span class="material-icons">local_florist</span></div>
@@ -467,7 +471,8 @@
                     </a>
                     
                     <button type="button" class="action-btn delete" title="Excluir"
-                            onclick="openDeleteModal('{{ harvest.pk }}', '{{ harvest.harvest_date|date:"d/m/Y"|escapejs }}')">
+                            onclick="openDeleteModal('{{ harvest.pk }}', '{{ harvest.harvest_date|date:"d/m/Y"|escapejs }}', this)"
+                            data-delete-url="{% url 'harvest_delete' cultivation_plant_pk=cultivation_plant_pk pk=harvest.pk %}">
                         <span class="material-icons">delete</span>
                     </button>
                 </div>
@@ -553,9 +558,35 @@
 {% block scripts %}
 <script>
 // Funções do modal de exclusão
-const modal = document.getElementById('deleteModal');
+function openDeleteModal(harvestId, harvestDate, element) {
+    console.log('DEBUG: Função chamada');
+    
+    // Obtém a URL do atributo data
+    const deleteButton = element.closest('.delete');
+    const url = deleteButton.dataset.deleteUrl;
+    
+    console.log('URL completa:', url);
+    
+    // Elementos
+    const modal = document.getElementById('deleteModal');
     const harvestDateSpan = document.getElementById('harvestDate');
     const deleteForm = document.getElementById('deleteForm');
+    
+    if (!modal || !harvestDateSpan || !deleteForm) {
+        console.error('Elementos não encontrados!');
+        return;
+    }
+    
+    // Preenche a data
+    harvestDateSpan.textContent = harvestDate;
+    
+    // Configura formulário
+    deleteForm.action = url;
+    
+    // Mostra modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
 
 function closeDeleteModal() {
     const modal = document.getElementById('deleteModal');
@@ -577,35 +608,42 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-
-function openDeleteModal(harvestId, harvestDate) {
-    console.log('DEBUG: Função chamada');
+// Adiciona evento de submit para o formulário de exclusão
+document.getElementById('deleteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    // Elementos
-    const modal = document.getElementById('deleteModal');
-    const harvestDateSpan = document.getElementById('harvestDate');
-    const deleteForm = document.getElementById('deleteForm');
+    const form = this;
+    const url = form.action;
     
-    if (!modal || !harvestDateSpan || !deleteForm) {
-        console.error('Elementos não encontrados!');
-        return;
-    }
-    
-    // Preenche a data
-    harvestDateSpan.textContent = harvestDate;
-    
-    // Monta URL
-    const baseUrl = window.location.origin;
-    const url = `${baseUrl}/plantio/{{ cultivation_plant_pk }}/colheitas/${harvestId}/excluir/`;
-    
-    console.log('URL completa:', url);
-    
-    // Configura formulário
-    deleteForm.action = url;
-    
-    // Mostra modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
+    // Envia a requisição POST via fetch
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Erro na requisição');
+    })
+    .then(data => {
+        if (data.success) {
+            // Fecha o modal
+            closeDeleteModal();
+            // Recarrega a página para atualizar a lista
+            window.location.reload();
+        } else {
+            alert('Erro ao excluir colheita: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        // Se der erro, faz o submit normal do formulário (fallback)
+        form.submit();
+    });
+});
 </script>
 {% endblock %}

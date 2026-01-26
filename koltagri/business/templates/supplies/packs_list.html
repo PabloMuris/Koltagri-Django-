@@ -13,6 +13,95 @@
 
 {% block styles %}
 <style>
+
+  /* Estilos básicos para a paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  margin: 1rem 0;
+}
+
+.pagination a {
+  color: var(--primary-color, #2e7d32);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: var(--primary-color, #2e7d32);
+  color: white;
+  border-color: var(--primary-color, #2e7d32);
+}
+
+.pagination span {
+  color: var(--text-muted, #666);
+  font-size: 0.9rem;
+}
+
+/* Estilo para quando não há link disponível */
+.pagination a:disabled,
+.pagination a[aria-disabled="true"] {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pagination a:disabled:hover,
+.pagination a[aria-disabled="true"]:hover {
+  background-color: transparent;
+  color: #ccc;
+}
+
+  /* Estilos básicos para a paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  margin: 1rem 0;
+}
+
+.pagination a {
+  color: var(--primary-color, #2e7d32);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: var(--primary-color, #2e7d32);
+  color: white;
+  border-color: var(--primary-color, #2e7d32);
+}
+
+.pagination span {
+  color: var(--text-muted, #666);
+  font-size: 0.9rem;
+}
+
+/* Estilo para quando não há link disponível */
+.pagination a:disabled,
+.pagination a[aria-disabled="true"] {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pagination a:disabled:hover,
+.pagination a[aria-disabled="true"]:hover {
+  background-color: transparent;
+  color: #ccc;
+}
+
 :root{
   --bg:#f2f2f2;
   --muted:#66788f;
@@ -419,9 +508,17 @@
   </section>
 
   <!-- BUSCA -->
-  <section class="filter-search-section">
-   
-  </section>
+  <div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+  {% endif %}
+</div>
 
   <!-- LISTAGEM -->
   <section class="tasks-result">

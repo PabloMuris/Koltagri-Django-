@@ -460,9 +460,11 @@ class AgriculturalInputPackCreateView(LoginRequiredMixin, CreateView):
         
         # Cria a despesa automaticamente
         self.create_expense_for_pack(instance)
-        
+
+         # Para redirecionar para o detalhe do pack
+
         messages.success(self.request, "Pack criado com sucesso e despesa registrada.")
-        return redirect(reverse("pack_detail", kwargs={"pk": instance.pk}))
+        return redirect(reverse("packs_list", kwargs={"supplie_pk": supplie_pk }))
 
     def create_expense_for_pack(self, pack):
         """

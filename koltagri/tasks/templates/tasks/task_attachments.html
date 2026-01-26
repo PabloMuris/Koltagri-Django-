@@ -11,17 +11,64 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
-<link rel="stylesheet" href="{% static 'css/task_detail_docs.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/css/task_detail_docs.css'%}">
+<style>
+  /* Estilos básicos para a paginação */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  margin: 1rem 0;
+}
 
+.pagination a {
+  color: var(--primary-color, #2e7d32);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: var(--primary-color, #2e7d32);
+  color: white;
+  border-color: var(--primary-color, #2e7d32);
+}
+
+.pagination span {
+  color: var(--text-muted, #666);
+  font-size: 0.9rem;
+}
+
+/* Estilo para quando não há link disponível */
+.pagination a:disabled,
+.pagination a[aria-disabled="true"] {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.pagination a:disabled:hover,
+.pagination a[aria-disabled="true"]:hover {
+  background-color: transparent;
+  color: #ccc;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="user-actions">
-    <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
+<div class="user-actions" style="align-items: center;">
+    <div style="display: flex; align-items: center;gap: 10px;">
+      <button type="button" id="back-button" onclick="history.back()">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
         <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
       </svg>
     </button>
+    <h1>Anexos </h1>
+    </div>
     <button type="button" id="edit-button" class="hidden">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
         <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
@@ -39,7 +86,7 @@
     <div class="participant-info">
       <h1 class="participant-name">{{ user.get_full_name }}</h1>
       <p class="participant-meta">Especialista em poda · Membro desde Jan 2023</p>
-      <div class="participant-stats">
+      <div class="participant-stats" style="display: none;">
         <div class="stat-item">
           <p class="stat-value">24</p>
           <p class="stat-label">Tarefas</p>
@@ -57,25 +104,17 @@
   </section>
 
    
-  <section class="filter-section">
-    <div class="filter-group">
-      <label for="name-filter">Nome</label>
-      <input type="text" id="name-filter">
-    </div>
-    
-    
-    
-    <div class="filter-actions">
-      <button class="btn" id="clear-filters">
-        <span class="material-icons">clear</span>
-        Limpar
-      </button>
-      <button class="btn primary" id="apply-filters">
-        <span class="material-icons">search</span>
-        Aplicar
-      </button>
-    </div>
-  </section>
+  <div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+  {% endif %}
+
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+  {% endif %}
+</div>
 
    
   <section class="attachments-section">
@@ -111,9 +150,7 @@
           </div>
         </div>
         <div class="attachment-actions">
-          <button class="btn small icon-only" title="Visualizar">
-            <span class="material-icons">visibility</span>
-          </button>
+          
           <button class="btn small icon-only" title="Download" onclick="window.location.href='{% url 'download_attch' attach.pk %}'">
             <span class="material-icons">download</span>
           </button>

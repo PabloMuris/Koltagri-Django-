@@ -14,6 +14,10 @@
 <link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
 
 <style>
+  .task-description{
+  height: 100%;
+  
+}
 
 /* modificado (card da task) */
 
@@ -622,7 +626,7 @@ html { font-size: var(--base-font); color: #071029; }
     </div>
     <div class="task-info">
       <h1 class="task-title">{{task_d.name}}</h1>
-      <p class="task-meta">Criada em {{ task_d.created_at }} · Prazo: {{ task_d.due_date }} · Responsável: {{ task_d.responsible }}</p>
+      <p class="task-meta">Criada em {{ task_d.created_at }} · Prazo: {{ task_d.due_date }} · Responsável: {{ task_d.created_by }}</p>
       <p class="task-meta">Espécie(s): Adenium · Local: Estufa Principal</p>
     </div>
     <div class="task-actions">
@@ -656,9 +660,14 @@ html { font-size: var(--base-font); color: #071029; }
   border-right: transparent;
 ">
       {% if is_owner %}
-        <button class="btn" onclick="location.href='{% url 'task_participant' pk=task_id %}'">
+        <button class="btn" onclick="location.href='{% url 'task_participant' pk=task_id %}'" style="border-bottom-right-radius: 0px; border-top-right-radius: 0px; border-right: none;">
           <span class="material-icons">person</span>
           <p>Participantes</p>
+        </button>
+      {% else %}
+        <button class="btn" onclick="location.href='{% url 'task_attachments' task_pk=task_d.id user_pk=task_d.created_by.id %}'">
+          <span class="material-icons">person</span>
+          <p>Anexos da Tarefa</p>
         </button>
       {% endif %}
     </div>
@@ -687,12 +696,12 @@ html { font-size: var(--base-font); color: #071029; }
         </h3>
         <div class="info-grid">
           <div class="info-item">
-            <span class="info-label">Status</span>
-            <span class="info-value" style="color: #f57c00;">Em andamento</span>
+            <span class="info-label">Espécie alvo</span>
+            <span class="info-value" style="color: #f57c00;">{{ task_d.plant_specie }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Prioridade</span>
-            <span class="info-value" style="color: #d32f2f;">Alta</span>
+            <span class="info-value" style="color: #d32f2f;">{{ task_d.priority }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Tempo Restante</span>
