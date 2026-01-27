@@ -56,10 +56,116 @@
   background-color: transparent;
   color: #ccc;
 }
+
+/* Modal de confirmação */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: #d32f2f;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  color: #333;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-cancel {
+  background: #f7f9fb;
+  border: 1px solid #e9eef6;
+  color: #6b7688;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.btn-delete {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.btn-cancel:hover {
+  background: #e9eef6;
+}
+
+.btn-delete:hover {
+  background: #b71c1c;
+}
+
+/* Responsividade do modal */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Modal de confirmação para deletar anexo -->
+<div id="deleteAttachmentModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Excluir Anexo</h3>
+    <p id="attachmentDeleteText">Tem certeza que deseja excluir o anexo?<br>Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelAttachmentDelete">Cancelar</button>
+      <form method="post" id="deleteAttachmentForm" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete">Excluir</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="user-actions" style="align-items: center;">
     <div style="display: flex; align-items: center;gap: 10px;">
       <button type="button" id="back-button" onclick="history.back()">
@@ -77,7 +183,6 @@
   </div>
 <div class="page">
 
-   
   <section class="participant-header">
     <div class="participant-avatar">
       <img src="{% static 'example_img/user1.jpg' %}" alt="Pablo Murilo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -103,7 +208,6 @@
     </div>
   </section>
 
-   
   <div class="pagination">
   {% if page_obj.has_previous %}
     <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
@@ -116,7 +220,6 @@
   {% endif %}
 </div>
 
-   
   <section class="attachments-section">
     <h3 class="section-title">
       <span class="material-icons">attach_file</span>
@@ -124,13 +227,15 @@
     </h3>
 
     <div class="attachments-list">
-       
-      
-
       {% for attach in attachments %}
       <div class="attachment-card">
         <div class="attachment-icon">
-          <span class="material-icons">image</span>
+          <span class="material-icons">
+            {% if attach.name|lower|slice:'-4:' == '.pdf' %}description
+            {% elif attach.name|lower|slice:'-4:' == '.jpg' or attach.name|lower|slice:'-5:' == '.jpeg' or attach.name|lower|slice:'-4:' == '.png' %}image
+            {% elif attach.name|lower|slice:'-4:' == '.txt' %}note
+            {% else %}attach_file{% endif %}
+          </span>
         </div>
         <div class="attachment-info">
           <p class="attachment-name">{{ attach.name }}</p>
@@ -141,35 +246,36 @@
             </span>
             <span class="meta-item">
               <span class="material-icons">calendar_today</span>
-              18/11/2023
+              {{ attach.created_at|date:"d/m/Y" }}
             </span>
             <span class="meta-item">
               <span class="material-icons">description</span>
-              2.4 MB
+              {{ attach.file.size|filesizeformat }}
             </span>
           </div>
         </div>
         <div class="attachment-actions">
-          
           <button class="btn small icon-only" title="Download" onclick="window.location.href='{% url 'download_attch' attach.pk %}'">
             <span class="material-icons">download</span>
           </button>
+          <button class="btn small icon-only delete-attachment-btn" title="Deletar" data-attachment-id="{{ attach.pk }}" data-attachment-name="{{ attach.name }}">
+            <span class="material-icons">delete</span>
+          </button>
         </div>
       </div>
-      {%endfor%}
-    </div>
-
-    <div class="empty-state" id="empty-state" style="display: none;">
-      <span class="material-icons">attach_file</span>
-      <p>Nenhum anexo encontrado</p>
-      <p>Tente ajustar os filtros para ver mais resultados.</p>
+      {% empty %}
+      <div class="empty-state">
+        <span class="material-icons">attach_file</span>
+        <p>Nenhum anexo encontrado</p>
+        <p>Tente ajustar os filtros para ver mais resultados.</p>
+      </div>
+      {% endfor %}
     </div>
   </section>
 
 </div>
 {% if is_paginated %}
   <nav class="pagination">
-
     {% if page_obj.has_previous %}
       <a href="{% querystring page=page_obj.previous_page_number %}">
         Anterior
@@ -185,13 +291,53 @@
         Próxima
       </a>
     {% endif %}
-
   </nav>
 {% endif %}
-
 
 {% endblock %}
 
 {% block scripts %}
+<script>
+// Variáveis para controle de deleção
+let currentAttachmentId = null;
+let currentAttachmentName = null;
 
+// Configurar eventos de deletar anexo
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar botões de deletar
+    document.querySelectorAll('.delete-attachment-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentAttachmentId = this.getAttribute('data-attachment-id');
+            currentAttachmentName = this.getAttribute('data-attachment-name');
+            
+            // Atualizar texto do modal
+            document.getElementById('attachmentDeleteText').innerHTML = 
+                `Tem certeza que deseja excluir o anexo <strong>${currentAttachmentName}</strong>?<br>Esta ação não pode ser desfeita.`;
+            
+            // Configurar a ação do formulário
+            const form = document.getElementById('deleteAttachmentForm');
+            form.action = "{% url 'delete_attachment' 0 %}".replace('0', currentAttachmentId);
+            
+            // Mostrar modal
+            document.getElementById('deleteAttachmentModal').style.display = 'flex';
+        });
+    });
+    
+    // Cancelar deleção
+    document.getElementById('cancelAttachmentDelete').addEventListener('click', function() {
+        document.getElementById('deleteAttachmentModal').style.display = 'none';
+        currentAttachmentId = null;
+        currentAttachmentName = null;
+    });
+    
+    // Fechar modal ao clicar fora
+    document.getElementById('deleteAttachmentModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+            currentAttachmentId = null;
+            currentAttachmentName = null;
+        }
+    });
+});
+</script>
 {% endblock %}

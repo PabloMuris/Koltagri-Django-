@@ -14,7 +14,9 @@ from .views import (
     conclude_task,
     DownloadFileView,
     SimpleFilteringTasksView,
-    upload_task_attachment  
+    upload_task_attachment ,
+    AttachmentForTaskDeleteView,  # Adicionar esta importação
+    DeleteTaskView
 )
 urlpatterns = [
     
@@ -32,5 +34,7 @@ urlpatterns = [
         upload_task_attachment,
         name="upload_task_attachment"
     ),
+    path("anexo/<int:pk>/deletar/", AttachmentForTaskDeleteView.as_view(), name="delete_attachment"),  # Nova URL
+    path("tarefa/<int:pk>/deletar/", DeleteTaskView.as_view(), name="delete_task"),  # Nova URL
     
     ]

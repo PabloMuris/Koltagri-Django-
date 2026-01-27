@@ -1,177 +1,278 @@
 /* ===== VARIÁVEIS ===== */
 :root {
-  --step-primary: #4a6fa5;
-  --step-primary-dark: #3a5f8a;
-  --step-accent: #00204b;
-  --step-bg: #f7f9fb;
-  --step-panel: #ffffff;
-  --step-muted: #6b7688;
-  --step-border: #e9eef6;
-  --step-radius: 12px;
-  --step-gap: 16px;
-  --step-font: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  
-  /* Cores de prioridade */
-  --step-low: #4caf50;
-  --step-medium: #ff9800;
-  --step-high: #f44336;
-  --step-critical: #d32f2f;
-  
-  /* Estados */
-  --step-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  --step-shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --background-color: #f8f9fa;
+  --border-color: #e0e0e0;
+  --text-color: #333;
+  --success-color: #27ae60;
+  --danger-color: #e74c3c;
+  --warning-color: #f39c12;
+  --info-color: #3498db;
 }
 
-/* ===== RESET & BASE ===== */
-.step-form-wrapper {
-  font-family: var(--step-font);
-  background: var(--step-bg);
-  min-height: 100vh;
-  padding: 20px 0;
-}
-
-.step-container {
-  max-width: 1000px;
+form {
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* ===== BOTÕES DE AÇÃO ===== */
-.step-actions-bar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.step-action-btn {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--step-border);
-  border-radius: 10px;
-  background: var(--step-panel);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.step-action-btn:hover {
-  border-color: var(--step-primary);
-  transform: translateY(-2px);
-  box-shadow: var(--step-shadow);
-}
-
-/* ===== INDICADOR DE ETAPAS ===== */
-.step-progress {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: 40px;
-  counter-reset: step-counter;
-}
-
-.step-progress::before {
-  content: '';
-  position: absolute;
-  top: 21px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--step-border);
-  z-index: 1;
-}
-
-.step-progress-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-  flex: 1;
+  height: 100%;
+  gap: 24px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
-.step-progress-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--step-panel);
-  border: 2px solid var(--step-border);
+.progress-container {
+  flex: 0.2;
+}
+
+.content-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  gap: 24px;
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  flex: 0.05;
+}
+
+.action-container button {
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
   font-weight: 600;
-  color: var(--step-muted);
-  margin-bottom: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+#prevBtn {
+  background-color: #f8f9fa;
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+#prevBtn:hover {
+  background-color: #e9ecef;
+}
+
+#nextBtn, #submitBtn {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+#nextBtn:hover, #submitBtn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.content-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
-.step-progress-item.active .step-progress-circle {
-  border-color: var(--step-primary);
-  background: var(--step-primary);
-  color: white;
+.content-field:hover {
+  border-color: var(--secondary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.step-progress-item.completed .step-progress-circle {
-  border-color: var(--step-primary);
-  background: var(--step-primary);
-  color: white;
+.field-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 16px;
 }
 
-.step-progress-label {
-  font-size: 0.9rem;
-  color: var(--step-muted);
-  text-align: center;
+.field-title svg {
+  fill: var(--secondary-color);
+  width: 22px;
+  height: 22px;
+}
+
+.content-field input,
+.content-field textarea {
+  padding: 14px;
+  border: 2px solid #e9eef6;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.content-field input:focus,
+.content-field textarea:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+#taskContent {
+  min-height: 200px;
+  resize: vertical;
+  border-radius: 8px;
+  padding: 14px;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.6;
+}
+
+/* Estilo para plantas selecionadas */
+.selected-plants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.plant-marker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+.plant-marker .plant-name {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plant-marker .remove-plant-icon {
+  font-size: 18px;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.plant-marker .remove-plant-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Estilo para resultados da busca */
+.plant-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid var(--secondary-color);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.plant-selected {
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f1f1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plant-selected:hover {
+  background-color: #f8fafc;
+  padding-left: 20px;
+}
+
+.plant-selected::before {
+  content: "add";
+  font-family: 'Material Icons';
+  font-size: 20px;
+  color: var(--secondary-color);
+}
+
+/* Estilo para botões de prioridade */
+#priority-picker {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.priority-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid #e9eef6;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
   font-weight: 500;
 }
 
-.step-progress-item.active .step-progress-label {
-  color: var(--step-accent);
-  font-weight: 600;
+.priority-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ===== FORMULÁRIO ===== */
-.step-form {
-  background: var(--step-panel);
-  border: 1px solid var(--step-border);
-  border-radius: var(--step-radius);
-  padding: 32px;
-  box-shadow: var(--step-shadow);
+.priority-btn.active {
+  border-color: var(--secondary-color);
+  background-color: rgba(52, 152, 219, 0.05);
 }
 
-.step-form-header {
-  text-align: center;
-  margin-bottom: 28px;
+.priority-btn.urgent.active {
+  border-color: var(--danger-color);
+  background-color: rgba(231, 76, 60, 0.05);
 }
 
-.step-form-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--step-accent);
-  margin: 0 0 8px 0;
+.priority-btn.high.active {
+  border-color: var(--warning-color);
+  background-color: rgba(243, 156, 18, 0.05);
 }
 
-.step-form-subtitle {
-  color: var(--step-muted);
-  font-size: 0.95rem;
-  margin: 0;
+.priority-btn.medium.active {
+  border-color: var(--info-color);
+  background-color: rgba(52, 152, 219, 0.05);
 }
 
-/* ===== PÁGINAS DAS ETAPAS ===== */
-.step-page {
-  display: none;
-  animation: stepFadeIn 0.3s ease;
+.priority-btn.low.active {
+  border-color: var(--success-color);
+  background-color: rgba(39, 174, 96, 0.05);
 }
 
-.step-page.active {
-  display: block;
+.priority-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
 }
 
-@keyframes stepFadeIn {
+/* Animações */
+@keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -179,462 +280,22 @@
   }
 }
 
-/* ===== CAMPOS DO FORMULÁRIO ===== */
-.step-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.step-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.step-label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--step-accent);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.step-icon {
-  font-size: 18px;
-  color: var(--step-muted);
-}
-
-.step-input,
-.step-textarea,
-.step-select {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--step-border);
-  border-radius: 8px;
-  background: var(--step-bg);
-  font-size: 0.95rem;
-  font-family: var(--step-font);
-  transition: all 0.2s ease;
-}
-
-.step-input:focus,
-.step-textarea:focus,
-.step-select:focus {
-  outline: none;
-  border-color: var(--step-primary);
-  background: var(--step-panel);
-  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
-}
-
-.step-textarea {
-  min-height: 160px;
-  resize: vertical;
-  line-height: 1.5;
-}
-
-.step-select[multiple] {
-  height: auto;
-  min-height: 120px;
-  padding: 8px 12px;
-}
-
-.step-select[multiple] option {
-  padding: 10px 12px;
-  border-radius: 6px;
-  margin: 4px 0;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.step-select[multiple] option:hover,
-.step-select[multiple] option:checked {
-  background: var(--step-primary);
-  color: white;
-}
-
-/* ===== INPUT DE ARQUIVO ===== */
-.step-file-input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--step-border);
-  border-radius: 8px;
-  background: var(--step-bg);
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
-.step-file-input::file-selector-button {
-  padding: 8px 20px;
-  border: 1px solid var(--step-border);
-  border-radius: 6px;
-  background: var(--step-panel);
-  color: var(--step-accent);
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 12px;
-  transition: all 0.2s ease;
-}
-
-.step-file-input::file-selector-button:hover {
-  border-color: var(--step-primary);
-  background: var(--step-primary);
-  color: white;
-}
-
-.step-help-text {
-  font-size: 0.85rem;
-  color: var(--step-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-/* ===== SELEÇÃO DE PRIORIDADE ===== */
-.step-priority-options {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.step-priority-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  background: var(--step-bg);
-  border-left: 4px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.step-priority-item:hover {
-  background: #f0f4fa;
-  transform: translateX(2px);
-}
-
-.step-priority-item.selected {
-  background: var(--step-primary);
-  color: white;
-}
-
-.step-priority-item.low {
-  border-left-color: var(--step-low);
-}
-
-.step-priority-item.medium {
-  border-left-color: var(--step-medium);
-}
-
-.step-priority-item.high {
-  border-left-color: var(--step-high);
-}
-
-.step-priority-item.critical {
-  border-left-color: var(--step-critical);
-}
-
-/* ===== SELEÇÃO DE PLANTAS ===== */
-.step-plant-search-container {
-  position: relative;
-  margin-bottom: 8px;
-}
-
-.step-plant-search {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--step-border);
-  border-radius: 8px;
-  background: var(--step-bg);
-  font-size: 0.95rem;
-  font-family: var(--step-font);
-  transition: all 0.2s ease;
-}
-
-.step-plant-search:focus {
-  outline: none;
-  border-color: var(--step-primary);
-  background: var(--step-panel);
-  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
-}
-
-.step-plant-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--step-panel);
-  border: 1px solid var(--step-border);
-  border-radius: 8px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1000;
-  display: none;
-  margin-top: 4px;
-  box-shadow: var(--step-shadow-hover);
-}
-
-.step-plant-dropdown.active {
-  display: block;
-}
-
-.step-plant-option {
-  padding: 12px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  border-bottom: 1px solid var(--step-border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.step-plant-option:last-child {
-  border-bottom: none;
-}
-
-.step-plant-option:hover {
-  background: var(--step-bg);
-}
-
-.step-plant-option.selected {
-  background: rgba(74, 111, 165, 0.1);
-  font-weight: 500;
-}
-
-.step-loading {
-  padding: 20px;
-  text-align: center;
-  color: var(--step-muted);
-  font-size: 0.9rem;
-}
-
-/* ===== CHIPS DAS PLANTAS SELECIONADAS ===== */
-.step-selected-plants {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-  min-height: 42px;
-  padding: 4px;
-}
-
-.step-plant-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background: var(--step-primary);
-  color: white;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  animation: chipAppear 0.2s ease;
-  box-shadow: 0 2px 4px rgba(74, 111, 165, 0.2);
-}
-
-.step-plant-chip:hover {
-  background: var(--step-primary-dark);
-}
-
-@keyframes chipAppear {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.step-chip-remove {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s ease;
-}
-
-.step-chip-remove:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* ===== NAVEGAÇÃO ENTRE ETAPAS ===== */
-.step-navigation {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid var(--step-border);
-}
-
-.step-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: 8px;
-  border: 1px solid var(--step-border);
-  background: var(--step-panel);
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s ease;
-  min-width: 140px;
-}
-
-.step-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--step-shadow);
-}
-
-.step-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.step-btn-secondary {
-  background: var(--step-panel);
-  color: var(--step-accent);
-  border-color: var(--step-border);
-}
-
-.step-btn-secondary:hover:not(:disabled) {
-  border-color: var(--step-primary);
-  background: #f8f9fa;
-}
-
-.step-btn-primary {
-  background: var(--step-primary);
-  color: white;
-  border-color: transparent;
-}
-
-.step-btn-primary:hover:not(:disabled) {
-  background: var(--step-primary-dark);
-  box-shadow: 0 4px 12px rgba(74, 111, 165, 0.3);
-}
-
-/* ===== AÇÕES DO FORMULÁRIO ===== */
-.step-form-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 32px;
-  display: none;
-}
-
-.step-form-actions.show {
-  display: grid;
-}
-
-/* ===== RESUMO DA ATIVIDADE ===== */
-.step-summary {
-  background: #f0f7ff;
-  border: 1px solid #d1e7ff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 24px;
-}
-
-.step-summary-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--step-accent);
-  margin: 0 0 12px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.step-summary-content {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: var(--step-muted);
-}
-
-.step-summary-item {
-  margin-bottom: 8px;
-  display: flex;
-}
-
-.step-summary-label {
-  font-weight: 600;
-  min-width: 140px;
-  color: var(--step-accent);
-}
-
-/* ===== DATA PICKER ===== */
-.step-date-input {
-  cursor: pointer;
-}
-
-/* ===== RESPONSIVIDADE ===== */
+/* Responsividade */
 @media (max-width: 768px) {
-  .step-container {
-    padding: 0 16px;
-  }
-  
-  .step-form {
-    padding: 24px;
-  }
-  
-  .step-progress-circle {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-  }
-  
-  .step-progress-label {
-    font-size: 0.8rem;
-  }
-  
-  .step-progress::before {
-    top: 17px;
-  }
-  
-  .step-navigation {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .step-btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .step-form-actions {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .step-form {
+  form {
     padding: 20px;
   }
   
-  .step-progress {
-    margin-bottom: 30px;
+  .content-field {
+    padding: 16px;
   }
   
-  .step-field-group {
-    gap: 20px;
+  #priority-picker {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-container button {
+    padding: 10px 20px;
+    font-size: 13px;
   }
 }

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from django.utils.translation import gettext_lazy as _
 
 from koltagri.core.models import BaseModelWithSoftDelete
 # Create your models here.
@@ -135,23 +135,29 @@ class AgriculturalInputUsage(BaseModelWithSoftDelete):
     pack = models.ForeignKey(
         AgriculturalInputPack,
         on_delete=models.PROTECT,
-        related_name="usages"
+        related_name="usages",
+        verbose_name=_("Pacote")
     )
 
     cultivation_plant = models.ForeignKey(
         "landplots.CultivationPlant",
         on_delete=models.CASCADE,
-        related_name="input_usages"
+        related_name="input_usages",
+        verbose_name=_("Cultivo de Planta")
     )
 
     quantity_used = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        help_text="Quantidade usada do pack"
+        help_text=_("Quantidade usada do pacote"),
+        verbose_name=_("Quantidade Usada")
     )
 
-    usage_date = models.DateField(default=timezone.now)
+    usage_date = models.DateField(default=timezone.now, verbose_name=_("Data de Uso"))
 
+    class Meta:
+        verbose_name = _("Uso de Insumo")
+        verbose_name_plural = _("Usos de Insumo")
 
     def __str__(self):
         return (
@@ -162,5 +168,4 @@ class AgriculturalInputUsage(BaseModelWithSoftDelete):
         )
     
     def save(self, *args, **kwargs):
-        
         return super().save(*args, **kwargs)

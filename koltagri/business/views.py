@@ -1321,3 +1321,156 @@ class GenerateExpenseReportView(LoginRequiredMixin, View):
             writer.writerow([item['category__name'], item['total'], item['count']])
         
         return response
+    
+
+
+# Adicione estas importações no início do arquivo
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
+
+# ... código existente ...
+
+class AgriculturalInputUsageUpdateView(LoginRequiredMixin, UpdateView):
+    model = AgriculturalInputUsage
+    form_class = AgriculturalInputUsageForm
+    template_name = "supplies/pack_usage_form.html"
+    
+    def get_object(self, queryset=None):
+        """Busca o uso específico com validação"""
+        site_id = self.request.session.get("selected_site_location")
+        supplie_pk = self.kwargs.get('supplie_pk')
+        pack_pk = self.kwargs.get('pack_pk')
+        usage_pk = self.kwargs.get('pk')
+        
+        if not site_id:
+            return None
+            
+        return get_object_or_404(
+            AgriculturalInputUsage,
+            pk=usage_pk,
+            pack__id=pack_pk,
+            pack__agricultural_input__id=supplie_pk,
+            pack__agricultural_input__site_id=site_id
+        )
+    
+    def get_context_data(self, **kwargs):
+        """Adiciona informações adicionais ao contexto"""
+        context = super().get_context_data(**kwargs)
+        usage = self.get_object()
+        
+        if usage:
+            context['pack'] = usage.pack
+            context['available_quantity'] = usage.pack.remaining_quantity() + usage.quantity_used
+            context['unit'] = usage.pack.agricultural_input.get_unit_display()
+            context['is_edit'] = True
+            context['supplie'] = usage.pack.agricultural_input
+        
+        return context
+    
+    def get_form_kwargs(self):
+        """Configura o formulário para edição"""
+        kwargs = super().get_form_kwargs()
+        usage = self.get_object()
+        
+        if usage:
+            # Passa o pack atual para o form
+            kwargs['pack'] = usage.pack
+            kwargs['pack_queryset'] = AgriculturalInputPack.objects.filter(pk=usage.pack.pk)
+        
+        return kwargs
+    
+    def form_valid(self, form):
+        """Atualiza o uso"""
+        instance = form.save(commit=False)
+        
+        # Verificação de estoque considerando o valor anterior
+        old_usage = AgriculturalInputUsage.objects.get(pk=instance.pk)
+        available = instance.pack.remaining_quantity() + old_usage.quantity_used
+        
+        if instance.quantity_used > available:
+            form.add_error('quantity_used', 
+                f"Erro: Quantidade excede o estoque disponível. "
+                f"Máximo permitido: {available} {instance.pack.agricultural_input.unit}.")
+            return self.form_invalid(form)
+        
+        instance.save()
+        messages.success(self.request, "Uso atualizado com sucesso!")
+        
+        # Redireciona de volta para a lista de usos
+        return redirect("pack_uses", 
+                      supplie_pk=instance.pack.agricultural_input.id,
+                      pk=instance.pack.id)
+
+
+class AgriculturalInputUsageDeleteView(LoginRequiredMixin, DeleteView):
+    model = AgriculturalInputUsage
+    template_name = "supplies/usage_delete_modal.html"
+    
+    def get_object(self, queryset=None):
+        """Busca o uso específico com validação"""
+        site_id = self.request.session.get("selected_site_location")
+        supplie_pk = self.kwargs.get('supplie_pk')
+        pack_pk = self.kwargs.get('pack_pk')
+        usage_pk = self.kwargs.get('pk')
+        
+        if not site_id:
+            return None
+            
+        return get_object_or_404(
+            AgriculturalInputUsage,
+            pk=usage_pk,
+            pack__id=pack_pk,
+            pack__agricultural_input__id=supplie_pk,
+            pack__agricultural_input__site_id=site_id
+        )
+    
+    def get_success_url(self):
+        """Redireciona para a lista de usos após exclusão"""
+        usage = self.get_object()
+        return reverse('pack_uses', kwargs={
+            'supplie_pk': usage.pack.agricultural_input.id,
+            'pk': usage.pack.id
+        })
+    
+    def delete(self, request, *args, **kwargs):
+        """Executa a exclusão e retorna JSON para requisições AJAX"""
+        try:
+            self.object = self.get_object()
+            
+            # Armazena informações antes de deletar
+            usage_data = {
+                'id': self.object.id,
+                'quantity_used': float(self.object.quantity_used),
+                'unit': self.object.pack.agricultural_input.unit
+            }
+            
+            # Deleta o objeto
+            self.object.delete()
+            
+            # Se for uma requisição AJAX, retorna JSON
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Uso excluído com sucesso!',
+                    'deleted_usage': usage_data
+                })
+            
+            # Caso contrário, segue o fluxo normal
+            messages.success(request, "Uso excluído com sucesso!")
+            return redirect(self.get_success_url())
+            
+        except Exception as e:
+            # Log do erro
+            print(f"Erro ao excluir uso: {str(e)}")
+            
+            # Se for uma requisição AJAX, retorna erro em JSON
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Erro ao excluir uso: {str(e)}'
+                }, status=400)
+            
+            # Caso contrário, mostra mensagem de erro
+            messages.error(request, f'Erro ao excluir uso: {str(e)}')
+            return redirect(self.get_success_url())
+# ... resto do código existente ...

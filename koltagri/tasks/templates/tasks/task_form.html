@@ -7,16 +7,104 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'tasks/css/form.css' %}">
 <link rel="stylesheet" href="{% static 'tasks/css/task_form/step-indicator.css'%}">
+<link rel="stylesheet" href="{% static 'css/partials/actions.css'%}">
 
 <style>
-.progress-container{
-   border-radius: 10px;
-   height: fit-content;
+/* Estilos adicionais para melhorar a experiência */
+.progress-container {
+  border-radius: 16px;
+  height: fit-content;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.action-container button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+#prevBtn::before {
+  content: "←";
+  font-weight: bold;
+}
+
+#nextBtn::after {
+  content: "→";
+  font-weight: bold;
+}
+
+#submitBtn::before {
+  content: "✓";
+  font-weight: bold;
+}
+
+/* Melhorar a aparência do campo de data */
+.task-date-input {
+  padding: 14px;
+  border: 2px solid #e9eef6;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.task-date-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Estilo para o campo de busca de plantas */
+.task-plants-input {
+  padding: 14px;
+  border: 2px solid #e9eef6;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  background: white;
+  transition: all 0.3s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+  padding-right: 40px;
+}
+
+.task-plants-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Placeholder estilizado */
+::placeholder {
+  color: #adb5bd;
+  opacity: 1;
+}
+
+/* Foco visível para acessibilidade */
+.content-field:focus-within {
+  border-color: var(--secondary-color);
 }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="user-actions">
+    <button type="button" id="back-button" onclick="location.href='{% url 'tasks' %}'">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6b7688">
+        <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/>
+      </svg>
+    </button>
+    <button type="button" id="delete-button" style="display: none;" >
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+    </button>
+  </div>
 <form class="task-form-container" method="post" id="taskForm"  action="{% if task_id %}{% url 'task_form_edit' pk=task_id %}{% else %}{% url 'task_form' %}{% endif %}">
   {% csrf_token %}
   <div class="progress-container">
@@ -114,10 +202,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/task_form/events.js' %}"></script>
-<script src="{% static 'js/task_form/slide_logic.js' %}"></script>
-<script src="{% static 'js/task_form/validation.js' %}"></script>
-<script src="{% static 'js/task_form/search_plants.js' %}"></script>
+<script src="{% static 'tasks/js/task_form/events.js' %}"></script>
+<script src="{% static 'tasks/js/task_form/slide_logic.js' %}"></script>
+<script src="{% static 'tasks/js/task_form/validation.js' %}"></script>
+<script src="{% static 'tasks/js/task_form/search_plants.js' %}"></script>
 {% endblock %}
 
 <!-- 

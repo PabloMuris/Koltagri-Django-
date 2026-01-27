@@ -36,8 +36,9 @@ from koltagri.person.models import UserInformation
 from .models import Country
 
 from .mixins import SiteRequiredMixin
+
 class IndexView(SiteRequiredMixin,TemplateView):
-    template_name = "index.html"
+    template_name = "core/index.html"
 
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm  # Importe o novo formulário
@@ -86,7 +87,7 @@ class LoginView(View):
         return render(request, self.template_name, {'form': form})
 
 class NotificationsView(TemplateView):
-    template_name = 'notifications.html'
+    template_name = 'core/notifications.html'
 
 # Em core/views.py, substitua a view ProfileView atual por esta:
 
@@ -143,7 +144,7 @@ class ProfileView( SiteRequiredMixin, FormView):
         return context
 
 class TeamView(LoginRequiredMixin, FilterView):
-    template_name = 'team.html'
+    template_name = 'core/team.html'
     model = SiteMembership
     context_object_name = "people"
     paginate_by = 7
@@ -179,7 +180,7 @@ class TeamView(LoginRequiredMixin, FilterView):
         return query
 
 class LandsView(LoginRequiredMixin,FilterView):
-    template_name = 'lands.html'
+    template_name = 'core/lands.html'
     model = Cultivation
     context_object_name = 'cultivations'
     paginate_by = 7
@@ -192,7 +193,7 @@ class LandsView(LoginRequiredMixin,FilterView):
         return query
 
 class PropertyView(TemplateView):
-    template_name = 'property.html'
+    template_name = 'core/property.html'
 
 
 
@@ -215,7 +216,7 @@ def select_site_location(request,site_id):
 
 
 class SelectSiteView(LoginRequiredMixin,FilterView):
-    template_name = 'select_site.html'
+    template_name = 'core/select_site.html'
     model = Site
     context_object_name = 'sites'
     filterset_fields = {
@@ -346,7 +347,7 @@ from koltagri.core.models import Country, State, City
 from .forms import CustomUserCreationForm, UserInformationForm
 
 class RegisterView(CreateView):
-    template_name = 'register.html'
+    template_name = 'core/register.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('index')  # Ou a URL que você quiser
     

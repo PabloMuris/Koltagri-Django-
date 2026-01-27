@@ -287,25 +287,141 @@
   color:#F44336;
 }
 
-/* Responsivo */
-@media (max-width:768px){
-  .usage_card{
-    grid-template-columns:1fr;
-  }
-  
-  .usage_details{
-    text-align:left;
-  }
-  
-  .supplies-indicators{
-    grid-template-columns:1fr;
-  }
-  
-  .pagination-container{
-    flex-direction:column;
-    gap:12px;
-  }
+/* Botões de ação */
+.action-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
 }
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.edit-btn {
+    color: var(--primary);
+}
+
+.edit-btn:hover {
+    background: rgba(74, 165, 138, 0.1);
+    border-color: var(--primary);
+}
+
+.delete-btn {
+    color: #f44336;
+}
+
+.delete-btn:hover {
+    background: rgba(244, 67, 54, 0.1);
+    border-color: #f44336;
+}
+
+/* Modal de confirmação */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--accent);
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--muted);
+}
+
+.close-modal:hover {
+    color: var(--accent);
+}
+
+.modal-body {
+    margin-bottom: 20px;
+    color: var(--muted);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn {
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+}
+
+.cancel-btn:hover {
+    background: #e8e8e8;
+}
+
+.confirm-delete-btn {
+    background: #f44336;
+    color: white;
+    border: 1px solid #f44336;
+}
+
+.confirm-delete-btn:hover {
+    background: #d32f2f;
+    border-color: #d32f2f;
+}
+
 /* Estilos básicos para a paginação */
 .pagination {
   display: flex;
@@ -349,6 +465,71 @@
   background-color: transparent;
   color: #ccc;
 }
+
+/* Responsivo */
+@media (max-width:768px){
+  .usage_card{
+    grid-template-columns:1fr;
+  }
+  
+  .usage_details{
+    text-align:left;
+  }
+  
+  .supplies-indicators{
+    grid-template-columns:1fr;
+  }
+  
+  .pagination-container{
+    flex-direction:column;
+    gap:12px;
+  }
+  
+  .action-buttons {
+    position: relative;
+    top: 0;
+    right: 0;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+}
+
+/* Notificações */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
 </style>
 {% endblock %}
 
@@ -356,7 +537,7 @@
 
 <div class="user-actions">
   <div class="flex-row" style="display: flex; flex-direction: row; align-items: center; gap: 12px;">
-    <a href="" class="back-button">
+    <a href="{% url 'packs_list' supplie_pk=agricultural_input.id %}" class="back-button">
       <span class="material-icons">arrow_back</span>
     </a>
     <h3 style="margin: 0;">Histórico de Usos</h3>
@@ -380,8 +561,6 @@
       <p>Pack: {{ pack.name }} | Insumo: {{ agricultural_input.name }} | Quantidade inicial: {{ pack.quantity }} {{ agricultural_input.unit }}</p>
       {% endif %}
     </div>
-
-    
 
     <div class="indicators-grid">
       <div class="usage-card">
@@ -409,31 +588,40 @@
           </p>
         </div>
       </div>
-
-      
     </div>
   </section>
 
-  <!-- BUSCA -->
-  
-
   <div class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
-  {% endif %}
+    {% if page_obj.has_previous %}
+      <a href="{% querystring page=page_obj.previous_page_number %}">Anterior</a>
+    {% endif %}
 
-  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
 
-  {% if page_obj.has_next %}
-    <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
-  {% endif %}
-</div>
+    {% if page_obj.has_next %}
+      <a href="{% querystring page=page_obj.next_page_number %}">Próxima</a>
+    {% endif %}
+  </div>
 
   <!-- LISTAGEM DE USOS -->
   <section class="tasks-result">
     <div class="results">
       {% for usage in usages %}
-      <div class="usage_card">
+      <div class="usage_card" id="usage-{{ usage.id }}">
+        <!-- Botões de ação -->
+        <div class="action-buttons">
+          <button class="action-btn edit-btn" 
+                  onclick="window.location.href='{% url 'usage_edit' supplie_pk=agricultural_input.id pack_pk=pack.id pk=usage.id %}'"
+                  title="Editar uso">
+            <span class="material-icons">edit</span>
+          </button>
+          <button class="action-btn delete-btn" 
+                  onclick="openDeleteModal({{ usage.id }}, '{{ usage.cultivation_plant|default:"Uso sem especificação" }}', '{{ usage.quantity_used }} {{ usage.pack.agricultural_input.unit }}')"
+                  title="Excluir uso">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+        
         <div class="card__icon">
           <span class="material-icons">
             {% if usage.cultivation_plant %}grass{% else %}agriculture{% endif %}
@@ -534,29 +722,407 @@
   {% endif %}
 
 </div>
+
+<!-- Modal de confirmação de exclusão -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Confirmar Exclusão</h3>
+      <button class="close-modal" onclick="closeDeleteModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Tem certeza que deseja excluir este uso?</p>
+      <p><strong>Uso:</strong> <span id="usageDetails"></span></p>
+      <p><strong>Quantidade:</strong> <span id="usageQuantity"></span></p>
+      <p class="small-note" style="color: #f44336; margin-top: 10px;">
+        ⚠️ Esta ação não pode ser desfeita.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel-btn" onclick="closeDeleteModal()">Cancelar</button>
+      <button class="modal-btn confirm-delete-btn" id="confirmDeleteBtn">Excluir</button>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-// Filtro de busca
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.querySelector('input[type="search"]');
-    const usageCards = document.querySelectorAll('.usage_card');
+// Variáveis globais para o modal
+let currentUsageId = null;
+let deleteUrl = '';
+let currentUsageQuantity = 0;
+let currentUsageUnit = '';
+
+// Abrir modal de exclusão
+function openDeleteModal(usageId, usageName, quantity) {
+    currentUsageId = usageId;
+    document.getElementById('usageDetails').textContent = usageName;
+    document.getElementById('usageQuantity').textContent = quantity;
+    document.getElementById('deleteModal').style.display = 'block';
     
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
+    // Extrair quantidade e unidade da string (ex: "10 kg")
+    const quantityMatch = quantity.match(/(\d+(\.\d+)?)\s+(\S+)/);
+    if (quantityMatch) {
+        currentUsageQuantity = parseFloat(quantityMatch[1]);
+        currentUsageUnit = quantityMatch[3];
+    }
+    
+    // Construir a URL de exclusão usando a tag url do Django
+    deleteUrl = `{% url 'usage_delete' supplie_pk=agricultural_input.id pack_pk=pack.id pk=0 %}`.replace('0', usageId);
+    
+    // Desabilitar scroll da página principal
+    document.body.style.overflow = 'hidden';
+}
+
+// Fechar modal
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    currentUsageId = null;
+    currentUsageQuantity = 0;
+    currentUsageUnit = '';
+    
+    // Reabilitar scroll da página principal
+    document.body.style.overflow = '';
+}
+
+// Configurar botão de confirmação
+document.addEventListener('DOMContentLoaded', function() {
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            if (!currentUsageId || !deleteUrl) {
+                showNotification('Erro: Não foi possível identificar o uso para exclusão.', 'error');
+                return;
+            }
             
-            usageCards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    card.style.display = '';
+            // Mostrar loading
+            confirmBtn.innerHTML = '<span class="material-icons" style="font-size: 16px; margin-right: 5px;">hourglass_empty</span> Excluindo...';
+            confirmBtn.disabled = true;
+            
+            // Obter token CSRF
+            const csrfToken = getCookie('csrftoken');
+            if (!csrfToken) {
+                showNotification('Erro de segurança: Token CSRF não encontrado.', 'error');
+                confirmBtn.innerHTML = 'Excluir';
+                confirmBtn.disabled = false;
+                return;
+            }
+            
+            // Fazer requisição AJAX para excluir
+            fetch(deleteUrl, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'csrfmiddlewaretoken': csrfToken
+                })
+            })
+            .then(response => {
+                // Primeiro, verificar se é JSON pela cabeçalho Content-Type
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
                 } else {
-                    card.style.display = 'none';
+                    // Se não for JSON, converter a resposta para texto para depuração
+                    return response.text().then(text => {
+                        console.error('Resposta não-JSON do servidor:', text);
+                        throw new Error('Resposta do servidor não é JSON. Status: ' + response.status);
+                    });
                 }
+            })
+            .then(data => {
+                if (data.success) {
+                    // Remover o card da lista
+                    const usageCard = document.getElementById(`usage-${currentUsageId}`);
+                    if (usageCard) {
+                        // Animação de saída
+                        usageCard.style.opacity = '0';
+                        usageCard.style.transform = 'translateX(100px)';
+                        usageCard.style.transition = 'all 0.3s ease';
+                        
+                        setTimeout(() => {
+                            usageCard.remove();
+                            
+                            // Atualizar indicadores
+                            updateIndicatorsAfterDeletion();
+                            
+                            // Verificar se ainda há usos
+                            const remainingCards = document.querySelectorAll('.usage_card').length;
+                            if (remainingCards === 0) {
+                                // Recarregar a página para mostrar mensagem de "nenhum uso"
+                                setTimeout(() => location.reload(), 300);
+                            }
+                        }, 300);
+                    }
+                    
+                    // Mostrar mensagem de sucesso
+                    showNotification(data.message || 'Uso excluído com sucesso!', 'success');
+                } else {
+                    showNotification(data.message || 'Erro ao excluir uso.', 'error');
+                }
+                
+                closeDeleteModal();
+                confirmBtn.innerHTML = 'Excluir';
+                confirmBtn.disabled = false;
+            })
+            .catch(error => {
+                console.error('Erro na exclusão:', error);
+                showNotification('Erro ao excluir uso: ' + error.message, 'error');
+                closeDeleteModal();
+                confirmBtn.innerHTML = 'Excluir';
+                confirmBtn.disabled = false;
             });
         });
     }
+    
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('deleteModal');
+        if (event.target === modal) {
+            closeDeleteModal();
+        }
+    });
+    
+    // Fechar modal com ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
 });
+
+// Função para atualizar indicadores após exclusão
+function updateIndicatorsAfterDeletion() {
+    // 1. Atualizar total de usos
+    const totalUsagesElement = document.querySelector('.indicators-grid .usage-card:nth-child(1) p');
+    if (totalUsagesElement) {
+        const current = parseInt(totalUsagesElement.textContent) || 0;
+        if (current > 0) {
+            totalUsagesElement.textContent = current - 1;
+        }
+    }
+    
+    // 2. Atualizar quantidade total usada
+    const totalUsedElement = document.querySelector('.indicators-grid .usage-card:nth-child(2) p');
+    if (totalUsedElement && currentUsageQuantity > 0) {
+        const currentText = totalUsedElement.textContent;
+        const match = currentText.match(/(\d+(\.\d+)?)/);
+        if (match) {
+            const currentUsed = parseFloat(match[1]);
+            const newTotal = Math.max(0, (currentUsed - currentUsageQuantity).toFixed(2));
+            totalUsedElement.textContent = `${newTotal} ${currentUsageUnit || '{{ agricultural_input.unit }}'}`;
+        }
+    }
+    
+    // 3. Atualizar quantidade restante
+    const remainingElement = document.querySelector('.indicators-grid .usage-card:nth-child(3) p');
+    if (remainingElement && currentUsageQuantity > 0) {
+        const currentText = remainingElement.textContent;
+        const match = currentText.match(/(\d+(\.\d+)?)/);
+        if (match) {
+            const currentRemaining = parseFloat(match[1]);
+            const newRemaining = (currentRemaining + currentUsageQuantity).toFixed(2);
+            remainingElement.textContent = `${newRemaining} ${currentUsageUnit || '{{ agricultural_input.unit }}'}`;
+            
+            // Atualizar classe de status
+            updateRemainingStatusClass(remainingElement, newRemaining);
+        }
+    }
+}
+
+// Função para atualizar classe de status da quantidade restante
+function updateRemainingStatusClass(element, remainingQuantity) {
+    // Limpar classes de status
+    element.classList.remove('status-cancelled', 'status-pending', 'status-completed');
+    
+    // Adicionar classe apropriada
+    const remaining = parseFloat(remainingQuantity);
+    const packQuantity = {{ pack.quantity|default:0 }};
+    
+    if (remaining <= 0) {
+        element.classList.add('status-cancelled');
+    } else if (remaining < packQuantity / 4) {
+        element.classList.add('status-pending');
+    } else {
+        element.classList.add('status-completed');
+    }
+}
+
+// Função para obter cookie CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Função para mostrar notificações
+function showNotification(message, type = 'info') {
+    // Remove notificação anterior se existir
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Cria nova notificação
+    const notification = document.createElement('div');
+    
+    // Ícone baseado no tipo
+    let icon = 'info';
+    let bgColor = '#2196F3';
+    
+    if (type === 'success') {
+        icon = 'check_circle';
+        bgColor = '#4CAF50';
+    } else if (type === 'error') {
+        icon = 'error';
+        bgColor = '#f44336';
+    } else if (type === 'warning') {
+        icon = 'warning';
+        bgColor = '#ff9800';
+    }
+    
+    notification.innerHTML = `
+        <span class="material-icons" style="margin-right: 8px;">
+            ${icon}
+        </span>
+        ${message}
+    `;
+    
+    // Estilos da notificação
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        background: ${bgColor};
+        color: white;
+        display: flex;
+        align-items: center;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    
+    // Adiciona ao body
+    document.body.appendChild(notification);
+    
+    // Remove após 4 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, 4000);
+}
+
+// Filtro de busca (se existir)
+const searchInput = document.querySelector('input[type="search"]');
+if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const usageCards = document.querySelectorAll('.usage_card');
+        let visibleCount = 0;
+        
+        usageCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Opcional: Mostrar mensagem se não houver resultados
+        const noResultsMessage = document.getElementById('no-results-message');
+        if (visibleCount === 0 && searchTerm !== '') {
+            if (!noResultsMessage) {
+                const message = document.createElement('div');
+                message.id = 'no-results-message';
+                message.textContent = `Nenhum resultado encontrado para "${searchTerm}"`;
+                message.style.cssText = `
+                    text-align: center;
+                    padding: 20px;
+                    color: var(--muted);
+                    font-style: italic;
+                    grid-column: 1 / -1;
+                `;
+                
+                const resultsContainer = document.querySelector('.results');
+                if (resultsContainer) {
+                    resultsContainer.appendChild(message);
+                }
+            }
+        } else if (noResultsMessage) {
+            noResultsMessage.remove();
+        }
+    });
+}
+
+// Adicionar animações CSS se não existirem
+if (!document.querySelector('#notification-animations')) {
+    const style = document.createElement('style');
+    style.id = 'notification-animations';
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .modal {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
 </script>
 {% endblock %}

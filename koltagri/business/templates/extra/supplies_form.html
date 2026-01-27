@@ -710,7 +710,7 @@
                     <div class="insumo-detail">
                         <span class="material-icons">scale</span>
                         <span class="quantidade-normal">
-                            {{ insumo.quantidade }} {{ insumo.unidade }}
+                            {{ insumo.unit }}
                         </span>
                     </div>
 
@@ -719,12 +719,7 @@
                         <span>R$ {{ insumo.preco|floatformat:2 }}</span>
                     </div>
 
-                    <div class="insumo-detail">
-                        <span class="material-icons">event</span>
-                        <span class="validade-proxima">
-                            Vence em {{ insumo.validade|date:"d/m/Y" }}
-                        </span>
-                    </div>
+                    
                 </div>
 
                 <p class="insumo-description">

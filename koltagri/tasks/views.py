@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_list_or_404,get_object_or_404
 from django.http import FileResponse, Http404,HttpResponseForbidden
-from django.views.generic import ListView,TemplateView,View,DetailView
+from django.views.generic import ListView,TemplateView,View,DetailView,DeleteView
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from asgiref.sync import sync_to_async
@@ -431,3 +431,33 @@ class AttachmentForTasksView(SiteTeamRequiredMixin,FilterView):
     model = Attachment
     template_name = "tasks/task_attachments_task"
     context_object_name = 'attachments'
+
+class DeleteTaskView(LoginRequiredMixin, DeleteView):
+    model = Task
+    success_url = reverse_lazy('tasks')
+    template_name = 'tasks/task_confirm_delete.html'
+    
+    def get_queryset(self):
+        site_id = self.request.session.get("selected_site_location")
+        if not site_id:
+            return Task.objects.none()
+        return Task.objects.filter(site=site_id)
+
+class AttachmentForTaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = Attachment
+    template_name = 'tasks/attachment_confirm_delete.html'
+    
+    def get_success_url(self):
+        # Redireciona de volta para a página anterior
+        task_id = self.object.task.id
+        return reverse_lazy('task_detail', kwargs={'pk': task_id})
+    
+    def delete(self, request, *args, **kwargs):
+        # Verificar se o usuário tem permissão para deletar o anexo
+        self.object = self.get_object()
+        
+        # Verificar se o usuário é o dono do anexo
+        if self.object.user != request.user:
+            return HttpResponseForbidden("Você não tem permissão para deletar este anexo.")
+        
+        return super().delete(request, *args, **kwargs)
